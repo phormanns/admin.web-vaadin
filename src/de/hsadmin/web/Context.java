@@ -20,6 +20,7 @@ public class Context {
 	public String getUser() {
 		Assertion assertion = (Assertion) getContext().getSessionMap().get(AbstractCasFilter.CONST_CAS_ASSERTION);
 		AttributePrincipal principal = assertion.getPrincipal();
+		String proxyTicket = principal.getProxyTicketFor("https://agnes.ostwall195.de/backend");
 		return principal.getName();
 	}
 
