@@ -13,7 +13,7 @@
 		<ui:param name="title" value="Hallo schöne Welt"/>
 		<ui:define name="content">
 			<f:view>
-				Hallo&#160; <h:outputText value="#{context.user}"/>, es ist jetzt&#160; <h:outputText value="#{bean.time}"/> Uhr.
+				<h:outputText value="#{hello.message}"/>, es ist jetzt&#160; <h:outputText value="#{hello.time}"/> Uhr.
 			</f:view>
 		</ui:define>
 	</ui:composition>

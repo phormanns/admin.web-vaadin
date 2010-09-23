@@ -9,19 +9,29 @@ import org.jasig.cas.client.authentication.AttributePrincipal;
 import org.jasig.cas.client.util.AbstractCasFilter;
 import org.jasig.cas.client.validation.Assertion;
 
-@ManagedBean
+@ManagedBean(name="context")
 @SessionScoped
 public class Context {
 
-	private ExternalContext getContext() {
+	private ExternalContext getExternalContext() {
 		return FacesContext.getCurrentInstance().getExternalContext();
 	}
 
-	public String getUser() {
-		Assertion assertion = (Assertion) getContext().getSessionMap().get(AbstractCasFilter.CONST_CAS_ASSERTION);
-		AttributePrincipal principal = assertion.getPrincipal();
-		String proxyTicket = principal.getProxyTicketFor("https://agnes.ostwall195.de/backend");
-		return principal.getName();
+	private AttributePrincipal getPrincipal() {
+		ExternalContext context = getExternalContext();
+		Assertion assertion = (Assertion) context.getSessionMap().get(AbstractCasFilter.CONST_CAS_ASSERTION);
+		return assertion.getPrincipal();
 	}
 
+	public String getUser() {
+		return getPrincipal().getName();
+	}
+
+	public String getProxyTicket() {
+		return getPrincipal().getProxyTicketFor("https://agnes.ostwall195.de:9443/hsar/backend");
+	}
+
+	public String getContextPath() {
+		return getExternalContext().getRequestContextPath();
+	}
 }
