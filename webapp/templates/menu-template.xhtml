@@ -14,8 +14,8 @@
 			<f:view>
 				<h:dataTable var="menuitem" value="#{modules.pageNames}">
 					<h:column>
-						<h:outputLink value="#{menuitem}/index.html">
-							<h:outputText value="#{msgs.hello}" />
+						<h:outputLink value="#{modules.urls[menuitem]}">
+							<h:outputText value="#{modules.labels[menuitem]}" />
 						</h:outputLink>
 					</h:column>
 				</h:dataTable>
