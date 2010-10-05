@@ -66,6 +66,9 @@ body {
   padding-top:0px; 
   padding-left:10px; 
   padding-right:10px; 
+  border-left-style: solid;
+  border-left-width: 1px;
+  border-left-color: #dd4901;
 }
 .footer {
   width:944px; 

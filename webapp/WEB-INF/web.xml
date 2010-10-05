@@ -8,6 +8,14 @@
 		<param-name>serverName</param-name>
 		<param-value>http://agnes.ostwall195.de:8180</param-value>
 	</context-param>
+	<context-param>
+		<param-name>backendURL</param-name>
+		<param-value>https://agnes.ostwall195.de:9443/hsar/backend</param-value>
+	</context-param>
+	<context-param>
+		<param-name>xmlrpcURL</param-name>
+		<param-value>https://agnes.ostwall195.de:9443/hsar/xmlrpc/hsadmin</param-value>
+	</context-param>
     
 	<filter>
 		<filter-name>CAS Authentication Filter</filter-name>

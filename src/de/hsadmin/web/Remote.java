@@ -22,14 +22,7 @@ public class Remote {
 	private Context context;
 
 	public Remote() throws HsarwebException {
-		XmlRpcClientConfigImpl config = new XmlRpcClientConfigImpl();
-		try {
-			config.setServerURL(new URL("https://agnes.ostwall195.de:9443/hsar/xmlrpc/hsadmin"));
-		} catch (MalformedURLException e) {
-			throw new HsarwebException("error in remote server url", e);
-		}
-		client = new XmlRpcClient();
-		client.setConfig(config);
+		client = null;
 	}
 	
 	public Object callSearch(String module, String user, Map<String, String> where) throws HsarwebException {
@@ -39,13 +32,28 @@ public class Remote {
 		params[2] = where;
 		Object res;
 		try {
-			res = client.execute(module + ".search", params);
+			res = getClient().execute(module + ".search", params);
 		} catch (XmlRpcException e) {
 			throw new HsarwebException("error in remote server call", e);
 		}
 		return res; 
 	}
 	
+	private XmlRpcClient getClient() throws HsarwebException {
+		if (client == null) {
+			XmlRpcClientConfigImpl config = new XmlRpcClientConfigImpl();
+			try {
+				String xmlrpcURL = context.getContextParam("xmlrpcURL");
+				config.setServerURL(new URL(xmlrpcURL));
+			} catch (MalformedURLException e) {
+				throw new HsarwebException("error in remote server url", e);
+			}
+			client = new XmlRpcClient();
+			client.setConfig(config);
+		}
+		return client;
+	}
+
 	public void setContext(Context context) {
 		this.context = context;
 	}

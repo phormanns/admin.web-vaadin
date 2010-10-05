@@ -28,10 +28,15 @@ public class Context {
 	}
 
 	public String getProxyTicket() {
-		return getPrincipal().getProxyTicketFor("https://agnes.ostwall195.de:9443/hsar/backend");
+		String backendURL = getContextParam("backendURL");
+		return getPrincipal().getProxyTicketFor(backendURL);
 	}
 
 	public String getContextPath() {
 		return getExternalContext().getRequestContextPath();
+	}
+
+	public String getContextParam(String name) {
+		return getExternalContext().getInitParameter(name);
 	}
 }
