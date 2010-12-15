@@ -22,6 +22,11 @@
 		<param-name>productionMode</param-name>
 		<param-value>false</param-value>
 	</context-param>
+	<context-param>
+		<description>HSAdmin Module</description>
+		<param-name>hsarmodules</param-name>
+		<param-value>de.hsadmin.web.DomainModule,de.hsadmin.web.EMailAddressModule,de.hsadmin.web.EMailAliasModule</param-value>
+	</context-param>
 
 	<filter>
 		<filter-name>CAS Authentication Filter</filter-name>
@@ -32,7 +37,7 @@
 		</init-param>
 		<init-param>
 			<param-name>service</param-name>
-			<param-value>https://agnes.ostwall195.de:8443/HSAdmin</param-value>
+			<param-value>https://agnes.ostwall195.de:8443/hsarweb</param-value>
 		</init-param>
 	</filter>
 
@@ -49,11 +54,11 @@
         </init-param>
         <init-param>
         	<param-name>proxyCallbackUrl</param-name>
-            <param-value>https://agnes.ostwall195.de:8443/HSAdmin/proxyCallback</param-value>
+            <param-value>https://agnes.ostwall195.de:8443/hsarweb/proxyCallback</param-value>
         </init-param>
 		<init-param>
 			<param-name>service</param-name>
-			<param-value>https://agnes.ostwall195.de:8443/HSAdmin</param-value>
+			<param-value>https://agnes.ostwall195.de:8443/hsarweb</param-value>
 		</init-param>
 	</filter>
 	
@@ -73,7 +78,7 @@
 		<init-param>
 			<description>Vaadin application class to start</description>
 			<param-name>application</param-name>
-			<param-value>de.hsadmin.web.DomainModule</param-value>
+			<param-value>de.hsadmin.web.MainApplication</param-value>
 		</init-param>
 	</servlet>
 	<servlet-mapping>

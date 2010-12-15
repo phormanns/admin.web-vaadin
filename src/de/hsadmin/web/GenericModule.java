@@ -8,53 +8,44 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
-import org.jasig.cas.client.authentication.AttributePrincipal;
-import org.jasig.cas.client.authentication.AuthenticationFilter;
-import org.jasig.cas.client.validation.Assertion;
-
-import com.vaadin.Application;
 import com.vaadin.data.Property;
 import com.vaadin.terminal.Sizeable;
 import com.vaadin.terminal.ThemeResource;
-import com.vaadin.terminal.gwt.server.HttpServletRequestListener;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Component;
 import com.vaadin.ui.Table;
-import com.vaadin.ui.Window;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.themes.BaseTheme;
 
 import de.hsadmin.web.config.ModuleConfig;
 import de.hsadmin.web.config.PropertyConfig;
 
-public abstract class GenericModule extends Application implements HttpServletRequestListener {
+public abstract class GenericModule {
 
 	private static final long serialVersionUID = 1L;
 	private static final DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT);
 
-	private HttpSession httpSession;
-	private AttributePrincipal userPrincipal;
-	private ServletContext servletContext;
 	private Table table;
+	private Remote remote;
 
-	
-	@Override
-	public void init() {
-		Window mainWindow = new Window(getModuleConfig().getName());
-		mainWindow.setHeight(100.0f, Sizeable.UNITS_PERCENTAGE);
-		mainWindow.setWidth(100.0f, Sizeable.UNITS_PERCENTAGE);
+	public void setRemote(Remote remote) {
+		this.remote = remote;
 		try {
 			initTable();
-			mainWindow.addComponent(table);
 		} catch (IllegalAccessException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		setMainWindow(mainWindow);
+	}
+	
+	public abstract ModuleConfig getModuleConfig();
+
+	public Component getComponent() {
+		return table;
+	}
+
+	public void reload() {
+		loadTable();
 	}
 
 	private void initTable() throws IllegalAccessException {
@@ -92,14 +83,12 @@ public abstract class GenericModule extends Application implements HttpServletRe
 		table.addContainerProperty("del", Button.class, null);
 		table.setColumnWidth("del", 16);
 		table.setColumnHeader("del", "");
-		loadTable();
 	}
 
 	private void loadTable() {
-		Remote remote = new Remote(this);
 		table.removeAllItems();
 		try {
-			Object callSearch = remote.callSearch(userPrincipal.getName(), new HashMap<String, String>());
+			Object callSearch = remote.callSearch(getModuleConfig().getName(), new HashMap<String, String>());
 			List<PropertyConfig> propertyList = getModuleConfig().getPropertyList();
 			if (callSearch instanceof Object[]) {
 				for (Object row : ((Object[])callSearch)) {
@@ -169,7 +158,7 @@ public abstract class GenericModule extends Application implements HttpServletRe
 	}
 
 	private Button createDeleteButton(long id) {
-		ThemeResource icon = new ThemeResource("../runo/icons/16/cancel.png");
+		ThemeResource icon = new ThemeResource("../runo/icons/16/document-delete.png");
 		Button button = new Button();
 		button.setIcon(icon);
 		button.setData(id);
@@ -184,29 +173,5 @@ public abstract class GenericModule extends Application implements HttpServletRe
 		});
 		return button;
 	}
-	
-	public String getProxyTicket() {
-		return userPrincipal.getProxyTicketFor(servletContext.getInitParameter("backendURL"));
-	}
-
-	public String getContextParam(String string) {
-		return servletContext.getInitParameter(string);
-	}
-
-	@Override
-	public void onRequestStart(HttpServletRequest request,
-			HttpServletResponse response) {
-		httpSession = request.getSession();
-		servletContext = httpSession.getServletContext();
-		userPrincipal = ((Assertion) httpSession.getAttribute(AuthenticationFilter.CONST_CAS_ASSERTION)).getPrincipal();
-	}
-
-	@Override
-	public void onRequestEnd(HttpServletRequest request,
-			HttpServletResponse response) {
-		
-	}
-	
-	public abstract ModuleConfig getModuleConfig();
 
 }

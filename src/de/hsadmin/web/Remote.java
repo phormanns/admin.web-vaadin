@@ -11,20 +11,20 @@ import org.apache.xmlrpc.client.XmlRpcClientConfigImpl;
 public class Remote {
 
 	private XmlRpcClient client;
-	private GenericModule module;
+	private MainApplication app;
 	
-	public Remote(GenericModule module) {
-		this.module = module;
+	public Remote(MainApplication application) {
+		this.app = application;
 	}
 
-	public Object callSearch(String user, Map<String, String> where) throws HsarwebException {
+	public Object callSearch(String module, Map<String, String> where) throws HsarwebException {
 		Object[] params = new Object[3];
-		params[0] = user;
-		params[1] = module.getProxyTicket();
+		params[0] = app.getLogin();
+		params[1] = app.getProxyTicket();
 		params[2] = where;
 		Object res;
 		try {
-			res = getClient().execute(module.getModuleConfig().getName() + ".search", params);
+			res = getClient().execute(module + ".search", params);
 		} catch (XmlRpcException e) {
 			throw new HsarwebException("error in remote server call", e);
 		}
@@ -35,13 +35,14 @@ public class Remote {
 		if (client == null) {
 			XmlRpcClientConfigImpl config = new XmlRpcClientConfigImpl();
 			try {
-				String xmlrpcURL = module.getContextParam("xmlrpcURL");
+				String xmlrpcURL = app.getContextParam("xmlrpcURL");
 				config.setServerURL(new URL(xmlrpcURL));
+				config.setEnabledForExceptions(true);
+				client = new XmlRpcClient();
+				client.setConfig(config);
 			} catch (MalformedURLException e) {
 				throw new HsarwebException("error in remote server url", e);
 			}
-			client = new XmlRpcClient();
-			client.setConfig(config);
 		}
 		return client;
 	}
