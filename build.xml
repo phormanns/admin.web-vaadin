@@ -2,16 +2,16 @@
 <project name="hsarweb" default="war">
 
 	<path id="cp">
-		<fileset dir="lib">
+		<fileset dir="WebContent/WEB-INF/lib">
 		    <include name="**/*.jar"/>
+		</fileset>
+		<fileset dir="/usr/share/java">
+		    <include name="servlet-api-2.4.jar"/>
 		</fileset>
 	</path>
 	
 	<target name="war" depends="compile">
-        <war destfile="build/hsarweb.war" basedir="webapp">
-        	<lib dir="lib">
-    		    <include name="**/*.jar"/>
-        	</lib>
+        <war destfile="build/hsarweb.war" basedir="WebContent">
         	<classes dir="build/cls" />
         	<classes dir="src">
     		    <include name="**/*.properties"/>
