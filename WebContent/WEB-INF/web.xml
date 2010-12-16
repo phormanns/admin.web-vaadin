@@ -25,7 +25,7 @@
 	<context-param>
 		<description>HSAdmin Module</description>
 		<param-name>hsarmodules</param-name>
-		<param-value>de.hsadmin.web.DomainModule,de.hsadmin.web.EMailAddressModule,de.hsadmin.web.EMailAliasModule</param-value>
+		<param-value>de.hsadmin.web.UnixUserModule,de.hsadmin.web.DomainModule,de.hsadmin.web.EMailAddressModule,de.hsadmin.web.EMailAliasModule,de.hsadmin.web.QueueTaskModule</param-value>
 	</context-param>
 
 	<filter>

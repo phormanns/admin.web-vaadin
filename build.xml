@@ -15,6 +15,7 @@
         	<classes dir="build/cls" />
         	<classes dir="src">
     		    <include name="**/*.properties"/>
+    		    <include name="**/*.png"/>
         	</classes>
         </war>
     </target>

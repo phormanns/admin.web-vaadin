@@ -1,5 +1,6 @@
 package de.hsadmin.web;
 
+import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.Calendar;
@@ -20,7 +21,7 @@ import com.vaadin.ui.themes.BaseTheme;
 import de.hsadmin.web.config.ModuleConfig;
 import de.hsadmin.web.config.PropertyConfig;
 
-public abstract class GenericModule {
+public abstract class GenericModule implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	private static final DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT);

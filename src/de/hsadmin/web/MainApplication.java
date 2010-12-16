@@ -41,7 +41,7 @@ public class MainApplication extends Application implements HttpServletRequestLi
 	public void init() {
 		localeConfig = new LocaleConfig(Locale.getDefault(), "main");
 		remote = new Remote(this);
-		Window mainWindow = new Window(localeConfig.getText("title"));
+		Window mainWindow = new Window(localeConfig.getText("applicationtitle"));
 		TabSheet tabs = new TabSheet();
 		tabs.setWidth(100.0f, Sizeable.UNITS_PERCENTAGE);
 		tabs.setHeight(680.0f, Sizeable.UNITS_PIXELS);
@@ -56,9 +56,9 @@ public class MainApplication extends Application implements HttpServletRequestLi
 					firstModule = module;
 				}
 				ModuleConfig moduleConfig = module.getModuleConfig();
-				String label = moduleConfig.getLabel("title");
+				String label = moduleConfig.getLabel("moduletitle");
 				modules.put(label, module);
-				tabs.addTab(module.getComponent(), label, new ThemeResource(moduleConfig.getLabel("icon")));
+				tabs.addTab(module.getComponent(), label, new ThemeResource(moduleConfig.getLabel("moduleicon")));
 			} catch (InstantiationException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
