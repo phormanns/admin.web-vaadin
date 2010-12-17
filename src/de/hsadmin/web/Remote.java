@@ -18,26 +18,34 @@ public class Remote {
 	}
 
 	public Object callSearch(String module, Map<String, String> where) throws HsarwebException {
+		return xmlrpcCall(module, "search", where); 
+	}
+
+	public void callDelete(String module, Map<String, String> where) throws HsarwebException {
+		xmlrpcCall(module, "delete", where); 
+	}
+
+	private Object xmlrpcCall(String module, String operation, Map<String, String> where) throws HsarwebException {
 		Object[] params = new Object[3];
 		params[0] = app.getLogin();
 		params[1] = app.getProxyTicket();
 		params[2] = where;
 		Object res;
 		try {
-			res = getClient().execute(module + ".search", params);
+			res = getClient().execute(module + "." + operation, params);
 		} catch (XmlRpcException e) {
 			throw new HsarwebException("error in remote server call", e);
 		}
-		return res; 
+		return res;
 	}
-	
+
 	private XmlRpcClient getClient() throws HsarwebException {
 		if (client == null) {
 			XmlRpcClientConfigImpl config = new XmlRpcClientConfigImpl();
 			try {
 				String xmlrpcURL = app.getContextParam("xmlrpcURL");
 				config.setServerURL(new URL(xmlrpcURL));
-				config.setEnabledForExceptions(true);
+				config.setEnabledForExtensions(true);
 				client = new XmlRpcClient();
 				client.setConfig(config);
 			} catch (MalformedURLException e) {

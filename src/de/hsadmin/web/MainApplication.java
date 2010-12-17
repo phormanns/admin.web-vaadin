@@ -15,6 +15,7 @@ import org.jasig.cas.client.validation.Assertion;
 
 import com.vaadin.Application;
 import com.vaadin.terminal.Sizeable;
+import com.vaadin.terminal.Terminal;
 import com.vaadin.terminal.ThemeResource;
 import com.vaadin.terminal.gwt.server.HttpServletRequestListener;
 import com.vaadin.ui.Component;
@@ -22,6 +23,7 @@ import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.TabSheet.SelectedTabChangeEvent;
 import com.vaadin.ui.TabSheet.Tab;
+import com.vaadin.ui.Window.Notification;
 
 import de.hsadmin.web.config.LocaleConfig;
 import de.hsadmin.web.config.ModuleConfig;
@@ -37,6 +39,7 @@ public class MainApplication extends Application implements HttpServletRequestLi
 	private Remote remote;
 	private Map<String, GenericModule> modules;
 
+
 	@Override
 	public void init() {
 		localeConfig = new LocaleConfig(Locale.getDefault(), "main");
@@ -44,14 +47,14 @@ public class MainApplication extends Application implements HttpServletRequestLi
 		Window mainWindow = new Window(localeConfig.getText("applicationtitle"));
 		TabSheet tabs = new TabSheet();
 		tabs.setWidth(100.0f, Sizeable.UNITS_PERCENTAGE);
-		tabs.setHeight(680.0f, Sizeable.UNITS_PIXELS);
+		tabs.setHeight(200.0f, Sizeable.UNITS_PERCENTAGE);
 		String modulesParamString = getContextParam("hsarmodules");
 		modules = new HashMap<String, GenericModule>();
 		GenericModule firstModule = null;
 		for (String className : modulesParamString.split(",")) {
 			try {
 				GenericModule module = (GenericModule) Class.forName(className).newInstance();
-				module.setRemote(remote);
+				module.setApplication(this);
 				if (firstModule == null) {
 					firstModule = module;
 				}
@@ -59,21 +62,25 @@ public class MainApplication extends Application implements HttpServletRequestLi
 				String label = moduleConfig.getLabel("moduletitle");
 				modules.put(label, module);
 				tabs.addTab(module.getComponent(), label, new ThemeResource(moduleConfig.getLabel("moduleicon")));
-			} catch (InstantiationException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IllegalAccessException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (ClassNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			} catch (Exception e) {
+				showSystemException(e);
 			}
 		}
 		tabs.addListener(this);
 		mainWindow.addComponent(tabs);
 		setMainWindow(mainWindow);
-		firstModule.reload();
+		setErrorHandler(new Terminal.ErrorListener() {
+			private static final long serialVersionUID = 1L;
+			@Override
+			public void terminalError(Terminal.ErrorEvent event) {
+				event.getThrowable().printStackTrace();
+			}
+		});
+		try {
+			firstModule.reload();
+		} catch (HsarwebException e) {
+			showSystemException(e);
+		}
 	}
 
 	public String getProxyTicket() {
@@ -86,6 +93,14 @@ public class MainApplication extends Application implements HttpServletRequestLi
 
 	public Object getLogin() {
 		return userPrincipal.getName();
+	}
+
+	public Remote getRemote() {
+		return remote;
+	}
+
+	public LocaleConfig getLocaleConfig() {
+		return localeConfig;
 	}
 
 	@Override
@@ -108,7 +123,19 @@ public class MainApplication extends Application implements HttpServletRequestLi
 		Component selectedTab = tabSheet.getSelectedTab();
 		Tab tab = tabSheet.getTab(selectedTab);
 		GenericModule module = modules.get(tab.getCaption());
-		module.reload();
+		try {
+			module.reload();
+		} catch (HsarwebException e) {
+			showSystemException(e);
+		}
+	}
+
+	public void showUserException(Exception e) {
+		getMainWindow().showNotification("Anwendungs-Fehler", "<br/ >" + e.getMessage(), Notification.TYPE_WARNING_MESSAGE);			
+	}
+
+	public void showSystemException(Exception e) {
+		getMainWindow().showNotification("System-Fehler", "<br />Bitte informieren Sie den Support<br/ >" + e.getMessage(), Notification.TYPE_ERROR_MESSAGE);			
 	}
 
 }

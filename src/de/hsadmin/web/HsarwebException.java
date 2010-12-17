@@ -9,4 +9,12 @@ public class HsarwebException extends Exception {
 		super(string, e);
 	}
 
+	public HsarwebException(Throwable e) {
+		super(e);
+	}
+
+	public HsarwebException(String string) {
+		super(string);
+	}
+
 }
