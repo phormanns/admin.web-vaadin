@@ -21,20 +21,41 @@ public class Remote {
 		return xmlrpcCall(module, "search", where); 
 	}
 
+	public void callAdd(String module, Map<String, String> set) throws HsarwebException {
+		xmlrpcCall(module, "add", set); 
+	}
+
+	public void callUpdate(String module, Map<String, String> set, Map<String, String> where) throws HsarwebException {
+		xmlrpcCall(module, "update", set, where); 
+	}
+
 	public void callDelete(String module, Map<String, String> where) throws HsarwebException {
 		xmlrpcCall(module, "delete", where); 
 	}
 
-	private Object xmlrpcCall(String module, String operation, Map<String, String> where) throws HsarwebException {
+	private Object xmlrpcCall(String module, String operation, Map<String, String> param1) throws HsarwebException {
 		Object[] params = new Object[3];
 		params[0] = app.getLogin();
 		params[1] = app.getProxyTicket();
-		params[2] = where;
-		Object res;
+		params[2] = param1;
+		return xmlrpcCall(module + "." + operation, params);
+	}
+
+	private Object xmlrpcCall(String module, String operation, Map<String, String> param1, Map<String, String> param2) throws HsarwebException {
+		Object[] params = new Object[4];
+		params[0] = app.getLogin();
+		params[1] = app.getProxyTicket();
+		params[2] = param1;
+		params[3] = param2;
+		return xmlrpcCall(module + "." + operation, params);
+	}
+
+	private Object xmlrpcCall(String operation, Object[] params) throws HsarwebException {
+		Object res = null;
 		try {
-			res = getClient().execute(module + "." + operation, params);
+			res = getClient().execute(operation, params);
 		} catch (XmlRpcException e) {
-			throw new HsarwebException("error in remote server call", e);
+			throw new HsarwebException(e.getMessage(), e);
 		}
 		return res;
 	}

@@ -11,10 +11,10 @@ public class EMailAliasModule extends GenericModule {
 
 	public EMailAliasModule() {
 		moduleConfig = new ModuleConfig("emailalias");
-		moduleConfig.addProperty(new PropertyConfig(moduleConfig, "id", Long.class, "", true, true));
-		moduleConfig.addProperty(new PropertyConfig(moduleConfig, "name", String.class, ""));
-		moduleConfig.addProperty(new PropertyConfig(moduleConfig, "target", String.class, ""));
-		moduleConfig.addProperty(new PropertyConfig(moduleConfig, "pac", String.class, "", true));
+		moduleConfig.addProperty(new PropertyConfig(moduleConfig, "id", Long.class, true, true));
+		moduleConfig.addProperty(new PropertyConfig(moduleConfig, "name", String.class));
+		moduleConfig.addProperty(new PropertyConfig(moduleConfig, "target", String.class));
+		moduleConfig.addProperty(new PropertyConfig(moduleConfig, "pac", String.class, true));
 	}
 	
 	@Override

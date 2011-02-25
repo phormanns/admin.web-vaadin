@@ -13,29 +13,29 @@ public class PropertyConfig implements Serializable {
 	private boolean hidden;
 	private boolean ident;
 	
-	public PropertyConfig(ModuleConfig moduleConfig, String id, Class<?> clasz, String defaultValue) {
+	public PropertyConfig(ModuleConfig moduleConfig, String id, Class<?> clasz) {
 		this.moduleConfig = moduleConfig;
 		this.id = id;
 		this.type = clasz;
-		this.defaultValue = defaultValue;
+		this.defaultValue = "";
 		this.setHidden(false);
 		this.setIdent(false);
 	}
 
-	public PropertyConfig(ModuleConfig moduleConfig, String id, Class<?> clasz, String defaultValue, boolean hidden) {
+	public PropertyConfig(ModuleConfig moduleConfig, String id, Class<?> clasz, boolean hidden) {
 		this.moduleConfig = moduleConfig;
 		this.id = id;
 		this.type = clasz;
-		this.defaultValue = defaultValue;
+		this.defaultValue = "";
 		this.setHidden(hidden);
 		this.setIdent(false);
 	}
 
-	public PropertyConfig(ModuleConfig moduleConfig, String id, Class<?> clasz, String defaultValue, boolean hidden, boolean ident) {
+	public PropertyConfig(ModuleConfig moduleConfig, String id, Class<?> clasz, boolean hidden, boolean ident) {
 		this.moduleConfig = moduleConfig;
 		this.id = id;
 		this.type = clasz;
-		this.defaultValue = defaultValue;
+		this.defaultValue = "";
 		this.setHidden(hidden);
 		this.setIdent(ident);
 	}

@@ -13,14 +13,18 @@ public class QueueTaskModule extends GenericModule {
 
 	public QueueTaskModule() {
 		moduleConfig = new ModuleConfig("q");
-		moduleConfig.addProperty(new PropertyConfig(moduleConfig, "id", Long.class, "", true, true));
-		moduleConfig.addProperty(new PropertyConfig(moduleConfig, "title", String.class, ""));
-		moduleConfig.addProperty(new PropertyConfig(moduleConfig, "status", String.class, ""));
-		moduleConfig.addProperty(new PropertyConfig(moduleConfig, "started", Date.class, ""));
-		moduleConfig.addProperty(new PropertyConfig(moduleConfig, "finished", Date.class, ""));
-		moduleConfig.addProperty(new PropertyConfig(moduleConfig, "user", String.class, "", true));
-		moduleConfig.addProperty(new PropertyConfig(moduleConfig, "details", String.class, "", true));
-		moduleConfig.addProperty(new PropertyConfig(moduleConfig, "exception", String.class, "", true));
+		moduleConfig.setUpdateAble(false);
+		moduleConfig.setDeleteAble(false);
+		moduleConfig.setAddAble(false);
+		moduleConfig.setSearchAble(false);
+		moduleConfig.addProperty(new PropertyConfig(moduleConfig, "id", Long.class, true, true));
+		moduleConfig.addProperty(new PropertyConfig(moduleConfig, "title", String.class));
+		moduleConfig.addProperty(new PropertyConfig(moduleConfig, "status", String.class));
+		moduleConfig.addProperty(new PropertyConfig(moduleConfig, "started", Date.class));
+		moduleConfig.addProperty(new PropertyConfig(moduleConfig, "finished", Date.class));
+		moduleConfig.addProperty(new PropertyConfig(moduleConfig, "user", String.class, true));
+		moduleConfig.addProperty(new PropertyConfig(moduleConfig, "details", String.class, true));
+		moduleConfig.addProperty(new PropertyConfig(moduleConfig, "exception", String.class, true));
 	}
 	
 	@Override

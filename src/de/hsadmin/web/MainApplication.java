@@ -14,12 +14,12 @@ import org.jasig.cas.client.authentication.AuthenticationFilter;
 import org.jasig.cas.client.validation.Assertion;
 
 import com.vaadin.Application;
-import com.vaadin.terminal.Sizeable;
 import com.vaadin.terminal.Terminal;
 import com.vaadin.terminal.ThemeResource;
 import com.vaadin.terminal.gwt.server.HttpServletRequestListener;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.TabSheet;
+import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.TabSheet.SelectedTabChangeEvent;
 import com.vaadin.ui.TabSheet.Tab;
@@ -45,9 +45,12 @@ public class MainApplication extends Application implements HttpServletRequestLi
 		localeConfig = new LocaleConfig(Locale.getDefault(), "main");
 		remote = new Remote(this);
 		Window mainWindow = new Window(localeConfig.getText("applicationtitle"));
+		VerticalLayout verticalLayout = new VerticalLayout();
+		verticalLayout.setSizeFull();
 		TabSheet tabs = new TabSheet();
-		tabs.setWidth(100.0f, Sizeable.UNITS_PERCENTAGE);
-		tabs.setHeight(200.0f, Sizeable.UNITS_PERCENTAGE);
+		tabs.setSizeFull();
+//		tabs.setWidth(95.0f, Sizeable.UNITS_PERCENTAGE);
+//		tabs.setHeight(95.0f, Sizeable.UNITS_PERCENTAGE);
 		String modulesParamString = getContextParam("hsarmodules");
 		modules = new HashMap<String, GenericModule>();
 		GenericModule firstModule = null;
@@ -67,7 +70,8 @@ public class MainApplication extends Application implements HttpServletRequestLi
 			}
 		}
 		tabs.addListener(this);
-		mainWindow.addComponent(tabs);
+		verticalLayout.addComponent(tabs);
+		mainWindow.setContent(verticalLayout);
 		setMainWindow(mainWindow);
 		setErrorHandler(new Terminal.ErrorListener() {
 			private static final long serialVersionUID = 1L;

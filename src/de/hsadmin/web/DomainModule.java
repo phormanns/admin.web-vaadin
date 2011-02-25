@@ -13,12 +13,12 @@ public class DomainModule extends GenericModule {
 
 	public DomainModule() {
 		moduleConfig = new ModuleConfig("domain");
-		moduleConfig.addProperty(new PropertyConfig(moduleConfig, "id", Long.class, "", true, true));
-		moduleConfig.addProperty(new PropertyConfig(moduleConfig, "name", String.class, ""));
-		moduleConfig.addProperty(new PropertyConfig(moduleConfig, "user", String.class, ""));
-		moduleConfig.addProperty(new PropertyConfig(moduleConfig, "pac", String.class, "", true));
-		moduleConfig.addProperty(new PropertyConfig(moduleConfig, "hive", String.class, "", true));
-		moduleConfig.addProperty(new PropertyConfig(moduleConfig, "since", Date.class, ""));
+		moduleConfig.addProperty(new PropertyConfig(moduleConfig, "id", Long.class, true, true));
+		moduleConfig.addProperty(new PropertyConfig(moduleConfig, "name", String.class));
+		moduleConfig.addProperty(new PropertyConfig(moduleConfig, "user", String.class));
+		moduleConfig.addProperty(new PropertyConfig(moduleConfig, "pac", String.class, true));
+		moduleConfig.addProperty(new PropertyConfig(moduleConfig, "hive", String.class, true));
+		moduleConfig.addProperty(new PropertyConfig(moduleConfig, "since", Date.class));
 	}
 	
 	@Override
