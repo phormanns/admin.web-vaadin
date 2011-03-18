@@ -1,53 +1,65 @@
 package de.hsadmin.web.config;
 
 import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
 
-public class PropertyConfig implements Serializable {
+public class PropertyConfig implements Serializable, PropertyDefaultValue, PropertySelectValues {
 
 	private static final long serialVersionUID = 1L;
 	
 	private ModuleConfig moduleConfig;
 	private String id;
 	private Class<?> type;
-	private String defaultValue;
-	private boolean hidden;
-	private boolean ident;
+	private PropertyTableColumn propTableColumn;
+	private PropertyFormField propFormField;
+	private PropertyDefaultValue defaultValue;
+	private PropertySelectValues selectValues;
 	
 	public PropertyConfig(ModuleConfig moduleConfig, String id, Class<?> clasz) {
 		this.moduleConfig = moduleConfig;
 		this.id = id;
 		this.type = clasz;
-		this.defaultValue = "";
-		this.setHidden(false);
-		this.setIdent(false);
+		this.propTableColumn = PropertyTableColumn.DISPLAY;
+		this.propFormField = PropertyFormField.READWRITE;
+		this.defaultValue = null;
+		this.selectValues = null;
 	}
 
-	public PropertyConfig(ModuleConfig moduleConfig, String id, Class<?> clasz, boolean hidden) {
+	public PropertyConfig(ModuleConfig moduleConfig, String id, Class<?> clasz, PropertyFormField formField) {
 		this.moduleConfig = moduleConfig;
 		this.id = id;
 		this.type = clasz;
-		this.defaultValue = "";
-		this.setHidden(hidden);
-		this.setIdent(false);
+		this.propTableColumn = PropertyTableColumn.DISPLAY;
+		this.propFormField = formField;
+		this.defaultValue = null;
+		this.selectValues = null;
 	}
 
-	public PropertyConfig(ModuleConfig moduleConfig, String id, Class<?> clasz, boolean hidden, boolean ident) {
+	public PropertyConfig(ModuleConfig moduleConfig, String id, Class<?> clasz, PropertyTableColumn tablecolumn) {
 		this.moduleConfig = moduleConfig;
 		this.id = id;
 		this.type = clasz;
-		this.defaultValue = "";
-		this.setHidden(hidden);
-		this.setIdent(ident);
+		this.propTableColumn = tablecolumn;
+		this.propFormField = PropertyFormField.READWRITE;
+		this.defaultValue = null;
+		this.selectValues = null;
+	}
+
+	public PropertyConfig(ModuleConfig moduleConfig, String id, Class<?> clasz, PropertyTableColumn tablecolumn, PropertyFormField formField) {
+		this.moduleConfig = moduleConfig;
+		this.id = id;
+		this.type = clasz;
+		this.propTableColumn = tablecolumn;
+		this.propFormField = formField;
+		this.defaultValue = null;
+		this.selectValues = null;
 	}
 
 	public String getId() {
 		return id;
 	}
 	
-	public void setId(String id) {
-		this.id = id;
-	}
-
 	public String getLabel() {
 		return moduleConfig.getLabel(id);
 	}
@@ -56,32 +68,49 @@ public class PropertyConfig implements Serializable {
 		return type;
 	}
 
-	public void setType(Class<?> type) {
-		this.type = type;
+	public PropertyTableColumn getPropTableColumn() {
+		return propTableColumn;
 	}
 
-	public String getDefaultValue() {
-		return defaultValue;
+	public PropertyFormField getPropFormField() {
+		return propFormField;
 	}
 
-	public void setDefaultValue(String defaultValue) {
+	public void setDefaultValue(PropertyDefaultValue defaultValue) {
 		this.defaultValue = defaultValue;
 	}
 
-	public void setHidden(boolean hidden) {
-		this.hidden = hidden;
+	public void setSelectValues(PropertySelectValues selectValues) {
+		this.selectValues = selectValues;
 	}
 
-	public boolean isHidden() {
-		return hidden;
+	public String getDefaultValue() {
+		if (defaultValue != null) {
+			return defaultValue.getDefaultValue();
+		}
+		return "";
 	}
 
-	public void setIdent(boolean ident) {
-		this.ident = ident;
+	public Map<String, String> getSelectValues() {
+		if (selectValues != null) {
+			return selectValues.getSelectValues();
+		}
+		return new HashMap<String, String>();
+	}
+	
+	public boolean newItemsAllowed() {
+		if (selectValues != null) {
+			return selectValues.newItemsAllowed();
+		}
+		return propFormField == PropertyFormField.READWRITE || propFormField == PropertyFormField.WRITEONCE;
 	}
 
-	public boolean isIdent() {
-		return ident;
+	@Override
+	public boolean hasSelectList() {
+		if (selectValues != null) {
+			return selectValues.hasSelectList();
+		}
+		return false;
 	}
-
+	
 }

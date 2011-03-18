@@ -14,6 +14,7 @@ import com.vaadin.data.Property;
 import com.vaadin.terminal.ExternalResource;
 import com.vaadin.terminal.Sizeable;
 import com.vaadin.terminal.ThemeResource;
+import com.vaadin.ui.AbstractTextField;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Form;
@@ -21,6 +22,8 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
 import com.vaadin.ui.Link;
+import com.vaadin.ui.PasswordField;
+import com.vaadin.ui.Select;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
@@ -31,6 +34,8 @@ import com.vaadin.ui.themes.BaseTheme;
 import de.hsadmin.web.config.LocaleConfig;
 import de.hsadmin.web.config.ModuleConfig;
 import de.hsadmin.web.config.PropertyConfig;
+import de.hsadmin.web.config.PropertyFormField;
+import de.hsadmin.web.config.PropertyTableColumn;
 
 public abstract class GenericModule implements Serializable {
 
@@ -43,11 +48,18 @@ public abstract class GenericModule implements Serializable {
 
 	public void setApplication(MainApplication app) throws HsarwebException {
 		application = app;
+		initModule();
 		initTable();
 		initLayout();
 	}
+	
+	public MainApplication getApplication() {
+		return application;
+	}
 
 	public abstract ModuleConfig getModuleConfig();
+
+	protected abstract void initModule();
 
 	public Component getComponent() {
 		return layout;
@@ -61,6 +73,7 @@ public abstract class GenericModule implements Serializable {
 		layout = new VerticalLayout();
 		layout.setSizeFull();
 		final ModuleConfig moduleConfig = getModuleConfig();
+		final LocaleConfig localeConfig = application.getLocaleConfig();
 		if (moduleConfig.isSearchAble() || moduleConfig.isAddAble()) {
 			HorizontalLayout toolbar = new HorizontalLayout();
 			if (moduleConfig.isAddAble()) {
@@ -73,7 +86,6 @@ public abstract class GenericModule implements Serializable {
 					@Override
 					public void buttonClick(ClickEvent event) {
 						final Form form = createForm();
-						LocaleConfig localeConfig = application.getLocaleConfig();
 						childWindow = new Window(localeConfig.getText("new"));
 						childWindow.setWidth(640.0f, Sizeable.UNITS_PIXELS);
 						VerticalLayout vLayout = new VerticalLayout();
@@ -120,7 +132,7 @@ public abstract class GenericModule implements Serializable {
 		}
 		layout.addComponent(table);
 		layout.setExpandRatio(table, 1.0f);
-		layout.addComponent(new Link("Impressum", new ExternalResource("http://www.hostsharing.net/impressum")));
+		layout.addComponent(new Link(localeConfig.getText("impressum.label"), new ExternalResource(localeConfig.getText("impressum.link"))));
 	}
 
 	private void initTable() throws HsarwebException {
@@ -142,15 +154,21 @@ public abstract class GenericModule implements Serializable {
 		try {
 			table.setWidth(100.0f, Sizeable.UNITS_PERCENTAGE);
 			table.setHeight(100.0f, Sizeable.UNITS_PERCENTAGE);
-			table.setSelectable(true);
+			table.setSelectable(false);
 			table.setImmediate(true);
 			table.setColumnCollapsingAllowed(true);
 			table.setColumnReorderingAllowed(true);
 			for (PropertyConfig prop : getModuleConfig().getPropertyList()) {
-				table.addContainerProperty(prop.getId(), prop.getType(), prop.getDefaultValue());
-				table.setColumnHeader(prop.getId(), prop.getLabel());
-				if (prop.isHidden()) { 
-					table.setColumnCollapsed(prop.getId(), true);
+				PropertyTableColumn propTableColumn = prop.getPropTableColumn();
+				if (propTableColumn != PropertyTableColumn.NONE) {
+					table.addContainerProperty(prop.getId(), prop.getType(), prop.getDefaultValue());
+					table.setColumnHeader(prop.getId(), prop.getLabel());
+					if (propTableColumn == PropertyTableColumn.HIDDEN) { 
+						table.setColumnCollapsed(prop.getId(), true);
+					}
+					if (propTableColumn == PropertyTableColumn.INTERNAL_KEY) { 
+						table.setColumnCollapsed(prop.getId(), true);
+					}
 				}
 			}
 			if (getModuleConfig().isUpdateAble()) {
@@ -171,52 +189,57 @@ public abstract class GenericModule implements Serializable {
 	private void loadTable() throws HsarwebException {
 		table.removeAllItems();
 		try {
-			Object callSearch = application.getRemote().callSearch(getModuleConfig().getName(), new HashMap<String, String>());
-			List<PropertyConfig> propertyList = getModuleConfig().getPropertyList();
+			ModuleConfig moduleConfig = getModuleConfig();
+			Object callSearch = application.getRemote().callSearch(moduleConfig.getName(), new HashMap<String, String>());
+			List<PropertyConfig> propertyList = moduleConfig.getPropertyList();
 			if (callSearch instanceof Object[]) {
 				for (Object row : ((Object[])callSearch)) {
 					long oid = -1L;
 					if (row instanceof Map<?, ?>) {
 						int numOfcolumns = propertyList.size();
-						if (getModuleConfig().isUpdateAble()) {
+						if (moduleConfig.isUpdateAble()) {
 							numOfcolumns++;
 						}
-						if (getModuleConfig().isDeleteAble()) {
+						if (moduleConfig.isDeleteAble()) {
 							numOfcolumns++;
 						}
+						numOfcolumns = moduleConfig.getNumOfColumns();
 						Object[] itemData = new Object[numOfcolumns];
 						int idx = 0;
 						for (PropertyConfig prop : propertyList) {
-							Object valueObject = ((Map<?, ?>) row).get(prop.getId());
-							if (valueObject != null && valueObject instanceof String) {
-								if (Long.class.equals(prop.getType())) {
-									itemData[idx] = Long.parseLong((String) valueObject);
-								}
-								if (Date.class.equals(prop.getType())) {
-									try {
-										itemData[idx] = df.parse((String) valueObject);
-									} catch (ParseException e) {
-										Calendar cal = Calendar.getInstance();
-										cal.clear();
-										itemData[idx] = cal.getTime();
+							PropertyTableColumn propTableColumn = prop.getPropTableColumn();
+							if (propTableColumn != PropertyTableColumn.NONE) {
+								Object valueObject = ((Map<?, ?>) row).get(prop.getId());
+								if (valueObject != null && valueObject instanceof String) {
+									if (Long.class.equals(prop.getType())) {
+										itemData[idx] = Long.parseLong((String) valueObject);
+									}
+									if (Date.class.equals(prop.getType())) {
+										try {
+											itemData[idx] = df.parse((String) valueObject);
+										} catch (ParseException e) {
+											Calendar cal = Calendar.getInstance();
+											cal.clear();
+											itemData[idx] = cal.getTime();
+										}
+									}
+									if (String.class.equals(prop.getType())) {
+										itemData[idx] = (String) valueObject;
+									}
+									if (propTableColumn == PropertyTableColumn.INTERNAL_KEY && Long.class.equals(prop.getType())) {
+										if (valueObject instanceof String) {
+											oid = Long.parseLong((String) valueObject);
+										}
 									}
 								}
-								if (String.class.equals(prop.getType())) {
-									itemData[idx] = (String) valueObject;
-								}
-								if (prop.isIdent() && Long.class.equals(prop.getType())) {
-									if (valueObject instanceof String) {
-										oid = Long.parseLong((String) valueObject);
-									}
-								}
+								idx++;
 							}
-							idx++;
 						}
-						if (getModuleConfig().isUpdateAble()) {
+						if (moduleConfig.isUpdateAble()) {
 							itemData[idx] = createEditButton(oid);
 							idx++;
 						}
-						if (getModuleConfig().isDeleteAble()) {
+						if (moduleConfig.isDeleteAble()) {
 							itemData[idx] = createDeleteButton(oid);
 							idx++;
 						}
@@ -244,12 +267,7 @@ public abstract class GenericModule implements Serializable {
 		Iterator<Component> componentIterator = form.getLayout().getComponentIterator();
 		while (componentIterator.hasNext()) {
 			Component c = componentIterator.next();
-			if (c instanceof TextField) {
-				TextField tf = (TextField) c;
-				Object data = tf.getData();
-				Object value = tf.getValue();
-				setHash.put((String) data, (String) value);
-			}
+			transferToHash(setHash, c);
 		}
 		application.getRemote().callUpdate(getModuleConfig().getName(), setHash, whereHash);
 		loadTable();
@@ -260,22 +278,33 @@ public abstract class GenericModule implements Serializable {
 		Iterator<Component> componentIterator = form.getLayout().getComponentIterator();
 		while (componentIterator.hasNext()) {
 			Component c = componentIterator.next();
-			if (c instanceof TextField) {
-				TextField tf = (TextField) c;
-				Object data = tf.getData();
-				Object value = tf.getValue();
-				setHash.put((String) data, (String) value);
-			}
+			transferToHash(setHash, c);
 		}
 		application.getRemote().callAdd(getModuleConfig().getName(), setHash);
 		loadTable();
+	}
+
+	private void transferToHash(Map<String, String> setHash, Component c) {
+		if (c instanceof AbstractTextField) {
+			AbstractTextField tf = (AbstractTextField) c;
+			Object data = tf.getData();
+			Object value = tf.getValue();
+			setHash.put((String) data, (String) value);
+		}
+		if (c instanceof Select) {
+			Select sel = (Select) c; 
+			Object data = sel.getData();
+			Object value = sel.getValue();
+			setHash.put((String) data, (String) value);
+		}
 	}
 
 	private String findIdKey() {
 		List<PropertyConfig> propertyList = getModuleConfig().getPropertyList();
 		String idKey = null;
 		for (PropertyConfig propConf : propertyList) {
-			if (propConf.isIdent()) {
+			PropertyTableColumn propTableColumn = propConf.getPropTableColumn();
+			if (PropertyTableColumn.INTERNAL_KEY == propTableColumn) {
 				idKey = propConf.getId();
 				return idKey;
 			}
@@ -398,13 +427,34 @@ public abstract class GenericModule implements Serializable {
 				f.setData(key);
 				Layout layout = f.getLayout();
 				for (PropertyConfig prop : getModuleConfig().getPropertyList()) {
-					if (!prop.isIdent()) {
-						TextField tf = new TextField(prop.getLabel());
-						tf.setData(prop.getId());
-						tf.setWidth(480.0f, Sizeable.UNITS_PIXELS);
-						Object value = row.get(prop.getId());
-						tf.setValue(value != null ? value : "");
-						layout.addComponent(tf);
+					PropertyFormField propFormField = prop.getPropFormField();
+					if (propFormField != PropertyFormField.INTERNAL_KEY && propFormField != PropertyFormField.NONE) {
+						if (prop.hasSelectList()) {
+							Select sel = new Select(prop.getLabel());
+							sel.setData(prop.getId());
+							sel.setNullSelectionAllowed(false);
+							sel.setNewItemsAllowed(prop.newItemsAllowed());
+							Map<String, String> selectValues = prop.getSelectValues();
+							for (Object skey : selectValues.keySet()) {
+								sel.addItem(skey);
+								sel.setItemCaption(skey, selectValues.get(skey));
+							}
+							sel.setWidth(480.0f, Sizeable.UNITS_PIXELS);
+							Object value = row.get(prop.getId());
+							sel.setValue(value != null ? value : prop.getDefaultValue());
+							sel.setReadOnly(PropertyFormField.READONLY == propFormField || PropertyFormField.WRITEONCE == propFormField);
+							layout.addComponent(sel);
+						} else {
+							if (propFormField != PropertyFormField.PASSWORD) {
+								TextField tf = new TextField(prop.getLabel());
+								tf.setData(prop.getId());
+								tf.setWidth(480.0f, Sizeable.UNITS_PIXELS);
+								Object value = row.get(prop.getId());
+								tf.setValue(value != null ? value : prop.getDefaultValue());
+								tf.setReadOnly(PropertyFormField.READONLY == propFormField || PropertyFormField.WRITEONCE == propFormField);
+								layout.addComponent(tf);
+							}
+						}
 					}
 				}
 				return f;
@@ -421,12 +471,41 @@ public abstract class GenericModule implements Serializable {
 		f.setCaption(getModuleConfig().getLabel("new"));
 		Layout layout = f.getLayout();
 		for (PropertyConfig prop : getModuleConfig().getPropertyList()) {
-			if (!prop.isIdent()) {
-				TextField tf = new TextField(prop.getLabel());
-				tf.setData(prop.getId());
-				tf.setWidth(480.0f, Sizeable.UNITS_PIXELS);
-				tf.setValue("");
-				layout.addComponent(tf);
+			PropertyFormField propFormField = prop.getPropFormField();
+			if (PropertyFormField.READWRITE == propFormField || PropertyFormField.WRITEONCE == propFormField || PropertyFormField.PASSWORD == propFormField) {
+				if (prop.hasSelectList()) {
+					Select sel = new Select(prop.getLabel());
+					sel.setData(prop.getId());
+					sel.setNullSelectionAllowed(false);
+					sel.setNewItemsAllowed(prop.newItemsAllowed());
+					Map<String, String> selectValues = prop.getSelectValues();
+					for (Object key : selectValues.keySet()) {
+						sel.addItem(key);
+						sel.setItemCaption(key, selectValues.get(key));
+					}
+					sel.setWidth(480.0f, Sizeable.UNITS_PIXELS);
+					sel.setValue(prop.getDefaultValue());
+					layout.addComponent(sel);
+				} else {
+					if (PropertyFormField.PASSWORD == propFormField) {
+						PasswordField tf1 = new PasswordField(getModuleConfig().getLabel(prop.getId() + "1"));
+						tf1.setData(prop.getId());
+						tf1.setWidth(480.0f, Sizeable.UNITS_PIXELS);
+						tf1.setValue(prop.getDefaultValue());
+						layout.addComponent(tf1);
+						PasswordField tf2 = new PasswordField(getModuleConfig().getLabel(prop.getId() + "2"));
+						tf2.setData(prop.getId());
+						tf2.setWidth(480.0f, Sizeable.UNITS_PIXELS);
+						tf2.setValue(prop.getDefaultValue());
+						layout.addComponent(tf2);
+					} else {
+						TextField tf = new TextField(prop.getLabel());
+						tf.setData(prop.getId());
+						tf.setWidth(480.0f, Sizeable.UNITS_PIXELS);
+						tf.setValue(prop.getDefaultValue());
+						layout.addComponent(tf);
+					}
+				}
 			}
 		}
 		return f;

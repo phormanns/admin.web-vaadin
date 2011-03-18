@@ -95,7 +95,7 @@ public class MainApplication extends Application implements HttpServletRequestLi
 		return servletContext.getInitParameter(string);
 	}
 
-	public Object getLogin() {
+	public String getLogin() {
 		return userPrincipal.getName();
 	}
 

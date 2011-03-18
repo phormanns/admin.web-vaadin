@@ -83,5 +83,21 @@ public class ModuleConfig implements Serializable {
 	public void setSearchAble(boolean searchAble) {
 		this.searchAble = searchAble;
 	}
+
+	public int getNumOfColumns() {
+		int numOfCols = 0;
+		for (PropertyConfig prop : propertyList) {
+			if (prop.getPropTableColumn() != PropertyTableColumn.NONE) {
+				numOfCols++;
+			}
+		}
+		if (isUpdateAble()) {
+			numOfCols++;
+		}
+		if (isDeleteAble()) {
+			numOfCols++;
+		}
+		return numOfCols;
+	}
 	
 }
