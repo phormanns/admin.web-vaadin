@@ -37,7 +37,7 @@ public class MainApplication extends Application implements HttpServletRequestLi
 	private AttributePrincipal userPrincipal;
 	private LocaleConfig localeConfig;
 	private Remote remote;
-	private Map<String, GenericModule> modules;
+	private Map<String, Module> modules;
 
 
 	@Override
@@ -49,14 +49,12 @@ public class MainApplication extends Application implements HttpServletRequestLi
 		verticalLayout.setSizeFull();
 		TabSheet tabs = new TabSheet();
 		tabs.setSizeFull();
-//		tabs.setWidth(95.0f, Sizeable.UNITS_PERCENTAGE);
-//		tabs.setHeight(95.0f, Sizeable.UNITS_PERCENTAGE);
 		String modulesParamString = getContextParam("hsarmodules");
-		modules = new HashMap<String, GenericModule>();
-		GenericModule firstModule = null;
+		modules = new HashMap<String, Module>();
+		Module firstModule = null;
 		for (String className : modulesParamString.split(",")) {
 			try {
-				GenericModule module = (GenericModule) Class.forName(className).newInstance();
+				Module module = (Module) Class.forName(className).newInstance();
 				module.setApplication(this);
 				if (firstModule == null) {
 					firstModule = module;
@@ -64,7 +62,7 @@ public class MainApplication extends Application implements HttpServletRequestLi
 				ModuleConfig moduleConfig = module.getModuleConfig();
 				String label = moduleConfig.getLabel("moduletitle");
 				modules.put(label, module);
-				tabs.addTab(module.getComponent(), label, new ThemeResource(moduleConfig.getLabel("moduleicon")));
+				tabs.addTab((Component) module.getComponent(), label, new ThemeResource(moduleConfig.getLabel("moduleicon")));
 			} catch (Exception e) {
 				showSystemException(e);
 			}
@@ -126,7 +124,7 @@ public class MainApplication extends Application implements HttpServletRequestLi
 		TabSheet tabSheet = event.getTabSheet();
 		Component selectedTab = tabSheet.getSelectedTab();
 		Tab tab = tabSheet.getTab(selectedTab);
-		GenericModule module = modules.get(tab.getCaption());
+		Module module = modules.get(tab.getCaption());
 		try {
 			module.reload();
 		} catch (HsarwebException e) {

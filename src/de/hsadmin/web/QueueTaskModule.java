@@ -6,7 +6,7 @@ import de.hsadmin.web.config.ModuleConfig;
 import de.hsadmin.web.config.PropertyConfig;
 import de.hsadmin.web.config.PropertyTableColumn;
 
-public class QueueTaskModule extends GenericModule {
+public class QueueTaskModule extends AbstractModule {
 
 	private static final long serialVersionUID = 1L;
 	
@@ -15,10 +15,6 @@ public class QueueTaskModule extends GenericModule {
 	@Override
 	protected void initModule() {
 		moduleConfig = new ModuleConfig("q");
-		moduleConfig.setUpdateAble(false);
-		moduleConfig.setDeleteAble(false);
-		moduleConfig.setAddAble(false);
-		moduleConfig.setSearchAble(false);
 		moduleConfig.addProperty(new PropertyConfig(moduleConfig, "id", Long.class, PropertyTableColumn.INTERNAL_KEY));
 		moduleConfig.addProperty(new PropertyConfig(moduleConfig, "title", String.class));
 		moduleConfig.addProperty(new PropertyConfig(moduleConfig, "status", String.class));

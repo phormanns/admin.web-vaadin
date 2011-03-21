@@ -10,9 +10,9 @@ import java.util.TreeMap;
 import de.hsadmin.web.config.ModuleConfig;
 import de.hsadmin.web.config.PropertyConfig;
 import de.hsadmin.web.config.PropertyDefaultValue;
-import de.hsadmin.web.config.PropertyFormField;
 import de.hsadmin.web.config.PropertySelectValues;
 import de.hsadmin.web.config.PropertyTableColumn;
+import de.hsadmin.web.vaadin.SelectPropertyFieldFactory;
 
 public class DomainModule extends GenericModule {
 
@@ -23,12 +23,13 @@ public class DomainModule extends GenericModule {
 	@Override
 	protected void initModule() {
 		moduleConfig = new ModuleConfig("domain");
-		moduleConfig.setUpdateAble(false);
 		String login = getApplication().getLogin();
 		final String pac = login.length() >= 5 ? login.substring(0, 5) : "";
-		PropertyConfig idProp = new PropertyConfig(moduleConfig, "id", Long.class, PropertyTableColumn.INTERNAL_KEY, PropertyFormField.INTERNAL_KEY);
-		PropertyConfig nameProp = new PropertyConfig(moduleConfig, "name", String.class, PropertyFormField.WRITEONCE);
-		PropertyConfig userProp = new PropertyConfig(moduleConfig, "user", String.class, PropertyFormField.WRITEONCE);
+		PropertyConfig idProp = new PropertyConfig(moduleConfig, "id", Long.class, PropertyTableColumn.INTERNAL_KEY);
+		idProp.setReadOnly(true);
+		PropertyConfig nameProp = new PropertyConfig(moduleConfig, "name", String.class);
+		nameProp.setWriteOnce(true);
+		PropertyConfig userProp = new PropertyConfig(moduleConfig, "user", String.class, new SelectPropertyFieldFactory());
 		userProp.setDefaultValue(new PropertyDefaultValue() {
 			@Override
 			public String getDefaultValue() {
@@ -54,15 +55,19 @@ public class DomainModule extends GenericModule {
 				return map;
 			}
 		});
-		PropertyConfig pacProp = new PropertyConfig(moduleConfig, "pac", String.class, PropertyTableColumn.HIDDEN, PropertyFormField.READONLY);
+		userProp.setWriteOnce(true);
+		PropertyConfig pacProp = new PropertyConfig(moduleConfig, "pac", String.class, PropertyTableColumn.HIDDEN);
 		pacProp.setDefaultValue(new PropertyDefaultValue() {
 			@Override
 			public String getDefaultValue() {
 				return pac;
 			}
 		});
-		PropertyConfig hiveProp = new PropertyConfig(moduleConfig, "hive", String.class, PropertyTableColumn.HIDDEN, PropertyFormField.NONE);
-		PropertyConfig sinceProp = new PropertyConfig(moduleConfig, "since", Date.class, PropertyFormField.READONLY);
+		pacProp.setReadOnly(true);
+		PropertyConfig hiveProp = new PropertyConfig(moduleConfig, "hive", String.class, PropertyTableColumn.HIDDEN);
+		hiveProp.setReadOnly(true);
+		PropertyConfig sinceProp = new PropertyConfig(moduleConfig, "since", Date.class);
+		sinceProp.setReadOnly(true);
 		moduleConfig.addProperty(idProp);
 		moduleConfig.addProperty(nameProp);
 		moduleConfig.addProperty(userProp);

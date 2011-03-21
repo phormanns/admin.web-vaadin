@@ -9,9 +9,9 @@ import java.util.TreeMap;
 import de.hsadmin.web.config.ModuleConfig;
 import de.hsadmin.web.config.PropertyConfig;
 import de.hsadmin.web.config.PropertyDefaultValue;
-import de.hsadmin.web.config.PropertyFormField;
 import de.hsadmin.web.config.PropertySelectValues;
 import de.hsadmin.web.config.PropertyTableColumn;
+import de.hsadmin.web.vaadin.SelectPropertyFieldFactory;
 
 public class EMailAddressModule extends GenericModule {
 
@@ -24,12 +24,16 @@ public class EMailAddressModule extends GenericModule {
 		moduleConfig = new ModuleConfig("emailaddress");
 		String login = getApplication().getLogin();
 		final String pac = login.length() >= 5 ? login.substring(0, 5) : "";
-		moduleConfig.addProperty(new PropertyConfig(moduleConfig, "id", Long.class, PropertyTableColumn.INTERNAL_KEY, PropertyFormField.INTERNAL_KEY));
-		moduleConfig.addProperty(new PropertyConfig(moduleConfig, "emailaddress", String.class, PropertyFormField.NONE));
-		moduleConfig.addProperty(new PropertyConfig(moduleConfig, "localpart", String.class, PropertyTableColumn.HIDDEN, PropertyFormField.WRITEONCE));
-		moduleConfig.addProperty(new PropertyConfig(moduleConfig, "subdomain", String.class, PropertyTableColumn.HIDDEN, PropertyFormField.WRITEONCE));
-		PropertyConfig DomainProp = new PropertyConfig(moduleConfig, "domain", String.class, PropertyTableColumn.HIDDEN, PropertyFormField.WRITEONCE);
-		DomainProp.setSelectValues(new PropertySelectValues() {
+		PropertyConfig idProp = new PropertyConfig(moduleConfig, "id", Long.class, PropertyTableColumn.INTERNAL_KEY);
+		idProp.setReadOnly(true);
+		PropertyConfig fullAddressProp = new PropertyConfig(moduleConfig, "emailaddress", String.class);
+		fullAddressProp.setReadOnly(true);
+		PropertyConfig localpartProp = new PropertyConfig(moduleConfig, "localpart", String.class, PropertyTableColumn.HIDDEN);
+		localpartProp.setWriteOnce(true);
+		PropertyConfig subdomainProp = new PropertyConfig(moduleConfig, "subdomain", String.class, PropertyTableColumn.HIDDEN);
+		subdomainProp.setWriteOnce(true);
+		PropertyConfig domainProp = new PropertyConfig(moduleConfig, "domain", String.class, PropertyTableColumn.HIDDEN, new SelectPropertyFieldFactory());
+		domainProp.setSelectValues(new PropertySelectValues() {
 			@Override
 			public boolean newItemsAllowed() {
 				return false;
@@ -48,7 +52,7 @@ public class EMailAddressModule extends GenericModule {
 				return map;
 			}
 		});
-		moduleConfig.addProperty(DomainProp);
+		domainProp.setWriteOnce(true);
 		PropertyConfig targetProp = new PropertyConfig(moduleConfig, "target", String.class);
 		targetProp.setDefaultValue(new PropertyDefaultValue() {
 			@Override
@@ -56,10 +60,21 @@ public class EMailAddressModule extends GenericModule {
 				return pac + "-";
 			}
 		});
+		PropertyConfig domAdminProp = new PropertyConfig(moduleConfig, "admin", String.class, PropertyTableColumn.HIDDEN);
+		domAdminProp.setReadOnly(true);
+		PropertyConfig pacProp = new PropertyConfig(moduleConfig, "pac", String.class, PropertyTableColumn.HIDDEN);
+		pacProp.setReadOnly(true);
+		PropertyConfig fulldomainProp = new PropertyConfig(moduleConfig, "fulldomain", String.class, PropertyTableColumn.HIDDEN);
+		fulldomainProp.setReadOnly(true);
+		moduleConfig.addProperty(idProp);
+		moduleConfig.addProperty(fullAddressProp);
+		moduleConfig.addProperty(localpartProp);
+		moduleConfig.addProperty(subdomainProp);
+		moduleConfig.addProperty(domainProp);
 		moduleConfig.addProperty(targetProp);
-		moduleConfig.addProperty(new PropertyConfig(moduleConfig, "admin", String.class, PropertyTableColumn.HIDDEN, PropertyFormField.NONE));
-		moduleConfig.addProperty(new PropertyConfig(moduleConfig, "pac", String.class, PropertyTableColumn.HIDDEN, PropertyFormField.NONE));
-		moduleConfig.addProperty(new PropertyConfig(moduleConfig, "fulldomain", String.class, PropertyTableColumn.HIDDEN, PropertyFormField.NONE));
+		moduleConfig.addProperty(domAdminProp);
+		moduleConfig.addProperty(pacProp);
+		moduleConfig.addProperty(fulldomainProp);
 	}
 	
 	@Override

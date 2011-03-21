@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
+import de.hsadmin.web.vaadin.DefaultPropertyFieldFactory;
+
 public class PropertyConfig implements Serializable, PropertyDefaultValue, PropertySelectValues {
 
 	private static final long serialVersionUID = 1L;
@@ -12,7 +14,7 @@ public class PropertyConfig implements Serializable, PropertyDefaultValue, Prope
 	private String id;
 	private Class<?> type;
 	private PropertyTableColumn propTableColumn;
-	private PropertyFormField propFormField;
+	private PropertyFieldFactory propFieldFactory;
 	private PropertyDefaultValue defaultValue;
 	private PropertySelectValues selectValues;
 	
@@ -21,17 +23,17 @@ public class PropertyConfig implements Serializable, PropertyDefaultValue, Prope
 		this.id = id;
 		this.type = clasz;
 		this.propTableColumn = PropertyTableColumn.DISPLAY;
-		this.propFormField = PropertyFormField.READWRITE;
+		this.setPropFieldFactory(new DefaultPropertyFieldFactory());
 		this.defaultValue = null;
 		this.selectValues = null;
 	}
 
-	public PropertyConfig(ModuleConfig moduleConfig, String id, Class<?> clasz, PropertyFormField formField) {
+	public PropertyConfig(ModuleConfig moduleConfig, String id, Class<?> clasz, PropertyFieldFactory fieldFactory) {
 		this.moduleConfig = moduleConfig;
 		this.id = id;
 		this.type = clasz;
 		this.propTableColumn = PropertyTableColumn.DISPLAY;
-		this.propFormField = formField;
+		this.setPropFieldFactory(fieldFactory);
 		this.defaultValue = null;
 		this.selectValues = null;
 	}
@@ -41,17 +43,17 @@ public class PropertyConfig implements Serializable, PropertyDefaultValue, Prope
 		this.id = id;
 		this.type = clasz;
 		this.propTableColumn = tablecolumn;
-		this.propFormField = PropertyFormField.READWRITE;
+		this.setPropFieldFactory(new DefaultPropertyFieldFactory());
 		this.defaultValue = null;
 		this.selectValues = null;
 	}
 
-	public PropertyConfig(ModuleConfig moduleConfig, String id, Class<?> clasz, PropertyTableColumn tablecolumn, PropertyFormField formField) {
+	public PropertyConfig(ModuleConfig moduleConfig, String id, Class<?> clasz, PropertyTableColumn tablecolumn, PropertyFieldFactory fieldFactory) {
 		this.moduleConfig = moduleConfig;
 		this.id = id;
 		this.type = clasz;
 		this.propTableColumn = tablecolumn;
-		this.propFormField = formField;
+		this.setPropFieldFactory(fieldFactory);
 		this.defaultValue = null;
 		this.selectValues = null;
 	}
@@ -70,10 +72,6 @@ public class PropertyConfig implements Serializable, PropertyDefaultValue, Prope
 
 	public PropertyTableColumn getPropTableColumn() {
 		return propTableColumn;
-	}
-
-	public PropertyFormField getPropFormField() {
-		return propFormField;
 	}
 
 	public void setDefaultValue(PropertyDefaultValue defaultValue) {
@@ -102,7 +100,7 @@ public class PropertyConfig implements Serializable, PropertyDefaultValue, Prope
 		if (selectValues != null) {
 			return selectValues.newItemsAllowed();
 		}
-		return propFormField == PropertyFormField.READWRITE || propFormField == PropertyFormField.WRITEONCE;
+		return true;
 	}
 
 	@Override
@@ -111,6 +109,22 @@ public class PropertyConfig implements Serializable, PropertyDefaultValue, Prope
 			return selectValues.hasSelectList();
 		}
 		return false;
+	}
+
+	public void setPropFieldFactory(PropertyFieldFactory propFieldFactory) {
+		this.propFieldFactory = propFieldFactory;
+	}
+
+	public PropertyFieldFactory getPropFieldFactory() {
+		return propFieldFactory;
+	}
+
+	public void setReadOnly(boolean readOnly) {
+		propFieldFactory.setReadOnly(readOnly);
+	}
+
+	public void setWriteOnce(boolean writeOnce) {
+		propFieldFactory.setWriteOnce(writeOnce);
 	}
 	
 }

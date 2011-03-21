@@ -6,9 +6,10 @@ import java.util.TreeMap;
 import de.hsadmin.web.config.ModuleConfig;
 import de.hsadmin.web.config.PropertyConfig;
 import de.hsadmin.web.config.PropertyDefaultValue;
-import de.hsadmin.web.config.PropertyFormField;
 import de.hsadmin.web.config.PropertySelectValues;
 import de.hsadmin.web.config.PropertyTableColumn;
+import de.hsadmin.web.vaadin.PasswordPropertyFieldFactory;
+import de.hsadmin.web.vaadin.SelectPropertyFieldFactory;
 
 public class UnixUserModule extends GenericModule {
 
@@ -21,9 +22,12 @@ public class UnixUserModule extends GenericModule {
 		moduleConfig = new ModuleConfig("user");
 		String login = getApplication().getLogin();
 		final String pac = login.length() >= 5 ? login.substring(0, 5) : "";
-		PropertyConfig useridProp = new PropertyConfig(moduleConfig, "userid", Long.class, PropertyTableColumn.HIDDEN, PropertyFormField.READONLY);
-		PropertyConfig idProp = new PropertyConfig(moduleConfig, "id", Long.class, PropertyTableColumn.INTERNAL_KEY, PropertyFormField.INTERNAL_KEY);
-		PropertyConfig nameProp = new PropertyConfig(moduleConfig, "name", String.class, PropertyFormField.WRITEONCE);
+		PropertyConfig idProp = new PropertyConfig(moduleConfig, "id", Long.class, PropertyTableColumn.INTERNAL_KEY);
+		idProp.setReadOnly(true);
+		PropertyConfig useridProp = new PropertyConfig(moduleConfig, "userid", Long.class, PropertyTableColumn.HIDDEN);
+		useridProp.setReadOnly(true);
+		PropertyConfig nameProp = new PropertyConfig(moduleConfig, "name", String.class);
+		nameProp.setWriteOnce(true);
 		nameProp.setDefaultValue(new PropertyDefaultValue() {
 			@Override
 			public String getDefaultValue() {
@@ -33,9 +37,9 @@ public class UnixUserModule extends GenericModule {
 				return "";
 			}
 		});
-		PropertyConfig passwordProp = new PropertyConfig(moduleConfig, "password", String.class, PropertyTableColumn.NONE, PropertyFormField.PASSWORD);
+		PropertyConfig passwordProp = new PropertyConfig(moduleConfig, "password", String.class, PropertyTableColumn.NONE, new PasswordPropertyFieldFactory(this));
 		PropertyConfig commentProp = new PropertyConfig(moduleConfig, "comment", String.class);
-		PropertyConfig shellProp = new PropertyConfig(moduleConfig, "shell", String.class);
+		PropertyConfig shellProp = new PropertyConfig(moduleConfig, "shell", String.class, new SelectPropertyFieldFactory());
 		shellProp.setDefaultValue(new PropertyDefaultValue() {
 			@Override
 			public String getDefaultValue() {
@@ -65,8 +69,10 @@ public class UnixUserModule extends GenericModule {
 				return true;
 			}
 		});
-		PropertyConfig homedirProp = new PropertyConfig(moduleConfig, "homedir", String.class, PropertyTableColumn.HIDDEN, PropertyFormField.READONLY);
-		PropertyConfig pacProp = new PropertyConfig(moduleConfig, "pac", String.class, PropertyTableColumn.HIDDEN, PropertyFormField.READONLY);
+		PropertyConfig homedirProp = new PropertyConfig(moduleConfig, "homedir", String.class, PropertyTableColumn.HIDDEN);
+		homedirProp.setReadOnly(true);
+		PropertyConfig pacProp = new PropertyConfig(moduleConfig, "pac", String.class, PropertyTableColumn.HIDDEN);
+		pacProp.setReadOnly(true);
 		pacProp.setDefaultValue(new PropertyDefaultValue() {
 			@Override
 			public String getDefaultValue() {
