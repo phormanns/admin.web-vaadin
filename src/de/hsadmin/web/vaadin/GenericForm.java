@@ -56,13 +56,15 @@ public class GenericForm {
 				f.setData(entityId);
 				Layout layout = f.getLayout();
 				for (PropertyConfig prop : config.getPropertyList()) {
-					PropertyFieldFactory propFieldFactory = prop.getPropFieldFactory();
-					Object value = row.get(prop.getId());
-					Component component = (Component) propFieldFactory.createFieldComponent(prop, value);
-					if (propFieldFactory.isWriteOnce()) {
-						component.setReadOnly(true);
+					if (!prop.getPropTableColumn().equals(PropertyTableColumn.INTERNAL_KEY)) {
+						PropertyFieldFactory propFieldFactory = prop.getPropFieldFactory();
+						Object value = row.get(prop.getId());
+						Component component = (Component) propFieldFactory.createFieldComponent(prop, value);
+						if (propFieldFactory.isWriteOnce()) {
+							component.setReadOnly(true);
+						}
+						layout.addComponent(component);
 					}
-					layout.addComponent(component);
 				}
 				return f;
 			}

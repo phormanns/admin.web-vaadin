@@ -1,5 +1,8 @@
 package de.hsadmin.web;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -22,6 +25,33 @@ public class UnixUserModule extends GenericModule {
 		moduleConfig = new ModuleConfig("user");
 		String login = getApplication().getLogin();
 		final String pac = login.length() >= 5 ? login.substring(0, 5) : "";
+		PropertyConfig pacProp = new PropertyConfig(moduleConfig, "pac", String.class, PropertyTableColumn.HIDDEN, new SelectPropertyFieldFactory());
+		pacProp.setSelectValues(new PropertySelectValues() {
+			@Override
+			public boolean newItemsAllowed() {
+				return false;
+			}
+			@Override
+			public boolean hasSelectList() {
+				return true;
+			}
+			@Override
+			public Map<String, String> getSelectValues() {
+				List<String> list = getPackets();
+				TreeMap<String,String> map = new TreeMap<String, String>();
+				for (String pac : list) {
+					map.put(pac, pac);
+				}
+				return map;
+			}
+		});
+		pacProp.setDefaultValue(new PropertyDefaultValue() {
+			@Override
+			public String getDefaultValue() {
+				return pac;
+			}
+		});
+		pacProp.setWriteOnce(true);
 		PropertyConfig idProp = new PropertyConfig(moduleConfig, "id", Long.class, PropertyTableColumn.INTERNAL_KEY);
 		idProp.setReadOnly(true);
 		PropertyConfig useridProp = new PropertyConfig(moduleConfig, "userid", Long.class, PropertyTableColumn.HIDDEN);
@@ -71,14 +101,6 @@ public class UnixUserModule extends GenericModule {
 		});
 		PropertyConfig homedirProp = new PropertyConfig(moduleConfig, "homedir", String.class, PropertyTableColumn.HIDDEN);
 		homedirProp.setReadOnly(true);
-		PropertyConfig pacProp = new PropertyConfig(moduleConfig, "pac", String.class, PropertyTableColumn.HIDDEN);
-		pacProp.setReadOnly(true);
-		pacProp.setDefaultValue(new PropertyDefaultValue() {
-			@Override
-			public String getDefaultValue() {
-				return pac;
-			}
-		});
 		PropertyConfig softQuotaProp = new PropertyConfig(moduleConfig, "quota_softlimit", Long.class, PropertyTableColumn.HIDDEN);
 		softQuotaProp.setDefaultValue(new PropertyDefaultValue() {
 			@Override
@@ -93,6 +115,7 @@ public class UnixUserModule extends GenericModule {
 				return "0";
 			}
 		});
+		moduleConfig.addProperty(pacProp);
 		moduleConfig.addProperty(idProp);
 		moduleConfig.addProperty(useridProp);
 		moduleConfig.addProperty(nameProp);
@@ -100,7 +123,6 @@ public class UnixUserModule extends GenericModule {
 		moduleConfig.addProperty(commentProp);
 		moduleConfig.addProperty(shellProp);
 		moduleConfig.addProperty(homedirProp);
-		moduleConfig.addProperty(pacProp);
 		moduleConfig.addProperty(softQuotaProp);
 		moduleConfig.addProperty(hardQuotaProp);
 	}
@@ -108,6 +130,27 @@ public class UnixUserModule extends GenericModule {
 	@Override
 	public ModuleConfig getModuleConfig() {
 		return moduleConfig;
+	}
+
+	public List<String> getPackets() {
+		ArrayList<String> list = new ArrayList<String>();
+		try {
+			Object callSearch = getApplication().getRemote().callSearch("pac", new HashMap<String, String>());
+			if (callSearch instanceof Object[]) {
+				for (Object row : ((Object[])callSearch)) {
+					if (row instanceof Map<?, ?>) {
+						Object object = ((Map<?, ?>) row).get("name");
+						if (object instanceof String) {
+							list.add((String) object);
+						}
+					}
+				}
+			}
+		} catch (HsarwebException e) {
+			e.printStackTrace();
+			getApplication().showSystemException(e);
+		}
+		return list;
 	}
 
 }
