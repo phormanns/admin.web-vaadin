@@ -90,6 +90,10 @@ public class GenericForm {
 
 	public void transferToHash(Map<String, String> map, Form form) throws HsarwebException {
 		Iterator<Component> iterator = form.getLayout().getComponentIterator();
+		Object formData = form.getData();
+		if (formData != null && formData instanceof Long) {
+			map.put(findIdKey(), ((Long) formData).toString());
+		}
 		while (iterator.hasNext()) {
 			Component component = (Component) iterator.next();
 			if (component instanceof AbstractComponent) {
