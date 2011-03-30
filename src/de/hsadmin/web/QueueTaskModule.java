@@ -14,7 +14,7 @@ public class QueueTaskModule extends AbstractModule {
 
 	@Override
 	protected void initModule() {
-		moduleConfig = new ModuleConfig("q");
+		moduleConfig = new ModuleConfig("q", getApplication().getLocale());
 		moduleConfig.addProperty(new PropertyConfig(moduleConfig, "id", Long.class, PropertyTableColumn.INTERNAL_KEY));
 		moduleConfig.addProperty(new PropertyConfig(moduleConfig, "title", String.class));
 		moduleConfig.addProperty(new PropertyConfig(moduleConfig, "status", String.class));

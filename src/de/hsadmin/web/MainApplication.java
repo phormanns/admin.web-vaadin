@@ -38,11 +38,16 @@ public class MainApplication extends Application implements HttpServletRequestLi
 	private LocaleConfig localeConfig;
 	private Remote remote;
 	private Map<String, Module> modules;
+	private Locale requestLocale;
 
 
 	@Override
 	public void init() {
-		localeConfig = new LocaleConfig(Locale.getDefault(), "main");
+		Locale locale = requestLocale;
+		if (locale == null) {
+			locale = Locale.getDefault();
+		}
+		localeConfig = new LocaleConfig(locale, "main");
 		remote = new Remote(this);
 		Window mainWindow = new Window(localeConfig.getText("applicationtitle"));
 		VerticalLayout verticalLayout = new VerticalLayout();
@@ -105,9 +110,14 @@ public class MainApplication extends Application implements HttpServletRequestLi
 		return localeConfig;
 	}
 
+	public Locale getRequestLocale() {
+		return requestLocale;
+	}
+
 	@Override
 	public void onRequestStart(HttpServletRequest request,
 			HttpServletResponse response) {
+		requestLocale = request.getLocale();
 		httpSession = request.getSession();
 		servletContext = httpSession.getServletContext();
 		userPrincipal = ((Assertion) httpSession.getAttribute(AuthenticationFilter.CONST_CAS_ASSERTION)).getPrincipal();

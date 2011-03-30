@@ -16,11 +16,11 @@ public class ModuleConfig implements Serializable {
 	private Map<String, PropertyConfig> propertyMap;
 	private LocaleConfig localeConfig;
 
-	public ModuleConfig(String name) {
+	public ModuleConfig(String name, Locale locale) {
 		this.name = name;
 		propertyList = new ArrayList<PropertyConfig>();
 		propertyMap = new HashMap<String, PropertyConfig>();
-		localeConfig = new LocaleConfig(Locale.getDefault(), name);
+		localeConfig = new LocaleConfig(locale, name);
 	}
 	
 	public String getName() {
