@@ -14,10 +14,15 @@ import org.jasig.cas.client.authentication.AuthenticationFilter;
 import org.jasig.cas.client.validation.Assertion;
 
 import com.vaadin.Application;
+import com.vaadin.terminal.ExternalResource;
 import com.vaadin.terminal.Terminal;
 import com.vaadin.terminal.ThemeResource;
 import com.vaadin.terminal.gwt.server.HttpServletRequestListener;
 import com.vaadin.ui.Component;
+import com.vaadin.ui.Embedded;
+import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.Link;
+import com.vaadin.ui.Panel;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
@@ -49,12 +54,33 @@ public class MainApplication extends Application implements HttpServletRequestLi
 		}
 		localeConfig = new LocaleConfig(locale, "main");
 		remote = new Remote(this);
+		String role = "NONE";
+		try {
+			Object rolesArrayObj = remote.callSearch("role", null);
+			if (rolesArrayObj != null && rolesArrayObj instanceof Object[]) {
+				Object[] rolesArray = (Object[]) rolesArrayObj;
+				if (rolesArray.length > 0 && rolesArray[0] instanceof Map<?, ?>) {
+					role = (String) ((Map<?, ?>) rolesArray[0]).get("role");
+				}
+			}
+		} catch (HsarwebException e) {
+			showSystemException(e);
+		}
 		Window mainWindow = new Window(localeConfig.getText("applicationtitle"));
 		VerticalLayout verticalLayout = new VerticalLayout();
 		verticalLayout.setSizeFull();
+		HorizontalLayout banner = new HorizontalLayout();
+		Embedded image = new Embedded(null, new ThemeResource("../hs/icons/logo.png"));
+		image.setMimeType("image/png");
+		Embedded bgImage = new Embedded(null, new ThemeResource("../hs/icons/bg.png"));
+		bgImage.setMimeType("image/png");
+		banner.addComponent(image);
+		banner.addComponent(bgImage);
+		banner.setExpandRatio(bgImage, 1.0f);
+		verticalLayout.addComponent(banner);
 		TabSheet tabs = new TabSheet();
 		tabs.setSizeFull();
-		String modulesParamString = getContextParam("hsarmodules");
+		String modulesParamString = localeConfig.getText("modules." + role);
 		modules = new HashMap<String, Module>();
 		Module firstModule = null;
 		for (String className : modulesParamString.split(",")) {
@@ -74,6 +100,8 @@ public class MainApplication extends Application implements HttpServletRequestLi
 		}
 		tabs.addListener(this);
 		verticalLayout.addComponent(tabs);
+		verticalLayout.setExpandRatio(tabs, 1.0f);
+		verticalLayout.addComponent(new Link(localeConfig.getText("impressum.label"), new ExternalResource(localeConfig.getText("impressum.link"))));
 		mainWindow.setContent(verticalLayout);
 		setMainWindow(mainWindow);
 		setErrorHandler(new Terminal.ErrorListener() {

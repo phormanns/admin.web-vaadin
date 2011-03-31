@@ -36,13 +36,15 @@ import de.hsadmin.web.config.PropertyTableColumn;
 public class TableComponentFactory implements ComponentFactory, Serializable {
 
 	private static final long serialVersionUID = 1L;
-	private static final DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT);
+	private static final DateFormat serverDateFormat = DateFormat.getDateInstance(DateFormat.SHORT);
 
 	private Module module;
 	private Table table;
+	private DateFormat browserDateFormat;
 
 	public TableComponentFactory(Module module) {
 		this.module = module;
+		this.browserDateFormat = DateFormat.getDateInstance(DateFormat.SHORT, module.getApplication().getLocale());
 	}
 	
 	@Override
@@ -55,7 +57,7 @@ public class TableComponentFactory implements ComponentFactory, Serializable {
 					Property property) {
 				if (Date.class == property.getType()) {
 					try {
-						return df.format(property.getValue());
+						return browserDateFormat.format(property.getValue());
 					} catch (IllegalArgumentException e) {
 						return "---";
 					}
@@ -104,7 +106,7 @@ public class TableComponentFactory implements ComponentFactory, Serializable {
 		table.removeAllItems();
 		try {
 			ModuleConfig moduleConfig = module.getModuleConfig();
-			Object callSearch = module.getApplication().getRemote().callSearch(moduleConfig.getName(), new HashMap<String, String>());
+			Object callSearch = module.getApplication().getRemote().callSearch(moduleConfig.getRemoteName(), new HashMap<String, String>());
 			List<PropertyConfig> propertyList = moduleConfig.getPropertyList();
 			if (callSearch instanceof Object[]) {
 				for (Object row : ((Object[])callSearch)) {
@@ -129,7 +131,7 @@ public class TableComponentFactory implements ComponentFactory, Serializable {
 									}
 									if (Date.class.equals(prop.getType())) {
 										try {
-											itemData[idx] = df.parse((String) valueObject);
+											itemData[idx] = serverDateFormat.parse((String) valueObject);
 										} catch (ParseException e) {
 											Calendar cal = Calendar.getInstance();
 											cal.clear();

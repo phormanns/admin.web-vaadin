@@ -104,7 +104,6 @@ public abstract class AbstractModule implements Module {
 		}
 		layout.addComponent(component);
 		layout.setExpandRatio(component, 1.0f);
-		layout.addComponent(new Link(localeConfig.getText("impressum.label"), new ExternalResource(localeConfig.getText("impressum.link"))));
 	}
 
 

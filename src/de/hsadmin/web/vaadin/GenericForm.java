@@ -48,7 +48,7 @@ public class GenericForm {
 			ModuleConfig config = module.getModuleConfig();
 			Map<String, String> where = new HashMap<String, String>();
 			where.put(findIdKey(), entityId.toString());
-			Object searchResult = application.getRemote().callSearch(config.getName(), where);
+			Object searchResult = application.getRemote().callSearch(config.getRemoteName(), where);
 			if (searchResult instanceof Object[]) {
 				Map<?, ?> row = (Map<?, ?>) (((Object[]) searchResult)[0]);
 				Form f = new Form();

@@ -141,8 +141,12 @@ public class EMailTargetPropertyFieldFactory implements PropertyFieldFactory {
 			leftPart.setNewItemsAllowed(false);
 			leftPart.setNullSelectionAllowed(false);
 			leftPart.addItem(" ");
-			leftPart.addItem("User");
-			leftPart.addItem("Alias");
+			if (users != null && users.size() > 0) {
+				leftPart.addItem("User");
+			}
+			if (mailAliases != null && mailAliases.size() > 0) {
+				leftPart.addItem("Alias");
+			}
 			leftPart.addItem("EMail");
 			String type = "";
 			if (target != null && target.length() > 0) {

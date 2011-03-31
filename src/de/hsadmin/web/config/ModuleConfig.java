@@ -12,12 +12,14 @@ public class ModuleConfig implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private String name;
+	private String remoteName;
 	private List<PropertyConfig> propertyList;
 	private Map<String, PropertyConfig> propertyMap;
 	private LocaleConfig localeConfig;
 
 	public ModuleConfig(String name, Locale locale) {
 		this.name = name;
+		this.remoteName = name;
 		propertyList = new ArrayList<PropertyConfig>();
 		propertyMap = new HashMap<String, PropertyConfig>();
 		localeConfig = new LocaleConfig(locale, name);
@@ -25,6 +27,14 @@ public class ModuleConfig implements Serializable {
 	
 	public String getName() {
 		return name;
+	}
+
+	public String getRemoteName() {
+		return remoteName;
+	}
+
+	public void setRemoteName(String name) {
+		remoteName = name;
 	}
 
 	public void addProperty(PropertyConfig property) {

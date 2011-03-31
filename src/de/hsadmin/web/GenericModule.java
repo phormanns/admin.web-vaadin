@@ -13,18 +13,18 @@ public abstract class GenericModule extends AbstractModule implements InsertAble
 	private static final long serialVersionUID = 1L;
 
 	public void insertRow(Map<String, String> paramHash) throws HsarwebException {
-		getApplication().getRemote().callAdd(getModuleConfig().getName(), paramHash);
+		getApplication().getRemote().callAdd(getModuleConfig().getRemoteName(), paramHash);
 	}
 
 	public void deleteRow(Map<String, String> paramHash) throws HsarwebException {
-		getApplication().getRemote().callDelete(getModuleConfig().getName(), paramHash);
+		getApplication().getRemote().callDelete(getModuleConfig().getRemoteName(), paramHash);
 	}
 	
 	public void updateRow(Map<String, String> paramHash) throws HsarwebException {
 		Map<String, String> whereHash = new HashMap<String, String>();
 		String idKey = findIdKey();
 		whereHash.put(idKey, paramHash.get(idKey));
-		getApplication().getRemote().callUpdate(getModuleConfig().getName(), paramHash, whereHash);
+		getApplication().getRemote().callUpdate(getModuleConfig().getRemoteName(), paramHash, whereHash);
 	}
 
 	private String findIdKey() {

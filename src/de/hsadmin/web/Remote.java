@@ -2,6 +2,7 @@ package de.hsadmin.web;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.xmlrpc.XmlRpcException;
@@ -37,7 +38,7 @@ public class Remote {
 		Object[] params = new Object[3];
 		params[0] = app.getLogin();
 		params[1] = app.getProxyTicket();
-		params[2] = param1;
+		params[2] = param1 != null ? param1 : new HashMap<String, String>();
 		return xmlrpcCall(module + "." + operation, params);
 	}
 
@@ -45,8 +46,8 @@ public class Remote {
 		Object[] params = new Object[4];
 		params[0] = app.getLogin();
 		params[1] = app.getProxyTicket();
-		params[2] = param1;
-		params[3] = param2;
+		params[2] = param1 != null ? param1 : new HashMap<String, String>();
+		params[3] = param2 != null ? param2 : new HashMap<String, String>();
 		return xmlrpcCall(module + "." + operation, params);
 	}
 
