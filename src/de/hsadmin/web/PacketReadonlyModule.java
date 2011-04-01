@@ -5,6 +5,7 @@ import java.util.Date;
 import de.hsadmin.web.config.ModuleConfig;
 import de.hsadmin.web.config.PropertyConfig;
 import de.hsadmin.web.config.PropertyTableColumn;
+import de.hsadmin.web.vaadin.DatePropertyFieldFactory;
 
 public class PacketReadonlyModule extends AbstractModule {
 
@@ -21,7 +22,7 @@ public class PacketReadonlyModule extends AbstractModule {
 		moduleConfig.addProperty(new PropertyConfig(moduleConfig, "components", String.class));
 		moduleConfig.addProperty(new PropertyConfig(moduleConfig, "hive", String.class));
 		moduleConfig.addProperty(new PropertyConfig(moduleConfig, "curinetaddr", String.class));
-		moduleConfig.addProperty(new PropertyConfig(moduleConfig, "created", Date.class));
+		moduleConfig.addProperty(new PropertyConfig(moduleConfig, "created", Date.class, new DatePropertyFieldFactory()));
 		moduleConfig.addProperty(new PropertyConfig(moduleConfig, "customer", String.class, PropertyTableColumn.HIDDEN));
 	}
 	

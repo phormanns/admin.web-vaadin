@@ -1,16 +1,15 @@
 package de.hsadmin.web;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.vaadin.terminal.ExternalResource;
 import com.vaadin.terminal.Sizeable;
 import com.vaadin.terminal.ThemeResource;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Form;
 import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.Link;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.Button.ClickEvent;
@@ -21,8 +20,10 @@ import de.hsadmin.web.config.ModuleConfig;
 import de.hsadmin.web.vaadin.GenericForm;
 import de.hsadmin.web.vaadin.TableComponentFactory;
 
-public abstract class AbstractModule implements Module {
+public abstract class AbstractModule implements Module, Serializable {
 
+	private static final long serialVersionUID = 1L;
+	
 	private MainApplication application;
 	private VerticalLayout layout;
 	private Component component;

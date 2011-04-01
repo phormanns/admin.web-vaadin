@@ -5,6 +5,7 @@ import java.util.Date;
 import de.hsadmin.web.config.ModuleConfig;
 import de.hsadmin.web.config.PropertyConfig;
 import de.hsadmin.web.config.PropertyTableColumn;
+import de.hsadmin.web.vaadin.DatePropertyFieldFactory;
 
 public class DomainReadonlyModule extends AbstractModule {
 
@@ -20,7 +21,7 @@ public class DomainReadonlyModule extends AbstractModule {
 		moduleConfig.addProperty(new PropertyConfig(moduleConfig, "user", String.class));
 		moduleConfig.addProperty(new PropertyConfig(moduleConfig, "pac", String.class, PropertyTableColumn.HIDDEN));
 		moduleConfig.addProperty(new PropertyConfig(moduleConfig, "hive", String.class, PropertyTableColumn.HIDDEN));
-		moduleConfig.addProperty(new PropertyConfig(moduleConfig, "since", Date.class));
+		moduleConfig.addProperty(new PropertyConfig(moduleConfig, "since", Date.class, new DatePropertyFieldFactory()));
 	}
 	
 	@Override

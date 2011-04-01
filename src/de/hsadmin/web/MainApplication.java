@@ -22,7 +22,6 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.Embedded;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Link;
-import com.vaadin.ui.Panel;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
@@ -166,6 +165,7 @@ public class MainApplication extends Application implements HttpServletRequestLi
 		try {
 			module.reload();
 		} catch (HsarwebException e) {
+			e.printStackTrace();
 			showSystemException(e);
 		}
 	}
