@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="hsarweb" default="war">
 
+	<property file="${user.home}/.hsar.ant.properties" />
+
 	<path id="cp">
 		<fileset dir="WebContent/WEB-INF/lib">
 		    <include name="**/*.jar"/>
@@ -11,6 +13,16 @@
 	</path>
 	
 	<target name="war" depends="compile">
+		<copy file="conf/WEB-INF/web.xml" todir="WebContent/WEB-INF/">
+			<filterset>
+				<filter token="LOGIN_HOST" value="${cas.domain.name}"/>
+				<filter token="LOGIN_PORT" value="${cas.https.port}"/>
+				<filter token="CONFIG_HOST" value="${hsar.domain.name}"/>
+				<filter token="CONFIG_PORT" value="${hsar.https.port}"/>
+				<filter token="ADMIN_HOST" value="${hsarweb.domain.name}"/>
+				<filter token="ADMIN_PORT" value="${hsarweb.https.port}"/>
+			</filterset>
+		</copy>
         <war destfile="build/hsarweb.war" basedir="WebContent">
         	<classes dir="build/cls" />
         	<classes dir="src">
