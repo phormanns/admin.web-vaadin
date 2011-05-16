@@ -25,6 +25,8 @@ import de.hsadmin.web.vaadin.PasswordPropertyFieldFactory;
 
 public class HomeModule extends AbstractModule implements ComponentFactory, UpdateAble {
 
+	private static final long serialVersionUID = 1L;
+	
 	private ModuleConfig moduleConfig;
 	private MainApplication application;
 
