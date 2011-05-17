@@ -18,16 +18,20 @@ import com.vaadin.terminal.ExternalResource;
 import com.vaadin.terminal.Terminal;
 import com.vaadin.terminal.ThemeResource;
 import com.vaadin.terminal.gwt.server.HttpServletRequestListener;
+import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
+import com.vaadin.ui.CustomLayout;
 import com.vaadin.ui.Embedded;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Link;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
+import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.TabSheet.SelectedTabChangeEvent;
 import com.vaadin.ui.TabSheet.Tab;
 import com.vaadin.ui.Window.Notification;
+import com.vaadin.ui.themes.BaseTheme;
 
 import de.hsadmin.web.config.LocaleConfig;
 import de.hsadmin.web.config.ModuleConfig;
@@ -43,6 +47,8 @@ public class MainApplication extends Application implements HttpServletRequestLi
 	private Remote remote;
 	private Map<String, Module> modules;
 	private Locale requestLocale;
+
+	private CustomLayout header;
 
 
 	@Override
@@ -68,14 +74,18 @@ public class MainApplication extends Application implements HttpServletRequestLi
 		Window mainWindow = new Window(localeConfig.getText("applicationtitle"));
 		VerticalLayout verticalLayout = new VerticalLayout();
 		verticalLayout.setSizeFull();
-		HorizontalLayout banner = new HorizontalLayout();
-		Embedded image = new Embedded(null, new ThemeResource("../hs/icons/logo.png"));
-		image.setMimeType("image/png");
-		Embedded bgImage = new Embedded(null, new ThemeResource("../hs/icons/bg.png"));
-		bgImage.setMimeType("image/png");
-		banner.addComponent(image);
-		banner.addComponent(bgImage);
-		banner.setExpandRatio(bgImage, 1.0f);
+//		HorizontalLayout banner = new HorizontalLayout();
+//		Embedded image = new Embedded(null, new ThemeResource("../hs/icons/logo.png"));
+//		image.setMimeType("image/png");
+//		Embedded bgImage = new Embedded(null, new ThemeResource("../hs/icons/bg.png"));
+//		bgImage.setMimeType("image/png");
+//		Link logout = new Link("logout", new ExternalResource(localeConfig.getText("logout.link")));
+//		banner.addComponent(image);
+//		banner.addComponent(bgImage);
+//		banner.addComponent(logout);
+//		banner.setExpandRatio(bgImage, 1.0f);
+//		verticalLayout.addComponent(banner);
+		CustomLayout banner = new CustomLayout("../../hs/layout/header");
 		verticalLayout.addComponent(banner);
 		TabSheet tabs = new TabSheet();
 		tabs.setSizeFull();
