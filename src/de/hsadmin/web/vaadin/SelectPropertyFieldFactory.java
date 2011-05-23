@@ -11,8 +11,8 @@ import de.hsadmin.web.config.PropertyFieldFactory;
 
 public class SelectPropertyFieldFactory implements PropertyFieldFactory {
 
-	private boolean readOnly;
-	private boolean writeOnce;
+	private boolean readOnly = false;
+	private boolean writeOnce = false;
 
 	@Override
 	public Object createFieldComponent(PropertyConfig prop, Object value) {

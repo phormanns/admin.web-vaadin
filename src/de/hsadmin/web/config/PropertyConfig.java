@@ -6,7 +6,7 @@ import java.util.Map;
 
 import de.hsadmin.web.vaadin.DefaultPropertyFieldFactory;
 
-public class PropertyConfig implements Serializable, PropertyDefaultValue, PropertySelectValues {
+public class PropertyConfig implements Serializable, PropertyDefaultValue, PropertySelectValues, PropertyFormVisible {
 
 	private static final long serialVersionUID = 1L;
 	
@@ -17,6 +17,7 @@ public class PropertyConfig implements Serializable, PropertyDefaultValue, Prope
 	private PropertyFieldFactory propFieldFactory;
 	private PropertyDefaultValue defaultValue;
 	private PropertySelectValues selectValues;
+	private boolean showInForm = true;
 	
 	public PropertyConfig(ModuleConfig moduleConfig, String id, Class<?> clasz) {
 		this.moduleConfig = moduleConfig;
@@ -125,6 +126,16 @@ public class PropertyConfig implements Serializable, PropertyDefaultValue, Prope
 
 	public void setWriteOnce(boolean writeOnce) {
 		propFieldFactory.setWriteOnce(writeOnce);
+	}
+
+	@Override
+	public boolean isShowInForm() {
+		return showInForm;
+	}
+
+	@Override
+	public void setShowInForm(boolean show) {
+		showInForm = show;
 	}
 	
 }

@@ -24,8 +24,8 @@ import de.hsadmin.web.config.PropertyFieldFactory;
 public class EMailTargetPropertyFieldFactory implements PropertyFieldFactory {
 
 	private Module module;
-	private boolean readOnly;
-	private boolean writeOnce;
+	private boolean readOnly = false;
+	private boolean writeOnce = false;
 	private List<String> users;
 	private List<String> mailAliases;
 	private Map<Integer, SingleEMailTarget> targets;
@@ -245,4 +245,5 @@ public class EMailTargetPropertyFieldFactory implements PropertyFieldFactory {
 			return value;
 		}
 	}
+
 }

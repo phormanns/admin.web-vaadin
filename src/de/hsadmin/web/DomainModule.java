@@ -68,6 +68,9 @@ public class DomainModule extends GenericModule {
 		hiveProp.setReadOnly(true);
 		PropertyConfig sinceProp = new PropertyConfig(moduleConfig, "since", Date.class, new DatePropertyFieldFactory());
 		sinceProp.setReadOnly(true);
+		idProp.setShowInForm(false);
+		pacProp.setShowInForm(false);
+		hiveProp.setShowInForm(false);
 		moduleConfig.addProperty(idProp);
 		moduleConfig.addProperty(nameProp);
 		moduleConfig.addProperty(userProp);

@@ -9,7 +9,7 @@ import de.hsadmin.web.config.PropertyFieldFactory;
 public class DefaultPropertyFieldFactory implements PropertyFieldFactory {
 
 	private boolean readOnly = false;
-	private boolean writeOnce;
+	private boolean writeOnce = false;
 	
 	@Override
 	public Object createFieldComponent(PropertyConfig prop, Object value) {

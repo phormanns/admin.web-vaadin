@@ -76,6 +76,9 @@ public class HomeModule extends AbstractModule implements ComponentFactory, Upda
 		PropertyConfig passwordProp = new PropertyConfig(moduleConfig, "password", String.class, PropertyTableColumn.NONE, new PasswordPropertyFieldFactory(this));
 		PropertyConfig commentProp = new PropertyConfig(moduleConfig, "comment", String.class);
 		commentProp.setReadOnly(true);
+		idProp.setShowInForm(false);
+		pacProp.setShowInForm(false);
+		useridProp.setShowInForm(false);
 		moduleConfig.addProperty(idProp);
 		moduleConfig.addProperty(pacProp);
 		moduleConfig.addProperty(useridProp);

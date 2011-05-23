@@ -66,13 +66,19 @@ public class EMailAddressModule extends GenericModule {
 		pacProp.setReadOnly(true);
 		PropertyConfig fulldomainProp = new PropertyConfig(moduleConfig, "fulldomain", String.class, PropertyTableColumn.HIDDEN);
 		fulldomainProp.setReadOnly(true);
+		idProp.setShowInForm(false);
+		localpartProp.setShowInForm(false);
+		subdomainProp.setShowInForm(false);
+		domainProp.setShowInForm(false);
+		pacProp.setShowInForm(false);
+		fulldomainProp.setShowInForm(false);
 		moduleConfig.addProperty(idProp);
+		moduleConfig.addProperty(domAdminProp);
 		moduleConfig.addProperty(fullAddressProp);
 		moduleConfig.addProperty(localpartProp);
 		moduleConfig.addProperty(subdomainProp);
 		moduleConfig.addProperty(domainProp);
 		moduleConfig.addProperty(targetProp);
-		moduleConfig.addProperty(domAdminProp);
 		moduleConfig.addProperty(pacProp);
 		moduleConfig.addProperty(fulldomainProp);
 	}

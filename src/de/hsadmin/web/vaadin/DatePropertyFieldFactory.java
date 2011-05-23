@@ -18,7 +18,7 @@ public class DatePropertyFieldFactory implements PropertyFieldFactory {
 	public static final DateFormat serverDf = DateFormat.getDateInstance(DateFormat.SHORT);
 	
 	private boolean readOnly = false;
-	private boolean writeOnce;
+	private boolean writeOnce = false;
 	
 	@Override
 	public Object createFieldComponent(PropertyConfig prop, Object value) {

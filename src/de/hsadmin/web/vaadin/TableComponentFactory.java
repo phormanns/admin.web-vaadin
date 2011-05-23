@@ -173,6 +173,7 @@ public class TableComponentFactory implements ComponentFactory, Serializable {
 		final Button button = new Button();
 		final Module thisModule = module;
 		button.setIcon(icon);
+		button.setDescription(module.getApplication().getLocaleConfig().getText("update"));
 		button.setData(id);
 		button.setStyleName(BaseTheme.BUTTON_LINK);
 		button.addListener(new Button.ClickListener() {
@@ -230,6 +231,7 @@ public class TableComponentFactory implements ComponentFactory, Serializable {
 		ThemeResource icon = new ThemeResource("../runo/icons/16/document-delete.png");
 		final Button button = new Button();
 		button.setIcon(icon);
+		button.setDescription(module.getApplication().getLocaleConfig().getText("delete"));
 		button.setData(id);
 		button.setStyleName(BaseTheme.BUTTON_LINK);
 		button.addListener(new Button.ClickListener() {

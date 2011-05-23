@@ -56,7 +56,7 @@ public class GenericForm {
 				f.setData(entityId);
 				Layout layout = f.getLayout();
 				for (PropertyConfig prop : config.getPropertyList()) {
-					if (!prop.getPropTableColumn().equals(PropertyTableColumn.INTERNAL_KEY)) {
+					if (!prop.getPropTableColumn().equals(PropertyTableColumn.INTERNAL_KEY) && prop.isShowInForm()) {
 						PropertyFieldFactory propFieldFactory = prop.getPropFieldFactory();
 						Object value = row.get(prop.getId());
 						Component component = (Component) propFieldFactory.createFieldComponent(prop, value);

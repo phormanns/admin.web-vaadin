@@ -74,6 +74,8 @@ public class EMailAliasModule extends GenericModule {
 			}
 		});
 		pacProp.setWriteOnce(true);
+		idProp.setShowInForm(false);
+		pacProp.setShowInForm(false);
 		moduleConfig.addProperty(idProp);
 		moduleConfig.addProperty(pacProp);
 		moduleConfig.addProperty(nameProp);

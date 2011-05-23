@@ -114,6 +114,9 @@ public class UnixUserModule extends GenericModule {
 				return "0";
 			}
 		});
+		pacProp.setShowInForm(false);
+		idProp.setShowInForm(false);
+		useridProp.setShowInForm(false);
 		moduleConfig.addProperty(pacProp);
 		moduleConfig.addProperty(idProp);
 		moduleConfig.addProperty(useridProp);

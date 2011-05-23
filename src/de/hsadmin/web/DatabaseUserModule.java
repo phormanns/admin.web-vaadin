@@ -67,6 +67,8 @@ public abstract class DatabaseUserModule extends GenericModule {
 		});
 		pacProp.setWriteOnce(true);
 		PropertyConfig passwordProp = new PropertyConfig(moduleConfig, "password", String.class, PropertyTableColumn.NONE, new PasswordPropertyFieldFactory(this));
+		idProp.setShowInForm(false);
+		pacProp.setShowInForm(false);
 		moduleConfig.addProperty(idProp);
 		moduleConfig.addProperty(pacProp);
 		moduleConfig.addProperty(nameProp);

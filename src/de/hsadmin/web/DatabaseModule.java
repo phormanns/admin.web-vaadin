@@ -124,7 +124,9 @@ public abstract class DatabaseModule extends GenericModule {
 				return map;
 			}
 		});
-		ownerProp.setWriteOnce(true);
+		idProp.setShowInForm(false);
+		pacProp.setShowInForm(false);
+		encodingProp.setShowInForm(false);
 		moduleConfig.addProperty(idProp);
 		moduleConfig.addProperty(pacProp);
 		moduleConfig.addProperty(nameProp);
