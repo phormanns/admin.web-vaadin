@@ -71,11 +71,12 @@ public class TableComponentFactory implements ComponentFactory, Serializable {
 			table.setSelectable(false);
 			table.setImmediate(true);
 			table.setColumnCollapsingAllowed(true);
-			table.setColumnReorderingAllowed(true);
+			table.setColumnReorderingAllowed(false);
 			for (PropertyConfig prop : config.getPropertyList()) {
 				PropertyTableColumn propTableColumn = prop.getPropTableColumn();
 				if (propTableColumn != PropertyTableColumn.NONE) {
 					table.addContainerProperty(prop.getId(), prop.getType(), prop.getDefaultValue());
+					table.setColumnExpandRatio(prop.getId(), prop.getExpandRatio());
 					table.setColumnHeader(prop.getId(), prop.getLabel());
 					if (propTableColumn == PropertyTableColumn.HIDDEN) { 
 						table.setColumnCollapsed(prop.getId(), true);

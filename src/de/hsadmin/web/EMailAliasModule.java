@@ -38,6 +38,7 @@ public class EMailAliasModule extends GenericModule {
 		});
 		nameProp.setWriteOnce(true);
 		PropertyConfig targetProp = new PropertyConfig(moduleConfig, "target", String.class, new EMailTargetPropertyFieldFactory(this));
+		targetProp.setExpandRatio(0.8f);
 		targetProp.setDefaultValue(new PropertyDefaultValue() {
 			@Override
 			public String getDefaultValue() {

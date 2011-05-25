@@ -54,6 +54,7 @@ public class EMailAddressModule extends GenericModule {
 		});
 		domainProp.setWriteOnce(true);
 		PropertyConfig targetProp = new PropertyConfig(moduleConfig, "target", String.class, new EMailTargetPropertyFieldFactory(this));
+		targetProp.setExpandRatio(0.8f);
 		targetProp.setDefaultValue(new PropertyDefaultValue() {
 			@Override
 			public String getDefaultValue() {

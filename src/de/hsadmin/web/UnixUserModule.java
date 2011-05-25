@@ -68,6 +68,7 @@ public class UnixUserModule extends GenericModule {
 		});
 		PropertyConfig passwordProp = new PropertyConfig(moduleConfig, "password", String.class, PropertyTableColumn.NONE, new PasswordPropertyFieldFactory(this));
 		PropertyConfig commentProp = new PropertyConfig(moduleConfig, "comment", String.class);
+		commentProp.setExpandRatio(0.7f);
 		PropertyConfig shellProp = new PropertyConfig(moduleConfig, "shell", String.class, new SelectPropertyFieldFactory());
 		shellProp.setDefaultValue(new PropertyDefaultValue() {
 			@Override

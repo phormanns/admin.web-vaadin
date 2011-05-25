@@ -18,6 +18,7 @@ public class PropertyConfig implements Serializable, PropertyDefaultValue, Prope
 	private PropertyDefaultValue defaultValue;
 	private PropertySelectValues selectValues;
 	private boolean showInForm = true;
+	private float expandRatio;
 	
 	public PropertyConfig(ModuleConfig moduleConfig, String id, Class<?> clasz) {
 		this.moduleConfig = moduleConfig;
@@ -27,6 +28,7 @@ public class PropertyConfig implements Serializable, PropertyDefaultValue, Prope
 		this.setPropFieldFactory(new DefaultPropertyFieldFactory());
 		this.defaultValue = null;
 		this.selectValues = null;
+		this.setExpandRatio(0.5f);
 	}
 
 	public PropertyConfig(ModuleConfig moduleConfig, String id, Class<?> clasz, PropertyFieldFactory fieldFactory) {
@@ -136,6 +138,14 @@ public class PropertyConfig implements Serializable, PropertyDefaultValue, Prope
 	@Override
 	public void setShowInForm(boolean show) {
 		showInForm = show;
+	}
+
+	public float getExpandRatio() {
+		return expandRatio;
+	}
+
+	public void setExpandRatio(float expandRatio) {
+		this.expandRatio = expandRatio;
 	}
 	
 }
