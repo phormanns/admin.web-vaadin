@@ -88,6 +88,7 @@ public class UnixUserModule extends GenericModule {
 				map.put("/bin/bash", "/bin/bash");
 				map.put("/bin/dash", "/bin/dash");
 				map.put("/bin/csh", "/bin/csh");
+				map.put("/bin/false", "/bin/false");
 				map.put("/bin/tcsh", "/bin/tcsh");
 				map.put("/bin/ksh", "/bin/ksh");
 				map.put("/bin/zsh", "/bin/zsh");
