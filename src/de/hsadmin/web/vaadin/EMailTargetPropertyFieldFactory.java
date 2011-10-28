@@ -77,6 +77,15 @@ public class EMailTargetPropertyFieldFactory implements PropertyFieldFactory {
 				lastIndex++;
 			}
 		}
+		if (value instanceof Object[]) {
+			Object[] list = (Object[]) value;
+			for (Object o : list) {
+				if (o instanceof String) {
+					targets.put(lastIndex, new SingleEMailTarget(this, lastIndex, (String) o));
+					lastIndex++;
+				}
+			}
+		}
 		targets.put(lastIndex, new SingleEMailTarget(this, lastIndex, ""));
 		repaint();
 		return layout;
