@@ -162,7 +162,7 @@ public class MainApplication extends Application implements HttpServletRequestLi
 	}
 
 	public void showUserException(Exception e) {
-		getMainWindow().showNotification("Anwendungs-Fehler", "<br/ >" + e.getMessage(), Notification.TYPE_WARNING_MESSAGE);			
+		getMainWindow().showNotification("Anwendungs-Fehler", "<br/ >" + e.getMessage(), Notification.TYPE_ERROR_MESSAGE);			
 	}
 
 	public void showSystemException(Exception e) {
