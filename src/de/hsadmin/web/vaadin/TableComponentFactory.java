@@ -160,6 +160,22 @@ public class TableComponentFactory implements ComponentFactory, Serializable {
 									}
 									itemData[idx] = buf.toString();
 								}
+								if (valueObject != null && valueObject instanceof Map) {
+									StringBuffer buf = new StringBuffer();
+									Map valueMap = (Map) valueObject;
+									for (Object o : valueMap.keySet()) {
+										if (o instanceof String) {
+											if (buf.length() > 0) {
+												buf.append(',');
+											}
+											String key = (String) o;
+											buf.append(key);
+											buf.append('=');
+											buf.append(valueMap.get(key).toString());
+										}
+									}
+									itemData[idx] = buf.toString();
+								}
 								idx++;
 							}
 						}
