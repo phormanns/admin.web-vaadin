@@ -7,7 +7,7 @@
 		<fileset dir="WebContent/WEB-INF/lib">
 		    <include name="**/*.jar"/>
 		</fileset>
-		<fileset dir="/usr/share/java">
+		<fileset dir="../hsarback/lib">
 		    <include name="servlet-api-2.4.jar"/>
 		</fileset>
 	</path>
