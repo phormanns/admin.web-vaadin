@@ -162,6 +162,7 @@ public class TableComponentFactory implements ComponentFactory, Serializable {
 								}
 								if (valueObject != null && valueObject instanceof Map) {
 									StringBuffer buf = new StringBuffer();
+									@SuppressWarnings("rawtypes")
 									Map valueMap = (Map) valueObject;
 									for (Object o : valueMap.keySet()) {
 										if (o instanceof String) {
