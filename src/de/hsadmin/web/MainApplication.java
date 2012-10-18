@@ -32,6 +32,14 @@ import de.hsadmin.web.config.ModuleConfig;
 public class MainApplication extends Application implements HttpServletRequestListener, TabSheet.SelectedTabChangeListener {
 
 	private static final long serialVersionUID = 1L;
+	private static final String LOGIN_URL = "https://login.hostsharing.net:443/cas/v1/tickets";
+	private static boolean isTestEnvironment = false;
+
+	static {
+		Config config = Config.getInstance();
+		Object loginURL = config.getProperty("loginURL", LOGIN_URL);
+		isTestEnvironment = "TestUmgebung".equals(loginURL);
+	}
 	
 	private HttpSession httpSession;
 	private ServletContext servletContext;
@@ -138,7 +146,26 @@ public class MainApplication extends Application implements HttpServletRequestLi
 		requestLocale = request.getLocale();
 		httpSession = request.getSession();
 		servletContext = httpSession.getServletContext();
-		userPrincipal = ((Assertion) httpSession.getAttribute(AuthenticationFilter.CONST_CAS_ASSERTION)).getPrincipal();
+		if (isTestEnvironment) {
+			userPrincipal = new AttributePrincipal() {
+				private static final long serialVersionUID = 1L;
+				@Override
+				public String getName() {
+					return "ad";
+				}
+				@Override
+				public String getProxyTicketFor(String arg0) {
+					return "user:ad";
+				}
+				@SuppressWarnings("rawtypes")
+				@Override
+				public Map getAttributes() {
+					return new HashMap();
+				}
+			};
+		} else {
+			userPrincipal = ((Assertion) httpSession.getAttribute(AuthenticationFilter.CONST_CAS_ASSERTION)).getPrincipal();
+		}
 	}
 
 	@Override

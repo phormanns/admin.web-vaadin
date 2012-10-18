@@ -21,6 +21,7 @@
 				<filter token="CONFIG_PORT" value="${hsar.https.port}"/>
 				<filter token="ADMIN_HOST" value="${hsarweb.domain.name}"/>
 				<filter token="ADMIN_PORT" value="${hsarweb.https.port}"/>
+				<filter token="HTTPS" value="${hsar.https}"/>
 			</filterset>
 		</copy>
         <war destfile="build/hsarweb.war" basedir="WebContent">
@@ -36,6 +37,11 @@
     	<javac srcdir="src" destdir="build/cls"
          	classpathref="cp" debug="on"
 		/>    
+    </target>
+
+    <target name="clean">
+    	<delete dir="build"/>
+    	<delete file="WebContent/WEB-INF/web.xml"/>
     </target>
 
 </project>
