@@ -22,7 +22,7 @@ public class EMailAliasModule extends GenericModule {
 	protected void initModule() {
 		MainApplication application = getApplication();
 		moduleConfig = new ModuleConfig("emailalias", application.getLocale());
-		String login = application.getLogin();
+		String login = application.getRunAs();
 		final String pac = login.length() >= 5 ? login.substring(0, 5) : "";
 		PropertyConfig idProp = new PropertyConfig(moduleConfig, "id", Long.class, PropertyTableColumn.INTERNAL_KEY);
 		idProp.setReadOnly(true);

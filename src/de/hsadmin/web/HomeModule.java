@@ -95,7 +95,7 @@ public class HomeModule extends AbstractModule implements ComponentFactory, Upda
 		ThemeResource icon = new ThemeResource(moduleConfig.getLabel("change_password_icon"));
 		button.setIcon(icon);
 		Map<String, String> whereHash = new HashMap<String, String>();
-		whereHash.put("name", application.getLogin());
+		whereHash.put("name", application.getRunAs());
 		Long key = -1L;
 		try {
 			Object object = application.getRemote().callSearch(moduleConfig.getRemoteName(), whereHash);

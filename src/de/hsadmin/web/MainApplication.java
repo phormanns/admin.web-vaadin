@@ -46,6 +46,9 @@ public class MainApplication extends Application implements HttpServletRequestLi
 	private Remote remote;
 	private Map<String, Module> modules;
 	private Locale requestLocale;
+	private String role = "NONE";
+	private String runAs = null;
+	private TabSheet tabSheet;
 
 
 	@Override
@@ -56,7 +59,6 @@ public class MainApplication extends Application implements HttpServletRequestLi
 		}
 		localeConfig = new LocaleConfig(locale, "main");
 		remote = new Remote(this);
-		String role = "NONE";
 		try {
 			Object rolesArrayObj = remote.callSearch("role", null);
 			if (rolesArrayObj != null && rolesArrayObj instanceof Object[]) {
@@ -69,8 +71,8 @@ public class MainApplication extends Application implements HttpServletRequestLi
 			showSystemException(e);
 		}
 		Window mainWindow = new Window(localeConfig.getText("applicationtitle"));
-		TabSheet tabs = new TabSheet();
-		tabs.setSizeFull();
+		tabSheet = new TabSheet();
+		tabSheet.setSizeFull();
 		String modulesParamString = localeConfig.getText("modules." + role);
 		modules = new HashMap<String, Module>();
 		Module firstModule = null;
@@ -84,13 +86,13 @@ public class MainApplication extends Application implements HttpServletRequestLi
 				ModuleConfig moduleConfig = module.getModuleConfig();
 				String label = moduleConfig.getLabel("moduletitle");
 				modules.put(label, module);
-				tabs.addTab((Component) module.getComponent(), label, new ThemeResource(moduleConfig.getLabel("moduleicon")));
+				tabSheet.addTab((Component) module.getComponent(), label, new ThemeResource(moduleConfig.getLabel("moduleicon")));
 			} catch (Exception e) {
 				showSystemException(e);
 			}
 		}
-		tabs.addListener(this);
-		mainWindow.setContent(tabs);
+		tabSheet.addListener(this);
+		mainWindow.setContent(tabSheet);
 		setMainWindow(mainWindow);
 		setErrorHandler(new Terminal.ErrorListener() {
 			private static final long serialVersionUID = 1L;
@@ -104,6 +106,10 @@ public class MainApplication extends Application implements HttpServletRequestLi
 		} catch (HsarwebException e) {
 			showSystemException(e);
 		}
+	}
+	
+	public String getLoginUserRole() {
+		return role;
 	}
 
 	public String getProxyTicket() {
@@ -184,6 +190,26 @@ public class MainApplication extends Application implements HttpServletRequestLi
 
 	public void showSystemException(Exception e) {
 		getMainWindow().showNotification("System-Fehler", "<br />Bitte informieren Sie den Support<br/ >" + e.getMessage(), Notification.TYPE_ERROR_MESSAGE);			
+	}
+
+	public String getRunAs() {
+		if (runAs == null) {
+			return getLogin();
+		}
+		return runAs;
+	}
+
+	public void setRunAs(String runAs) {
+		this.runAs = runAs;
+		Component selectedTab = tabSheet.getSelectedTab();
+		Tab tab = tabSheet.getTab(selectedTab);
+		Module module = modules.get(tab.getCaption());
+		try {
+			module.reload();
+		} catch (HsarwebException e) {
+			e.printStackTrace();
+			showSystemException(e);
+		}
 	}
 
 }

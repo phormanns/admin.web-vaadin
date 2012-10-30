@@ -4,12 +4,15 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.vaadin.data.Property;
+import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.terminal.Sizeable;
 import com.vaadin.terminal.ThemeResource;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Form;
 import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.Select;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.Button.ClickEvent;
@@ -28,23 +31,73 @@ public abstract class AbstractModule implements Module, Serializable {
 	private VerticalLayout layout;
 	private Component component;
 	private ComponentFactory componentFactory;
+	private Select selRunAs;
 
 	public Component getComponent() {
 		return layout;
 	}
 
 	public void reload() throws HsarwebException {
+		if (selRunAs != null) {
+			selRunAs.select(application.getRunAs());
+			selRunAs.setScrollToSelectedItem(true);
+		}
 		componentFactory.loadData();
 	}
 
-	private void initLayout() {
+	private void initLayout()  throws HsarwebException {
 		layout = new VerticalLayout();
 		layout.setSizeFull();
 		final Module thisModule = this;
 		final ModuleConfig moduleConfig = getModuleConfig();
 		final LocaleConfig localeConfig = application.getLocaleConfig();
-		if (this instanceof SearchAble || this instanceof InsertAble) {
+		if (this instanceof SearchAble || this instanceof InsertAble ||
+				!("USER".equals(application.getLoginUserRole()) || "NONE".equals(application.getLoginUserRole()))) {
 			HorizontalLayout toolbar = new HorizontalLayout();
+			if (!("USER".equals(application.getLoginUserRole()) || "NONE".equals(application.getLoginUserRole()))) {
+				selRunAs = new Select();
+				selRunAs.setWidth(100.0f, Sizeable.UNITS_PIXELS);
+				selRunAs.setImmediate(true);
+				selRunAs.setNewItemsAllowed(false);
+				selRunAs.setNullSelectionAllowed(false);
+				if (!application.getLoginUserRole().startsWith("PAC")) {
+//					if (application.getLoginUserRole().startsWith("PAC")) {
+//						
+//					}
+					selRunAs.addItem(application.getLogin());
+					Object custListObj = application.getRemote().callSearch("member", new HashMap<String, String>());
+					if (custListObj instanceof Object[]) {
+						Object[] custList = (Object[]) custListObj;
+						for (Object custObj : custList) {
+							if (custObj instanceof Map<?, ?>) {
+								Map<?, ?> custHash = (Map<?, ?>)custObj;
+								selRunAs.addItem(custHash.get("membercode"));
+							}
+						}
+					}
+				}
+				Object pacListObj = application.getRemote().callSearch("pac", new HashMap<String, String>());
+				if (pacListObj instanceof Object[]) {
+					Object[] pacList = (Object[]) pacListObj;
+					for (Object pacObj : pacList) {
+						if (pacObj instanceof Map<?, ?>) {
+							Map<?, ?> pacHash = (Map<?, ?>)pacObj;
+							selRunAs.addItem(pacHash.get("name"));
+						}
+					}
+				}
+				selRunAs.select(application.getRunAs());
+				selRunAs.setScrollToSelectedItem(true);
+				selRunAs.addListener(new Property.ValueChangeListener() {
+					private static final long serialVersionUID = 1L;
+					@Override
+					public void valueChange(ValueChangeEvent event) {
+						Property property = event.getProperty();
+						application.setRunAs(property.getValue().toString());
+					}
+				});
+				toolbar.addComponent(selRunAs);
+			}
 			if (this instanceof InsertAble) {
 				Button btNew = new Button(moduleConfig.getLabel("new"));
 				ThemeResource icon = new ThemeResource("../runo/icons/16/document-add.png");

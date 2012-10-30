@@ -22,7 +22,7 @@ public class UnixUserModule extends GenericModule {
 	protected void initModule() {
 		MainApplication application = getApplication();
 		moduleConfig = new ModuleConfig("user", application.getLocale());
-		String login = application.getLogin();
+		String login = application.getRunAs();
 		final String pac = login.length() >= 5 ? login.substring(0, 5) : "";
 		PropertyConfig pacProp = new PropertyConfig(moduleConfig, "pac", String.class, PropertyTableColumn.HIDDEN, new SelectPropertyFieldFactory());
 		pacProp.setSelectValues(new PropertySelectValues() {

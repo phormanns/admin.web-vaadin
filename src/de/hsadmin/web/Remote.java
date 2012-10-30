@@ -36,7 +36,7 @@ public class Remote {
 
 	private Object xmlrpcCall(String module, String operation, Map<String, String> param1) throws HsarwebException {
 		Object[] params = new Object[3];
-		params[0] = app.getLogin();
+		params[0] = app.getRunAs();
 		params[1] = app.getProxyTicket();
 		params[2] = param1 != null ? param1 : new HashMap<String, String>();
 		return xmlrpcCall(module + "." + operation, params);
@@ -44,7 +44,7 @@ public class Remote {
 
 	private Object xmlrpcCall(String module, String operation, Map<String, String> param1, Map<String, String> param2) throws HsarwebException {
 		Object[] params = new Object[4];
-		params[0] = app.getLogin();
+		params[0] = app.getRunAs();
 		params[1] = app.getProxyTicket();
 		params[2] = param1 != null ? param1 : new HashMap<String, String>();
 		params[3] = param2 != null ? param2 : new HashMap<String, String>();
