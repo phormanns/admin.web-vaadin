@@ -18,11 +18,9 @@ import com.vaadin.terminal.Terminal;
 import com.vaadin.terminal.ThemeResource;
 import com.vaadin.terminal.gwt.server.HttpServletRequestListener;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.CustomLayout;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.TabSheet.SelectedTabChangeEvent;
 import com.vaadin.ui.TabSheet.Tab;
-import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.Window.Notification;
 
@@ -71,10 +69,6 @@ public class MainApplication extends Application implements HttpServletRequestLi
 			showSystemException(e);
 		}
 		Window mainWindow = new Window(localeConfig.getText("applicationtitle"));
-		VerticalLayout verticalLayout = new VerticalLayout();
-		verticalLayout.setSizeFull();
-		CustomLayout banner = new CustomLayout("../../hs/layout/header");
-		verticalLayout.addComponent(banner);
 		TabSheet tabs = new TabSheet();
 		tabs.setSizeFull();
 		String modulesParamString = localeConfig.getText("modules." + role);
@@ -96,11 +90,7 @@ public class MainApplication extends Application implements HttpServletRequestLi
 			}
 		}
 		tabs.addListener(this);
-		verticalLayout.addComponent(tabs);
-		verticalLayout.setExpandRatio(tabs, 1.0f);
-		CustomLayout footer = new CustomLayout("../../hs/layout/footer");
-		verticalLayout.addComponent(footer);
-		mainWindow.setContent(verticalLayout);
+		mainWindow.setContent(tabs);
 		setMainWindow(mainWindow);
 		setErrorHandler(new Terminal.ErrorListener() {
 			private static final long serialVersionUID = 1L;
