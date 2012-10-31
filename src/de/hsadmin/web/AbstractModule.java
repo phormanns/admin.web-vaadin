@@ -54,49 +54,14 @@ public abstract class AbstractModule implements Module, Serializable {
 		if (this instanceof SearchAble || this instanceof InsertAble ||
 				!("USER".equals(application.getLoginUserRole()) || "NONE".equals(application.getLoginUserRole()))) {
 			HorizontalLayout toolbar = new HorizontalLayout();
-			if (!("USER".equals(application.getLoginUserRole()) || "NONE".equals(application.getLoginUserRole()))) {
-				selRunAs = new Select();
-				selRunAs.setWidth(100.0f, Sizeable.UNITS_PIXELS);
-				selRunAs.setImmediate(true);
-				selRunAs.setNewItemsAllowed(false);
-				selRunAs.setNullSelectionAllowed(false);
-				if (!application.getLoginUserRole().startsWith("PAC")) {
-//					if (application.getLoginUserRole().startsWith("PAC")) {
-//						
-//					}
-					selRunAs.addItem(application.getLogin());
-					Object custListObj = application.getRemote().callSearch("member", new HashMap<String, String>());
-					if (custListObj instanceof Object[]) {
-						Object[] custList = (Object[]) custListObj;
-						for (Object custObj : custList) {
-							if (custObj instanceof Map<?, ?>) {
-								Map<?, ?> custHash = (Map<?, ?>)custObj;
-								selRunAs.addItem(custHash.get("membercode"));
-							}
-						}
-					}
-				}
-				Object pacListObj = application.getRemote().callSearch("pac", new HashMap<String, String>());
-				if (pacListObj instanceof Object[]) {
-					Object[] pacList = (Object[]) pacListObj;
-					for (Object pacObj : pacList) {
-						if (pacObj instanceof Map<?, ?>) {
-							Map<?, ?> pacHash = (Map<?, ?>)pacObj;
-							selRunAs.addItem(pacHash.get("name"));
-						}
-					}
-				}
-				selRunAs.select(application.getRunAs());
-				selRunAs.setScrollToSelectedItem(true);
-				selRunAs.addListener(new Property.ValueChangeListener() {
-					private static final long serialVersionUID = 1L;
-					@Override
-					public void valueChange(ValueChangeEvent event) {
-						Property property = event.getProperty();
-						application.setRunAs(property.getValue().toString());
-					}
-				});
-				toolbar.addComponent(selRunAs);
+			if ("HOSTMASTER".equals(application.getLoginUserRole())) {
+				createRunAsSelect(toolbar, new SearchForSelector("member", "membercode"), new SearchForSelector("pac", "name"));
+			}
+			if ("CUSTOMER".equals(application.getLoginUserRole())) {
+				createRunAsSelect(toolbar, new SearchForSelector("pac", "name"));
+			}
+			if (application.getLoginUserRole().startsWith("PAC")) {
+				createRunAsSelect(toolbar, new SearchForSelector("user", "name"));
 			}
 			if (this instanceof InsertAble) {
 				Button btNew = new Button(moduleConfig.getLabel("new"));
@@ -150,14 +115,42 @@ public abstract class AbstractModule implements Module, Serializable {
 				});
 				toolbar.addComponent(btNew);
 			}
-//			if (this instanceof SearchAble) {
-//				Button btSearch = new Button("search");
-//				toolbar.addComponent(btSearch);
-//			}
 			layout.addComponent(toolbar);
 		}
 		layout.addComponent(component);
 		layout.setExpandRatio(component, 1.0f);
+	}
+
+	private void createRunAsSelect(HorizontalLayout toolbar, SearchForSelector... searchSelector) throws HsarwebException {
+		selRunAs = new Select();
+		selRunAs.setWidth(100.0f, Sizeable.UNITS_PIXELS);
+		selRunAs.setImmediate(true);
+		selRunAs.setNewItemsAllowed(false);
+		selRunAs.setNullSelectionAllowed(false);
+		selRunAs.addItem(application.getLogin());
+		for (SearchForSelector sel : searchSelector) {
+			Object custListObj = application.getRemote().callSearch(sel.getModuleName(), new HashMap<String, String>());
+			if (custListObj instanceof Object[]) {
+				Object[] custList = (Object[]) custListObj;
+				for (Object custObj : custList) {
+					if (custObj instanceof Map<?, ?>) {
+						Map<?, ?> custHash = (Map<?, ?>)custObj;
+						selRunAs.addItem(custHash.get(sel.getPropertyName()));
+					}
+				}
+			}
+		}
+		selRunAs.select(application.getRunAs());
+		selRunAs.setScrollToSelectedItem(true);
+		selRunAs.addListener(new Property.ValueChangeListener() {
+			private static final long serialVersionUID = 1L;
+			@Override
+			public void valueChange(ValueChangeEvent event) {
+				Property property = event.getProperty();
+				application.setRunAs(property.getValue().toString());
+			}
+		});
+		toolbar.addComponent(selRunAs);
 	}
 
 
@@ -183,5 +176,20 @@ public abstract class AbstractModule implements Module, Serializable {
 
 	@Override
 	public abstract ModuleConfig getModuleConfig();
+
+	private class SearchForSelector {
+		private final String moduleName;
+		private final String propertyName; 
+		public SearchForSelector(String module, String property) {
+			moduleName = module;
+			propertyName = property;
+		}
+		public String getModuleName() {
+			return moduleName;
+		}
+		public String getPropertyName() {
+			return propertyName;
+		}
+	}
 
 }
