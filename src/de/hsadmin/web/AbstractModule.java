@@ -12,6 +12,7 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Form;
 import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.Label;
 import com.vaadin.ui.Select;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
@@ -150,6 +151,7 @@ public abstract class AbstractModule implements Module, Serializable {
 				application.setRunAs(property.getValue().toString());
 			}
 		});
+		toolbar.addComponent(new Label(application.getLocaleConfig().getText("runAs")));
 		toolbar.addComponent(selRunAs);
 	}
 
