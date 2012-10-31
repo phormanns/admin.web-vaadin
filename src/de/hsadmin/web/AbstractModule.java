@@ -151,7 +151,9 @@ public abstract class AbstractModule implements Module, Serializable {
 				application.setRunAs(property.getValue().toString());
 			}
 		});
-		toolbar.addComponent(new Label(application.getLocaleConfig().getText("runas")));
+		Label lbl = new Label("&nbsp;" + application.getLocaleConfig().getText("runas") + "&nbsp;", Label.CONTENT_XHTML);
+		lbl.setSizeFull();
+		toolbar.addComponent(lbl);
 		toolbar.addComponent(selRunAs);
 	}
 
