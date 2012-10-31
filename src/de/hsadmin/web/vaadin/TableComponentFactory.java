@@ -13,13 +13,12 @@ import com.vaadin.data.Property;
 import com.vaadin.terminal.Sizeable;
 import com.vaadin.terminal.ThemeResource;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Form;
 import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.Label;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.themes.BaseTheme;
 
 import de.hsadmin.web.DeleteAble;
@@ -260,6 +259,7 @@ public class TableComponentFactory implements ComponentFactory, Serializable {
 	private Button createDeleteButton(long id) {
 		ThemeResource icon = new ThemeResource("../runo/icons/16/document-delete.png");
 		final Button button = new Button();
+		final Module thisModule = module;
 		button.setIcon(icon);
 		button.setDescription(module.getApplication().getLocaleConfig().getText("delete"));
 		button.setData(id);
@@ -269,14 +269,16 @@ public class TableComponentFactory implements ComponentFactory, Serializable {
 			private Window childWindow;
 			@Override
 			public void buttonClick(ClickEvent event) {
+				final GenericForm genericForm = new GenericForm(thisModule, (Long) button.getData());
+				final Form form = genericForm.createDeleteForm();
 				final MainApplication application = module.getApplication();
 				LocaleConfig localeConfig = application.getLocaleConfig();
 				childWindow = new Window(module.getModuleConfig().getLabel("moduletitle") + " " + localeConfig.getText("delete"));
-				childWindow.setWidth(320.0f, Sizeable.UNITS_PIXELS);
+				childWindow.setWidth(640.0f, Sizeable.UNITS_PIXELS);
 				VerticalLayout vLayout = new VerticalLayout();
 				vLayout.setMargin(true);
 				vLayout.setSpacing(true);
-				vLayout.addComponent(new Label(localeConfig.getText("confirmdelete")));
+				vLayout.addComponent(form);
 				HorizontalLayout hLayout = new HorizontalLayout();
 				Button btDeleteRow = new Button(localeConfig.getText("delete"));
 				btDeleteRow.addListener(new Button.ClickListener() {

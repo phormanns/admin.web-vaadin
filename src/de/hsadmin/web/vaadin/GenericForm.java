@@ -75,6 +75,38 @@ public class GenericForm {
 		return null;
 	}
 
+	public Form createDeleteForm() {
+		try {
+			MainApplication application = module.getApplication();
+			ModuleConfig config = module.getModuleConfig();
+			Map<String, String> where = new HashMap<String, String>();
+			where.put(findIdKey(), entityId.toString());
+			Object searchResult = application.getRemote().callSearch(config.getRemoteName(), where);
+			if (searchResult instanceof Object[]) {
+				Map<?, ?> row = (Map<?, ?>) (((Object[]) searchResult)[0]);
+				Form f = new Form();
+				f.setCaption(config.getLabel("delete"));
+				f.setData(entityId);
+				Layout layout = f.getLayout();
+				for (PropertyConfig prop : config.getPropertyList()) {
+					if (prop.getPropFieldFactory().getClass().equals(DefaultPropertyFieldFactory.class)
+							&& prop.getPropTableColumn().equals(PropertyTableColumn.DISPLAY)) {
+						PropertyFieldFactory propFieldFactory = prop.getPropFieldFactory();
+						Object value = row.get(prop.getId());
+						Component component = (Component) propFieldFactory.createFieldComponent(prop, value);
+						component.setReadOnly(true);
+						layout.addComponent(component);
+					}
+				}
+				return f;
+			}
+		} catch (HsarwebException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
+
 	private String findIdKey() {
 		List<PropertyConfig> propertyList = module.getModuleConfig().getPropertyList();
 		String idKey = null;
