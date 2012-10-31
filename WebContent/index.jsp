@@ -19,11 +19,13 @@
 	<script language='javascript' src='/hsarweb/VAADIN/widgetsets/com.vaadin.terminal.gwt.DefaultWidgetSet/com.vaadin.terminal.gwt.DefaultWidgetSet.nocache.js'>
 	</script>
   	<link rel="stylesheet" type="text/css" href="/hsarweb/VAADIN/themes/reindeer/styles.css"/>
+  	<!--#include virtual="/hostsharing/includes/head.html" -->
 </head>
 <body>
 	<iframe id="__gwt_historyFrame" style="width:0;height:0;border:0"></iframe>
-	<h1>HSAdmin Web</h1>
+	<!--#include virtual="/hostsharing/includes/header.html" -->
 	<div id="hsarweb" style="width:100%;height:800px;"
 		class="v-app v-app-loading v-theme-reindeer v-app-MainApplication"> </div>
+	<!--#include virtual="/hostsharing/includes/footer.html" -->
 </body>
 </html>
