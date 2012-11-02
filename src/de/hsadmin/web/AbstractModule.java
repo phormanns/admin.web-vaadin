@@ -9,6 +9,7 @@ import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.terminal.Sizeable;
 import com.vaadin.terminal.ThemeResource;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Form;
 import com.vaadin.ui.HorizontalLayout;
@@ -16,7 +17,6 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.Select;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
-import com.vaadin.ui.Button.ClickEvent;
 
 import de.hsadmin.web.config.ComponentFactory;
 import de.hsadmin.web.config.LocaleConfig;
@@ -55,15 +55,7 @@ public abstract class AbstractModule implements Module, Serializable {
 		if (this instanceof SearchAble || this instanceof InsertAble ||
 				!("USER".equals(application.getLoginUserRole()) || "NONE".equals(application.getLoginUserRole()))) {
 			HorizontalLayout toolbar = new HorizontalLayout();
-			if ("HOSTMASTER".equals(application.getLoginUserRole())) {
-				createRunAsSelect(toolbar, new SearchForSelector("member", "membercode"), new SearchForSelector("pac", "name"));
-			}
-			if ("CUSTOMER".equals(application.getLoginUserRole())) {
-				createRunAsSelect(toolbar, new SearchForSelector("pac", "name"));
-			}
-			if (application.getLoginUserRole().startsWith("PAC")) {
-				createRunAsSelect(toolbar, new SearchForSelector("user", "name"));
-			}
+			createRunAsSelect(toolbar);
 			if (this instanceof InsertAble) {
 				Button btNew = new Button(moduleConfig.getLabel("new"));
 				ThemeResource icon = new ThemeResource("../runo/icons/16/document-add.png");
@@ -122,24 +114,15 @@ public abstract class AbstractModule implements Module, Serializable {
 		layout.setExpandRatio(component, 1.0f);
 	}
 
-	private void createRunAsSelect(HorizontalLayout toolbar, SearchForSelector... searchSelector) throws HsarwebException {
+	private void createRunAsSelect(HorizontalLayout toolbar) throws UnsupportedOperationException, HsarwebException {
 		selRunAs = new Select();
 		selRunAs.setWidth(100.0f, Sizeable.UNITS_PIXELS);
 		selRunAs.setImmediate(true);
-		selRunAs.setNewItemsAllowed(false);
+		selRunAs.setNewItemsAllowed(true);
 		selRunAs.setNullSelectionAllowed(false);
 		selRunAs.addItem(application.getLogin());
-		for (SearchForSelector sel : searchSelector) {
-			Object custListObj = application.getRemote().callSearch(sel.getModuleName(), new HashMap<String, String>());
-			if (custListObj instanceof Object[]) {
-				Object[] custList = (Object[]) custListObj;
-				for (Object custObj : custList) {
-					if (custObj instanceof Map<?, ?>) {
-						Map<?, ?> custHash = (Map<?, ?>)custObj;
-						selRunAs.addItem(custHash.get(sel.getPropertyName()));
-					}
-				}
-			}
+		for (Object item : application.readSelectRunAsItems()) {
+			selRunAs.addItem(item);
 		}
 		selRunAs.select(application.getRunAs());
 		selRunAs.setScrollToSelectedItem(true);
@@ -151,12 +134,9 @@ public abstract class AbstractModule implements Module, Serializable {
 				application.setRunAs(property.getValue().toString());
 			}
 		});
-		Label lbl = new Label("&nbsp;" + application.getLocaleConfig().getText("runas") + "&nbsp;", Label.CONTENT_XHTML);
-		lbl.setSizeFull();
-		toolbar.addComponent(lbl);
+		selRunAs.setDescription(application.getLocaleConfig().getText("runas"));
 		toolbar.addComponent(selRunAs);
 	}
-
 
 	public void setApplication(MainApplication app) throws HsarwebException {
 		application = app;
@@ -180,20 +160,5 @@ public abstract class AbstractModule implements Module, Serializable {
 
 	@Override
 	public abstract ModuleConfig getModuleConfig();
-
-	private class SearchForSelector {
-		private final String moduleName;
-		private final String propertyName; 
-		public SearchForSelector(String module, String property) {
-			moduleName = module;
-			propertyName = property;
-		}
-		public String getModuleName() {
-			return moduleName;
-		}
-		public String getPropertyName() {
-			return propertyName;
-		}
-	}
 
 }

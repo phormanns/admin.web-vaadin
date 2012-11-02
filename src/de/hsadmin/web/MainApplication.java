@@ -1,6 +1,8 @@
 package de.hsadmin.web;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -50,6 +52,7 @@ public class MainApplication extends Application implements HttpServletRequestLi
 	private String runAs = null;
 	private TabSheet tabSheet;
 	private Window mainWindow;
+	private List<Object> runAsList = null;
 
 
 	@Override
@@ -222,6 +225,22 @@ public class MainApplication extends Application implements HttpServletRequestLi
 			e.printStackTrace();
 			showSystemException(e);
 		}
+	}
+
+	public List<Object> readSelectRunAsItems() throws HsarwebException {
+		if (runAsList == null) {
+			runAsList = new ArrayList<Object>();
+			if ("HOSTMASTER".equals(loginUserRole)) {
+				runAsList = ItemsReader.readItemList(this, "member", "membercode");
+			}
+			if ("CUSTOMER".equals(loginUserRole)) {
+				runAsList = ItemsReader.readItemList(this, "pac", "name");
+			}
+			if (loginUserRole.startsWith("PAC")) {
+				runAsList = ItemsReader.readItemList(this, "user", "name");
+			}
+		}
+		return runAsList;
 	}
 
 }
