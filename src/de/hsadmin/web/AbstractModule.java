@@ -6,10 +6,12 @@ import java.util.Map;
 
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
+import com.vaadin.terminal.ExternalResource;
 import com.vaadin.terminal.Sizeable;
 import com.vaadin.terminal.ThemeResource;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Form;
 import com.vaadin.ui.HorizontalLayout;
@@ -55,7 +57,6 @@ public abstract class AbstractModule implements Module, Serializable {
 		if (this instanceof SearchAble || this instanceof InsertAble ||
 				!("USER".equals(application.getLoginUserRole()) || "NONE".equals(application.getLoginUserRole()))) {
 			HorizontalLayout toolbar = new HorizontalLayout();
-			createRunAsSelect(toolbar);
 			if (this instanceof InsertAble) {
 				Button btNew = new Button(moduleConfig.getLabel("new"));
 				ThemeResource icon = new ThemeResource("../runo/icons/16/document-add.png");
@@ -108,6 +109,24 @@ public abstract class AbstractModule implements Module, Serializable {
 				});
 				toolbar.addComponent(btNew);
 			}
+			toolbar.setWidth("100%");
+			Label space = new Label("  ");
+			space.setWidth("100%");
+			toolbar.addComponent(space);
+			toolbar.setExpandRatio(space, 1.0f);
+			createRunAsSelect(toolbar);
+			Button btLogout = new Button(localeConfig.getText("logout"));
+			btLogout.addListener(new ClickListener() {
+				private static final long serialVersionUID = 1L;
+				@Override
+				public void buttonClick(ClickEvent event) {
+					ExternalResource logoutLink = new ExternalResource("logout");
+					application.getMainWindow().open(logoutLink);
+				}
+			});
+			toolbar.addComponent(btLogout);
+			ThemeResource icon = new ThemeResource("../runo/icons/16/cancel.png");
+			btLogout.setIcon(icon);
 			layout.addComponent(toolbar);
 		}
 		layout.addComponent(component);
