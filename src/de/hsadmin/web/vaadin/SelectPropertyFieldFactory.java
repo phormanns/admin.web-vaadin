@@ -5,7 +5,9 @@ import java.util.Map;
 import com.vaadin.terminal.Sizeable;
 import com.vaadin.ui.Select;
 
+import de.hsadmin.web.AbstractProperty;
 import de.hsadmin.web.HsarwebException;
+import de.hsadmin.web.StringProperty;
 import de.hsadmin.web.config.PropertyConfig;
 import de.hsadmin.web.config.PropertyFieldFactory;
 
@@ -33,10 +35,10 @@ public class SelectPropertyFieldFactory implements PropertyFieldFactory {
 	}
 
 	@Override
-	public String getValue(PropertyConfig prop, Object component)
+	public AbstractProperty getValue(PropertyConfig prop, Object component)
 			throws HsarwebException {
 		if (component instanceof Select) {
-			return (String) ((Select) component).getValue();
+			return new StringProperty((String) ((Select) component).getValue());
 		}
 		return null;
 	}

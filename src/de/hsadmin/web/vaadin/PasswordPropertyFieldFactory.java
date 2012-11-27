@@ -4,8 +4,10 @@ import com.vaadin.terminal.Sizeable;
 import com.vaadin.ui.PasswordField;
 import com.vaadin.ui.VerticalLayout;
 
+import de.hsadmin.web.AbstractProperty;
 import de.hsadmin.web.HsarwebException;
 import de.hsadmin.web.Module;
+import de.hsadmin.web.StringProperty;
 import de.hsadmin.web.config.ModuleConfig;
 import de.hsadmin.web.config.PropertyConfig;
 import de.hsadmin.web.config.PropertyFieldFactory;
@@ -42,13 +44,13 @@ public class PasswordPropertyFieldFactory implements PropertyFieldFactory {
 	}
 
 	@Override
-	public String getValue(PropertyConfig prop, Object component) throws HsarwebException {
+	public AbstractProperty getValue(PropertyConfig prop, Object component) throws HsarwebException {
 		if (component instanceof VerticalLayout) {
 			VerticalLayout layout = (VerticalLayout) component;
 			PasswordField pw1 = (PasswordField) layout.getComponent(0);
 			PasswordField pw2 = (PasswordField) layout.getComponent(1);
 			if (pw1.getValue().equals(pw2.getValue())) {
-				return (String) pw1.getValue();
+				return new StringProperty((String) pw1.getValue());
 			} else {
 				throw new HsarwebException("password mismatch");
 			}

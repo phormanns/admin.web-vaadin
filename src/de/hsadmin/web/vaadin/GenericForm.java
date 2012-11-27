@@ -10,9 +10,11 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.Form;
 import com.vaadin.ui.Layout;
 
+import de.hsadmin.web.AbstractProperty;
 import de.hsadmin.web.HsarwebException;
 import de.hsadmin.web.MainApplication;
 import de.hsadmin.web.Module;
+import de.hsadmin.web.StringProperty;
 import de.hsadmin.web.config.ModuleConfig;
 import de.hsadmin.web.config.PropertyConfig;
 import de.hsadmin.web.config.PropertyFieldFactory;
@@ -46,8 +48,8 @@ public class GenericForm {
 		try {
 			MainApplication application = module.getApplication();
 			ModuleConfig config = module.getModuleConfig();
-			Map<String, String> where = new HashMap<String, String>();
-			where.put(findIdKey(), entityId.toString());
+			Map<String, AbstractProperty> where = new HashMap<String, AbstractProperty>();
+			where.put(findIdKey(), new StringProperty(entityId.toString()));
 			Object searchResult = application.getRemote().callSearch(config.getRemoteName(), where);
 			if (searchResult instanceof Object[]) {
 				Map<?, ?> row = (Map<?, ?>) (((Object[]) searchResult)[0]);
@@ -88,11 +90,11 @@ public class GenericForm {
 		return idKey;
 	}
 
-	public void transferToHash(Map<String, String> map, Form form) throws HsarwebException {
+	public void transferToHash(Map<String, AbstractProperty> map, Form form) throws HsarwebException {
 		Iterator<Component> iterator = form.getLayout().getComponentIterator();
 		Object formData = form.getData();
 		if (formData != null && formData instanceof Long) {
-			map.put(findIdKey(), ((Long) formData).toString());
+			map.put(findIdKey(), new StringProperty(((Long) formData).toString()));
 		}
 		while (iterator.hasNext()) {
 			Component component = (Component) iterator.next();

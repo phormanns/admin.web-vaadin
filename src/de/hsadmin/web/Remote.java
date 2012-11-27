@@ -18,23 +18,23 @@ public class Remote {
 		this.app = application;
 	}
 
-	public Object callSearch(String module, Map<String, String> where) throws HsarwebException {
+	public Object callSearch(String module, Map<String, AbstractProperty> where) throws HsarwebException {
 		return xmlrpcCall(module, "search", where); 
 	}
 
-	public void callAdd(String module, Map<String, String> set) throws HsarwebException {
+	public void callAdd(String module, Map<String, AbstractProperty> set) throws HsarwebException {
 		xmlrpcCall(module, "add", set); 
 	}
 
-	public void callUpdate(String module, Map<String, String> set, Map<String, String> where) throws HsarwebException {
+	public void callUpdate(String module, Map<String, AbstractProperty> set, Map<String, AbstractProperty> where) throws HsarwebException {
 		xmlrpcCall(module, "update", set, where); 
 	}
 
-	public void callDelete(String module, Map<String, String> where) throws HsarwebException {
+	public void callDelete(String module, Map<String, AbstractProperty> where) throws HsarwebException {
 		xmlrpcCall(module, "delete", where); 
 	}
 
-	private Object xmlrpcCall(String module, String operation, Map<String, String> param1) throws HsarwebException {
+	private Object xmlrpcCall(String module, String operation, Map<String, AbstractProperty> param1) throws HsarwebException {
 		Object[] params = new Object[3];
 		params[0] = app.getLogin();
 		params[1] = app.getProxyTicket();
@@ -42,7 +42,7 @@ public class Remote {
 		return xmlrpcCall(module + "." + operation, params);
 	}
 
-	private Object xmlrpcCall(String module, String operation, Map<String, String> param1, Map<String, String> param2) throws HsarwebException {
+	private Object xmlrpcCall(String module, String operation, Map<String, AbstractProperty> param1, Map<String, AbstractProperty> param2) throws HsarwebException {
 		Object[] params = new Object[4];
 		params[0] = app.getLogin();
 		params[1] = app.getProxyTicket();
@@ -76,6 +76,5 @@ public class Remote {
 		}
 		return client;
 	}
-
 
 }

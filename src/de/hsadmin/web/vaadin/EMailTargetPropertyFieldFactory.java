@@ -15,9 +15,11 @@ import com.vaadin.ui.Select;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 
+import de.hsadmin.web.AbstractProperty;
 import de.hsadmin.web.GenericModule;
 import de.hsadmin.web.HsarwebException;
 import de.hsadmin.web.Module;
+import de.hsadmin.web.StringProperty;
 import de.hsadmin.web.config.PropertyConfig;
 import de.hsadmin.web.config.PropertyFieldFactory;
 
@@ -92,7 +94,7 @@ public class EMailTargetPropertyFieldFactory implements PropertyFieldFactory {
 	}
 
 	@Override
-	public String getValue(PropertyConfig prop, Object component) throws HsarwebException {
+	public AbstractProperty getValue(PropertyConfig prop, Object component) throws HsarwebException {
 		StringBuffer target = new StringBuffer();
 		boolean insertKomma = false;
 		for (Integer key : targets.keySet()) {
@@ -106,7 +108,7 @@ public class EMailTargetPropertyFieldFactory implements PropertyFieldFactory {
 				insertKomma = true;
 			}
 		}
-		return target.toString();
+		return new StringProperty(target.toString());
 	}
 
 	@Override

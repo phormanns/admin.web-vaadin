@@ -3,6 +3,8 @@ package de.hsadmin.web.vaadin;
 import com.vaadin.terminal.Sizeable;
 import com.vaadin.ui.TextField;
 
+import de.hsadmin.web.AbstractProperty;
+import de.hsadmin.web.StringProperty;
 import de.hsadmin.web.config.PropertyConfig;
 import de.hsadmin.web.config.PropertyFieldFactory;
 
@@ -22,9 +24,9 @@ public class DefaultPropertyFieldFactory implements PropertyFieldFactory {
 	}
 
 	@Override
-	public String getValue(PropertyConfig prop, Object component) {
+	public AbstractProperty getValue(PropertyConfig prop, Object component) {
 		if (component instanceof TextField) {
-			return (String) ((TextField) component).getValue();
+			return new StringProperty((String) ((TextField) component).getValue());
 		}
 		return null;
 	}

@@ -22,10 +22,12 @@ import com.vaadin.ui.Window;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.themes.BaseTheme;
 
+import de.hsadmin.web.AbstractProperty;
 import de.hsadmin.web.DeleteAble;
 import de.hsadmin.web.HsarwebException;
 import de.hsadmin.web.MainApplication;
 import de.hsadmin.web.Module;
+import de.hsadmin.web.StringProperty;
 import de.hsadmin.web.UpdateAble;
 import de.hsadmin.web.config.ComponentFactory;
 import de.hsadmin.web.config.LocaleConfig;
@@ -107,7 +109,7 @@ public class TableComponentFactory implements ComponentFactory, Serializable {
 		table.removeAllItems();
 		try {
 			ModuleConfig moduleConfig = module.getModuleConfig();
-			Object callSearch = module.getApplication().getRemote().callSearch(moduleConfig.getRemoteName(), new HashMap<String, String>());
+			Object callSearch = module.getApplication().getRemote().callSearch(moduleConfig.getRemoteName(), new HashMap<String, AbstractProperty>());
 			List<PropertyConfig> propertyList = moduleConfig.getPropertyList();
 			if (callSearch instanceof Object[]) {
 				for (Object row : ((Object[])callSearch)) {
@@ -229,7 +231,7 @@ public class TableComponentFactory implements ComponentFactory, Serializable {
 					public void buttonClick(ClickEvent event) {
 						application.getMainWindow().removeWindow(childWindow);
 						try {
-							Map<String, String> map = new HashMap<String, String>();
+							Map<String, AbstractProperty> map = new HashMap<String, AbstractProperty>();
 							genericForm.transferToHash(map, form);
 							((UpdateAble) module).updateRow(map);
 							loadData();
@@ -285,8 +287,8 @@ public class TableComponentFactory implements ComponentFactory, Serializable {
 					public void buttonClick(ClickEvent event) {
 						application.getMainWindow().removeWindow(childWindow);
 						try {
-							Map<String, String> map = new HashMap<String, String>();
-							map.put(findIdKey(), ((Long) button.getData()).toString());
+							Map<String, AbstractProperty> map = new HashMap<String, AbstractProperty>();
+							map.put(findIdKey(), new StringProperty(((Long) button.getData()).toString()));
 							((DeleteAble) module).deleteRow(map);
 							loadData();
 						} catch (HsarwebException e) {
