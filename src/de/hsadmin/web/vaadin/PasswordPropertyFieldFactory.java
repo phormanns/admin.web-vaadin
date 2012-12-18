@@ -12,7 +12,8 @@ import de.hsadmin.web.config.PropertyFieldFactory;
 
 public class PasswordPropertyFieldFactory implements PropertyFieldFactory {
 
-	private Module module;
+	final private Module module;
+
 	private boolean readOnly = false;
 	private boolean writeOnce = false;
 

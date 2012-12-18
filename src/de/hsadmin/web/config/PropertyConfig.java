@@ -147,5 +147,5 @@ public class PropertyConfig implements Serializable, PropertyDefaultValue, Prope
 	public void setExpandRatio(float expandRatio) {
 		this.expandRatio = expandRatio;
 	}
-	
+
 }

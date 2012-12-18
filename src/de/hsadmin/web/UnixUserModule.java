@@ -9,6 +9,7 @@ import de.hsadmin.web.config.PropertyConfig;
 import de.hsadmin.web.config.PropertyDefaultValue;
 import de.hsadmin.web.config.PropertySelectValues;
 import de.hsadmin.web.config.PropertyTableColumn;
+import de.hsadmin.web.vaadin.PacPrefixedNamePropertyFieldFactory;
 import de.hsadmin.web.vaadin.PasswordPropertyFieldFactory;
 import de.hsadmin.web.vaadin.SelectPropertyFieldFactory;
 
@@ -22,10 +23,12 @@ public class UnixUserModule extends GenericModule {
 	protected void initModule() {
 		MainApplication application = getApplication();
 		moduleConfig = new ModuleConfig("user", application.getLocale());
-		String login = application.getRunAs();
-		final String pac = login.length() >= 5 ? login.substring(0, 5) : "";
-		PropertyConfig pacProp = new PropertyConfig(moduleConfig, "pac", String.class, PropertyTableColumn.HIDDEN, new SelectPropertyFieldFactory());
-		pacProp.setSelectValues(new PropertySelectValues() {
+		PropertyConfig idProp = new PropertyConfig(moduleConfig, "id", Long.class, PropertyTableColumn.INTERNAL_KEY);
+		idProp.setReadOnly(true);
+		PropertyConfig useridProp = new PropertyConfig(moduleConfig, "userid", Long.class, PropertyTableColumn.HIDDEN);
+		useridProp.setReadOnly(true);
+		PropertyConfig nameProp = new PropertyConfig(moduleConfig, "name", String.class, new PacPrefixedNamePropertyFieldFactory(this));
+		nameProp.setSelectValues(new PropertySelectValues() {
 			@Override
 			public boolean newItemsAllowed() {
 				return false;
@@ -34,6 +37,7 @@ public class UnixUserModule extends GenericModule {
 			public boolean hasSelectList() {
 				return true;
 			}
+			
 			@Override
 			public Map<String, String> getSelectValues() {
 				List<String> list = getPackets();
@@ -44,28 +48,7 @@ public class UnixUserModule extends GenericModule {
 				return map;
 			}
 		});
-		pacProp.setDefaultValue(new PropertyDefaultValue() {
-			@Override
-			public String getDefaultValue() {
-				return pac;
-			}
-		});
-		pacProp.setWriteOnce(true);
-		PropertyConfig idProp = new PropertyConfig(moduleConfig, "id", Long.class, PropertyTableColumn.INTERNAL_KEY);
-		idProp.setReadOnly(true);
-		PropertyConfig useridProp = new PropertyConfig(moduleConfig, "userid", Long.class, PropertyTableColumn.HIDDEN);
-		useridProp.setReadOnly(true);
-		PropertyConfig nameProp = new PropertyConfig(moduleConfig, "name", String.class);
 		nameProp.setWriteOnce(true);
-		nameProp.setDefaultValue(new PropertyDefaultValue() {
-			@Override
-			public String getDefaultValue() {
-				if (pac.length() > 0) {
-					return pac + "-";
-				}
-				return "";
-			}
-		});
 		PropertyConfig passwordProp = new PropertyConfig(moduleConfig, "password", String.class, PropertyTableColumn.NONE, new PasswordPropertyFieldFactory(this));
 		PropertyConfig commentProp = new PropertyConfig(moduleConfig, "comment", String.class);
 		commentProp.setExpandRatio(0.7f);
@@ -116,10 +99,8 @@ public class UnixUserModule extends GenericModule {
 				return "0";
 			}
 		});
-		pacProp.setShowInForm(false);
 		idProp.setShowInForm(false);
 		useridProp.setShowInForm(false);
-		moduleConfig.addProperty(pacProp);
 		moduleConfig.addProperty(idProp);
 		moduleConfig.addProperty(useridProp);
 		moduleConfig.addProperty(nameProp);

@@ -89,8 +89,9 @@ public class GenericForm {
 				f.setData(entityId);
 				Layout layout = f.getLayout();
 				for (PropertyConfig prop : config.getPropertyList()) {
-					if (prop.getPropFieldFactory().getClass().equals(DefaultPropertyFieldFactory.class)
-							&& prop.getPropTableColumn().equals(PropertyTableColumn.DISPLAY)) {
+					if (( DefaultPropertyFieldFactory.class.equals(prop.getPropFieldFactory().getClass()) ||
+							PacPrefixedNamePropertyFieldFactory.class.equals(prop.getPropFieldFactory().getClass()))
+								&& prop.getPropTableColumn().equals(PropertyTableColumn.DISPLAY)) {
 						PropertyFieldFactory propFieldFactory = prop.getPropFieldFactory();
 						Object value = row.get(prop.getId());
 						Component component = (Component) propFieldFactory.createFieldComponent(prop, value);
