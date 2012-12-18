@@ -6,11 +6,10 @@ import java.util.TreeMap;
 
 import de.hsadmin.web.config.ModuleConfig;
 import de.hsadmin.web.config.PropertyConfig;
-import de.hsadmin.web.config.PropertyDefaultValue;
 import de.hsadmin.web.config.PropertySelectValues;
 import de.hsadmin.web.config.PropertyTableColumn;
 import de.hsadmin.web.vaadin.EMailTargetPropertyFieldFactory;
-import de.hsadmin.web.vaadin.SelectPropertyFieldFactory;
+import de.hsadmin.web.vaadin.PacPrefixedNamePropertyFieldFactory;
 
 public class EMailAliasModule extends GenericModule {
 
@@ -22,40 +21,10 @@ public class EMailAliasModule extends GenericModule {
 	protected void initModule() {
 		MainApplication application = getApplication();
 		moduleConfig = new ModuleConfig("emailalias", application.getLocale());
-		String login = application.getRunAs();
-		final String pac = login.length() >= 5 ? login.substring(0, 5) : "";
 		PropertyConfig idProp = new PropertyConfig(moduleConfig, "id", Long.class, PropertyTableColumn.INTERNAL_KEY);
 		idProp.setReadOnly(true);
-		PropertyConfig nameProp = new PropertyConfig(moduleConfig, "name", String.class);
-		nameProp.setDefaultValue(new PropertyDefaultValue() {
-			@Override
-			public String getDefaultValue() {
-				if (pac.length() >= 5) {
-					return pac + "-";
-				}
-				return "";
-			}
-		});
-		nameProp.setWriteOnce(true);
-		PropertyConfig targetProp = new PropertyConfig(moduleConfig, "target", String.class, new EMailTargetPropertyFieldFactory(this));
-		targetProp.setExpandRatio(0.8f);
-		targetProp.setDefaultValue(new PropertyDefaultValue() {
-			@Override
-			public String getDefaultValue() {
-				if (pac.length() >= 5) {
-					return pac + "-";
-				}
-				return "";
-			}
-		});
-		PropertyConfig pacProp = new PropertyConfig(moduleConfig, "pac", String.class, PropertyTableColumn.HIDDEN, new SelectPropertyFieldFactory());
-		pacProp.setDefaultValue(new PropertyDefaultValue() {
-			@Override
-			public String getDefaultValue() {
-				return pac;
-			}
-		});
-		pacProp.setSelectValues(new PropertySelectValues() {
+		PropertyConfig nameProp = new PropertyConfig(moduleConfig, "name", String.class, new PacPrefixedNamePropertyFieldFactory(this));
+		nameProp.setSelectValues(new PropertySelectValues() {
 			@Override
 			public boolean newItemsAllowed() {
 				return false;
@@ -64,6 +33,7 @@ public class EMailAliasModule extends GenericModule {
 			public boolean hasSelectList() {
 				return true;
 			}
+			
 			@Override
 			public Map<String, String> getSelectValues() {
 				List<String> list = getPackets();
@@ -74,11 +44,11 @@ public class EMailAliasModule extends GenericModule {
 				return map;
 			}
 		});
-		pacProp.setWriteOnce(true);
+		nameProp.setWriteOnce(true);
+		PropertyConfig targetProp = new PropertyConfig(moduleConfig, "target", String.class, new EMailTargetPropertyFieldFactory(this));
+		targetProp.setExpandRatio(0.8f);
 		idProp.setShowInForm(false);
-		pacProp.setShowInForm(false);
 		moduleConfig.addProperty(idProp);
-		moduleConfig.addProperty(pacProp);
 		moduleConfig.addProperty(nameProp);
 		moduleConfig.addProperty(targetProp);
 	}
