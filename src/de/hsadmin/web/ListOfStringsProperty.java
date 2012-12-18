@@ -1,15 +1,28 @@
 package de.hsadmin.web;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ListOfStringsProperty extends AbstractProperty {
-	public List<String> properties; 
+	
+	public final List<String> properties; 
 	
 	public ListOfStringsProperty(){
-// ??		this.properties = new List<String>();
+		this.properties = new ArrayList<String>();
 	}
 	
-	public boolean Add(String string){
+	public boolean add(String string){
 		 return properties.add(string);
+	}
+
+	@Override
+	public Object toXmlrpcParam() {
+		String[] result = new String[properties.size()];
+		int idx = 0;
+		for (String prop : properties) {
+			result[idx] = prop;
+			idx++;
+		}
+		return result;
 	}
 }

@@ -1,5 +1,7 @@
 package de.hsadmin.web;
 
-public class AbstractProperty {
+public abstract class AbstractProperty {
+
+	public abstract Object toXmlrpcParam();
 	
 }

@@ -19,35 +19,46 @@ public class Remote {
 	}
 
 	public Object callSearch(String module, Map<String, AbstractProperty> where) throws HsarwebException {
-		return xmlrpcCall(module, "search", where); 
+		return xmlrpcCall(module, "search", buildXmlrpcParam(where)); 
 	}
 
 	public void callAdd(String module, Map<String, AbstractProperty> set) throws HsarwebException {
-		xmlrpcCall(module, "add", set); 
+		xmlrpcCall(module, "add", buildXmlrpcParam(set)); 
 	}
 
 	public void callUpdate(String module, Map<String, AbstractProperty> set, Map<String, AbstractProperty> where) throws HsarwebException {
-		xmlrpcCall(module, "update", set, where); 
+		xmlrpcCall(module, "update", buildXmlrpcParam(set), buildXmlrpcParam(where)); 
 	}
 
 	public void callDelete(String module, Map<String, AbstractProperty> where) throws HsarwebException {
-		xmlrpcCall(module, "delete", where); 
+		xmlrpcCall(module, "delete", buildXmlrpcParam(where)); 
 	}
 
-	private Object xmlrpcCall(String module, String operation, Map<String, AbstractProperty> param1) throws HsarwebException {
+	private Map<String, Object> buildXmlrpcParam(Map<String, AbstractProperty> paramHash) {
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		if (paramHash == null) {
+			return null;
+		}
+		for (String key : paramHash.keySet()) {
+			resultMap.put(key, paramHash.get(key).toXmlrpcParam());
+		}
+		return resultMap;
+	}
+
+	private Object xmlrpcCall(String module, String operation, Map<String, Object> param1) throws HsarwebException {
 		Object[] params = new Object[3];
 		params[0] = app.getRunAs();
 		params[1] = app.getProxyTicket();
-		params[2] = param1 != null ? param1 : new HashMap<String, String>();
+		params[2] = param1 != null ? param1 : new HashMap<String, Object>();
 		return xmlrpcCall(module + "." + operation, params);
 	}
 
-	private Object xmlrpcCall(String module, String operation, Map<String, AbstractProperty> param1, Map<String, AbstractProperty> param2) throws HsarwebException {
+	private Object xmlrpcCall(String module, String operation, Map<String, Object> param1, Map<String, Object> param2) throws HsarwebException {
 		Object[] params = new Object[4];
 		params[0] = app.getRunAs();
 		params[1] = app.getProxyTicket();
-		params[2] = param1 != null ? param1 : new HashMap<String, String>();
-		params[3] = param2 != null ? param2 : new HashMap<String, String>();
+		params[2] = param1 != null ? param1 : new HashMap<String, Object>();
+		params[3] = param2 != null ? param2 : new HashMap<String, Object>();
 		return xmlrpcCall(module + "." + operation, params);
 	}
 

@@ -6,11 +6,10 @@ import java.util.TreeMap;
 
 import de.hsadmin.web.config.ModuleConfig;
 import de.hsadmin.web.config.PropertyConfig;
-import de.hsadmin.web.config.PropertyDefaultValue;
 import de.hsadmin.web.config.PropertySelectValues;
 import de.hsadmin.web.config.PropertyTableColumn;
+import de.hsadmin.web.vaadin.PacPrefixedNamePropertyFieldFactory;
 import de.hsadmin.web.vaadin.PasswordPropertyFieldFactory;
-import de.hsadmin.web.vaadin.SelectPropertyFieldFactory;
 
 public abstract class DatabaseUserModule extends GenericModule {
 
@@ -24,29 +23,10 @@ public abstract class DatabaseUserModule extends GenericModule {
 	protected void initModule() {
 		MainApplication application = getApplication();
 		moduleConfig = new ModuleConfig(getModuleIdent(), application.getLocale());
-		String login = application.getRunAs();
-		final String pac = login.length() >= 5 ? login.substring(0, 5) : "";
 		PropertyConfig idProp = new PropertyConfig(moduleConfig, "id", Long.class, PropertyTableColumn.INTERNAL_KEY);
 		idProp.setReadOnly(true);
-		PropertyConfig nameProp = new PropertyConfig(moduleConfig, "name", String.class);
-		nameProp.setDefaultValue(new PropertyDefaultValue() {
-			@Override
-			public String getDefaultValue() {
-				if (pac.length() >= 5) {
-					return pac + "_";
-				}
-				return "";
-			}
-		});
-		nameProp.setWriteOnce(true);
-		PropertyConfig pacProp = new PropertyConfig(moduleConfig, "pac", String.class, PropertyTableColumn.HIDDEN, new SelectPropertyFieldFactory());
-		pacProp.setDefaultValue(new PropertyDefaultValue() {
-			@Override
-			public String getDefaultValue() {
-				return pac;
-			}
-		});
-		pacProp.setSelectValues(new PropertySelectValues() {
+		PropertyConfig nameProp = new PropertyConfig(moduleConfig, "name", String.class, new PacPrefixedNamePropertyFieldFactory(this));
+		nameProp.setSelectValues(new PropertySelectValues() {
 			@Override
 			public boolean newItemsAllowed() {
 				return false;
@@ -65,12 +45,10 @@ public abstract class DatabaseUserModule extends GenericModule {
 				return map;
 			}
 		});
-		pacProp.setWriteOnce(true);
+		nameProp.setWriteOnce(true);
 		PropertyConfig passwordProp = new PropertyConfig(moduleConfig, "password", String.class, PropertyTableColumn.NONE, new PasswordPropertyFieldFactory(this));
 		idProp.setShowInForm(false);
-		pacProp.setShowInForm(false);
 		moduleConfig.addProperty(idProp);
-		moduleConfig.addProperty(pacProp);
 		moduleConfig.addProperty(nameProp);
 		moduleConfig.addProperty(passwordProp);
 	}

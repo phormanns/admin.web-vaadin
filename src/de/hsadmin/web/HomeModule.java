@@ -35,8 +35,8 @@ public class HomeModule extends AbstractModule implements ComponentFactory, Upda
 		setComponentFactory(this);
 	}
 	
-	public void updateRow(Map<String, String> paramHash) throws HsarwebException {
-		Map<String, String> whereHash = new HashMap<String, String>();
+	public void updateRow(Map<String, AbstractProperty> paramHash) throws HsarwebException {
+		Map<String, AbstractProperty> whereHash = new HashMap<String, AbstractProperty>();
 		String idKey = findIdKey();
 		whereHash.put(idKey, paramHash.get(idKey));
 		paramHash.remove(idKey);
@@ -94,8 +94,8 @@ public class HomeModule extends AbstractModule implements ComponentFactory, Upda
 		Button button = new Button(moduleConfig.getLabel("change_password"));
 		ThemeResource icon = new ThemeResource(moduleConfig.getLabel("change_password_icon"));
 		button.setIcon(icon);
-		Map<String, String> whereHash = new HashMap<String, String>();
-		whereHash.put("name", application.getRunAs());
+		Map<String, AbstractProperty> whereHash = new HashMap<String, AbstractProperty>();
+		whereHash.put("name", new StringProperty(application.getRunAs()));
 		Long key = -1L;
 		try {
 			Object object = application.getRemote().callSearch(moduleConfig.getRemoteName(), whereHash);
@@ -130,8 +130,8 @@ public class HomeModule extends AbstractModule implements ComponentFactory, Upda
 					public void buttonClick(ClickEvent event) {
 						application.getMainWindow().removeWindow(childWindow);
 						try {
-							Map<String, String> map = new HashMap<String, String>();
-							map.put("id", ((Long) event.getButton().getData()).toString());
+							Map<String, AbstractProperty> map = new HashMap<String, AbstractProperty>();
+							map.put("id", new StringProperty(((Long) event.getButton().getData()).toString()));
 							Iterator<Component> componentIterator = form.getLayout().getComponentIterator();
 							while (componentIterator.hasNext()) {
 								Component component = (Component) componentIterator.next();

@@ -81,8 +81,8 @@ public class GenericForm {
 		try {
 			MainApplication application = module.getApplication();
 			ModuleConfig config = module.getModuleConfig();
-			Map<String, String> where = new HashMap<String, String>();
-			where.put(findIdKey(), entityId.toString());
+			Map<String, AbstractProperty> where = new HashMap<String, AbstractProperty>();
+			where.put(findIdKey(), new StringProperty(entityId.toString()));
 			Object searchResult = application.getRemote().callSearch(config.getRemoteName(), where);
 			if (searchResult instanceof Object[]) {
 				Map<?, ?> row = (Map<?, ?>) (((Object[]) searchResult)[0]);

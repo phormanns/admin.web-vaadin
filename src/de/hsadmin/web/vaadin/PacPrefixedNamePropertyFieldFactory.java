@@ -7,8 +7,10 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Select;
 import com.vaadin.ui.TextField;
 
+import de.hsadmin.web.AbstractProperty;
 import de.hsadmin.web.HsarwebException;
 import de.hsadmin.web.Module;
+import de.hsadmin.web.StringProperty;
 import de.hsadmin.web.config.ModuleConfig;
 import de.hsadmin.web.config.PropertyConfig;
 import de.hsadmin.web.config.PropertyFieldFactory;
@@ -67,14 +69,14 @@ public class PacPrefixedNamePropertyFieldFactory implements PropertyFieldFactory
 	}
 
 	@Override
-	public String getValue(PropertyConfig prop, Object component) throws HsarwebException {
+	public AbstractProperty getValue(PropertyConfig prop, Object component) throws HsarwebException {
 		ModuleConfig config = module.getModuleConfig();
 		HorizontalLayout layout = (HorizontalLayout) component;
 		Select sel = (Select) layout.getComponent(0);
 		TextField tf = (TextField) layout.getComponent(2);
 		String pacPart = (String) sel.getValue();
 		String userPart = (String) tf.getValue();
-		return pacPart + config.getLabel(prop.getId() + ".separator") + userPart;
+		return new StringProperty(pacPart + config.getLabel(prop.getId() + ".separator") + userPart);
 	}
 
 	@Override

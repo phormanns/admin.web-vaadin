@@ -37,7 +37,6 @@ public class UnixUserModule extends GenericModule {
 			public boolean hasSelectList() {
 				return true;
 			}
-			
 			@Override
 			public Map<String, String> getSelectValues() {
 				List<String> list = getPackets();
