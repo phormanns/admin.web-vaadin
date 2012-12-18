@@ -86,6 +86,7 @@ public class DomainOptionsPropertyFieldFactory implements PropertyFieldFactory {
 		private HorizontalLayout rightPart;
 		private int index;
 		private String optionName;
+		private String testunusedoptionName;
 		private DomainOptionsPropertyFieldFactory owner;
 		
 		protected SingleDomainOption(DomainOptionsPropertyFieldFactory owner, int key, String optionName, Object optionValue) {
