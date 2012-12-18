@@ -10,6 +10,8 @@ import com.vaadin.terminal.Sizeable;
 import com.vaadin.ui.DateField;
 import com.vaadin.ui.PopupDateField;
 
+import de.hsadmin.web.AbstractProperty;
+import de.hsadmin.web.StringProperty;
 import de.hsadmin.web.config.PropertyConfig;
 import de.hsadmin.web.config.PropertyFieldFactory;
 
@@ -41,9 +43,9 @@ public class DatePropertyFieldFactory implements PropertyFieldFactory {
 	}
 
 	@Override
-	public String getValue(PropertyConfig prop, Object component) {
+	public AbstractProperty getValue(PropertyConfig prop, Object component) {
 		if (component instanceof DateField) {
-			return serverDf.format((Date) ((DateField) component).getValue());
+			return (new StringProperty(serverDf.format((Date) ((DateField) component).getValue()))); // TODO: besser DateProperty ?
 		}
 		return null;
 	}

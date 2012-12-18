@@ -142,7 +142,7 @@ public abstract class DatabaseModule extends GenericModule {
 	public List<String> getDatabaseUsers() {
 		ArrayList<String> list = new ArrayList<String>();
 		try {
-			Object callSearch = getApplication().getRemote().callSearch(getUserModuleIdent(), new HashMap<String, String>());
+			Object callSearch = getApplication().getRemote().callSearch(getUserModuleIdent(), new HashMap<String, AbstractProperty>());
 			if (callSearch instanceof Object[]) {
 				for (Object row : ((Object[])callSearch)) {
 					if (row instanceof Map<?, ?>) {

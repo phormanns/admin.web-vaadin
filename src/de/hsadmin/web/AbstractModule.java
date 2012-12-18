@@ -82,7 +82,7 @@ public abstract class AbstractModule implements Module, Serializable {
 							public void buttonClick(ClickEvent event) {
 								application.getMainWindow().removeWindow(childWindow);
 								try {
-									Map<String, String> map = new HashMap<String, String>();
+									Map<String, AbstractProperty> map = new HashMap<String, AbstractProperty>();
 									genericForm.transferToHash(map, form);
 									((InsertAble) thisModule).insertRow(map);
 									componentFactory.loadData();
