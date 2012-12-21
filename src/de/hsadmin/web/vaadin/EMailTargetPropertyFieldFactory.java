@@ -1,6 +1,7 @@
 package de.hsadmin.web.vaadin;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
@@ -18,8 +19,10 @@ import com.vaadin.ui.VerticalLayout;
 import de.hsadmin.web.AbstractProperty;
 import de.hsadmin.web.GenericModule;
 import de.hsadmin.web.HsarwebException;
+import de.hsadmin.web.ListOfStringsProperty;
 import de.hsadmin.web.Module;
 import de.hsadmin.web.StringProperty;
+import de.hsadmin.web.XmlrpcProperty;
 import de.hsadmin.web.config.PropertyConfig;
 import de.hsadmin.web.config.PropertyFieldFactory;
 
@@ -61,7 +64,7 @@ public class EMailTargetPropertyFieldFactory implements PropertyFieldFactory {
 	}
 
 	@Override
-	public Object createFieldComponent(PropertyConfig prop, Object value) {
+	public Object createFieldComponent(PropertyConfig prop, XmlrpcProperty value) {
 		GenericModule genModule = (GenericModule) module;
 		users = genModule.getUsers();
 		mailAliases = genModule.getEMailAliases();
@@ -71,21 +74,21 @@ public class EMailTargetPropertyFieldFactory implements PropertyFieldFactory {
 		
 		targets = new HashMap<Integer, SingleEMailTarget>();
 		lastIndex = 0;
-		if (value instanceof String) {
-			StringTokenizer tokenizer = new StringTokenizer((String) value, ",");
+		if (value instanceof AbstractProperty) {
+			String stringValue = ((AbstractProperty) value).toStringValue();
+			StringTokenizer tokenizer = new StringTokenizer(stringValue, ",");
 			while (tokenizer.hasMoreTokens()) {
 				String target = tokenizer.nextToken().trim();
 				targets.put(lastIndex, new SingleEMailTarget(this, lastIndex, target));
 				lastIndex++;
 			}
 		}
-		if (value instanceof Object[]) {
-			Object[] list = (Object[]) value;
-			for (Object o : list) {
-				if (o instanceof String) {
-					targets.put(lastIndex, new SingleEMailTarget(this, lastIndex, (String) o));
-					lastIndex++;
-				}
+		if (value instanceof ListOfStringsProperty) {
+			ListOfStringsProperty list = (ListOfStringsProperty) value;
+			Iterator<String> stringsIterator = list.stringsIterator();
+			while (stringsIterator.hasNext()) {
+				targets.put(lastIndex, new SingleEMailTarget(this, lastIndex, stringsIterator.next()));
+				lastIndex++;
 			}
 		}
 		targets.put(lastIndex, new SingleEMailTarget(this, lastIndex, ""));

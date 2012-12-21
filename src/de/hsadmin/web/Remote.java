@@ -18,23 +18,23 @@ public class Remote {
 		this.app = application;
 	}
 
-	public Object callSearch(String module, Map<String, AbstractProperty> where) throws HsarwebException {
+	public Object callSearch(String module, Map<String, XmlrpcProperty> where) throws HsarwebException {
 		return xmlrpcCall(module, "search", buildXmlrpcParam(where)); 
 	}
 
-	public void callAdd(String module, Map<String, AbstractProperty> set) throws HsarwebException {
+	public void callAdd(String module, Map<String, XmlrpcProperty> set) throws HsarwebException {
 		xmlrpcCall(module, "add", buildXmlrpcParam(set)); 
 	}
 
-	public void callUpdate(String module, Map<String, AbstractProperty> set, Map<String, AbstractProperty> where) throws HsarwebException {
+	public void callUpdate(String module, Map<String, XmlrpcProperty> set, Map<String, XmlrpcProperty> where) throws HsarwebException {
 		xmlrpcCall(module, "update", buildXmlrpcParam(set), buildXmlrpcParam(where)); 
 	}
 
-	public void callDelete(String module, Map<String, AbstractProperty> where) throws HsarwebException {
+	public void callDelete(String module, Map<String, XmlrpcProperty> where) throws HsarwebException {
 		xmlrpcCall(module, "delete", buildXmlrpcParam(where)); 
 	}
 
-	private Map<String, Object> buildXmlrpcParam(Map<String, AbstractProperty> paramHash) {
+	private Map<String, Object> buildXmlrpcParam(Map<String, XmlrpcProperty> paramHash) {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		if (paramHash == null) {
 			return null;

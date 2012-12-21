@@ -1,22 +1,17 @@
-/**
- * 
- */
 package de.hsadmin.web.vaadin;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import com.vaadin.data.Property;
-import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.terminal.Sizeable;
 import com.vaadin.ui.AbstractField;
 import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.Select;
 import com.vaadin.ui.VerticalLayout;
 
 import de.hsadmin.web.AbstractProperty;
 import de.hsadmin.web.HsarwebException;
 import de.hsadmin.web.ListOfStringsProperty;
+import de.hsadmin.web.XmlrpcProperty;
 import de.hsadmin.web.config.PropertyConfig;
 import de.hsadmin.web.config.PropertyFieldFactory;
 
@@ -49,13 +44,13 @@ public class DomainOptionsPropertyFieldFactory implements PropertyFieldFactory {
 	}
 
 	@Override
-	public Object createFieldComponent(PropertyConfig prop, Object value) {
+	public Object createFieldComponent(PropertyConfig prop, XmlrpcProperty value) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public AbstractProperty getValue(PropertyConfig prop, Object component)
+	public XmlrpcProperty getValue(PropertyConfig prop, Object component)
 			throws HsarwebException {
 		return setOptions;
 	}

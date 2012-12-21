@@ -4,6 +4,6 @@ import java.util.Map;
 
 public interface UpdateAble {
 
-	public void updateRow(Map<String, AbstractProperty> paramHash) throws HsarwebException;
+	public void updateRow(Map<String, XmlrpcProperty> paramHash) throws HsarwebException;
 	
 }

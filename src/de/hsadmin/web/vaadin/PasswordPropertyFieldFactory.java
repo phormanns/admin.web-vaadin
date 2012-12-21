@@ -8,6 +8,7 @@ import de.hsadmin.web.AbstractProperty;
 import de.hsadmin.web.HsarwebException;
 import de.hsadmin.web.Module;
 import de.hsadmin.web.StringProperty;
+import de.hsadmin.web.XmlrpcProperty;
 import de.hsadmin.web.config.ModuleConfig;
 import de.hsadmin.web.config.PropertyConfig;
 import de.hsadmin.web.config.PropertyFieldFactory;
@@ -24,7 +25,7 @@ public class PasswordPropertyFieldFactory implements PropertyFieldFactory {
 	}
 	
 	@Override
-	public Object createFieldComponent(PropertyConfig prop, Object value) {
+	public Object createFieldComponent(PropertyConfig prop, XmlrpcProperty value) {
 		ModuleConfig config = module.getModuleConfig();
 		VerticalLayout layout = new VerticalLayout();
 		layout.setCaption(prop.getLabel());
@@ -32,13 +33,17 @@ public class PasswordPropertyFieldFactory implements PropertyFieldFactory {
 		PasswordField tf1 = new PasswordField(config.getLabel(prop.getId() + "1"));
 		tf1.setData(prop.getId());
 		tf1.setWidth(480.0f, Sizeable.UNITS_PIXELS);
-		tf1.setValue(value != null ? value : prop.getDefaultValue());
+		String valueOrDefault = prop.getDefaultValue();
+		if (value instanceof AbstractProperty) {
+			valueOrDefault = ((AbstractProperty) value).toStringValue();
+		}
+		tf1.setValue(valueOrDefault);
 		tf1.setReadOnly(readOnly);
 		layout.addComponent(tf1);
 		PasswordField tf2 = new PasswordField(config.getLabel(prop.getId() + "2"));
 		tf2.setData(prop.getId());
 		tf2.setWidth(480.0f, Sizeable.UNITS_PIXELS);
-		tf2.setValue(value != null ? value : prop.getDefaultValue());
+		tf2.setValue(valueOrDefault);
 		tf2.setReadOnly(readOnly);
 		layout.addComponent(tf2);
 		return layout;

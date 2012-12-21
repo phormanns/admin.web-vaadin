@@ -11,7 +11,9 @@ import com.vaadin.ui.DateField;
 import com.vaadin.ui.PopupDateField;
 
 import de.hsadmin.web.AbstractProperty;
+import de.hsadmin.web.DateProperty;
 import de.hsadmin.web.StringProperty;
+import de.hsadmin.web.XmlrpcProperty;
 import de.hsadmin.web.config.PropertyConfig;
 import de.hsadmin.web.config.PropertyFieldFactory;
 
@@ -23,14 +25,21 @@ public class DatePropertyFieldFactory implements PropertyFieldFactory {
 	private boolean writeOnce = false;
 	
 	@Override
-	public Object createFieldComponent(PropertyConfig prop, Object value) {
+	public Object createFieldComponent(PropertyConfig prop, XmlrpcProperty value) {
 		DateField dateField = new PopupDateField(prop.getLabel());
 		dateField.setDateFormat("dd.MM.yyyy");
 		dateField.setData(prop.getId());
 		dateField.setWidth(480.0f, Sizeable.UNITS_PIXELS);
 		try {
 			if (value != null) {
-				dateField.setValue(serverDf.parse((String) value));
+				if (value instanceof AbstractProperty) {
+					if (value instanceof StringProperty) {
+						dateField.setValue(DateProperty.serverDf.parse(((StringProperty) value).toStringValue()));
+					}
+					if (value instanceof DateProperty) {
+						dateField.setValue(((DateProperty) value).getDateValue());
+					}
+				}
 				dateField.setReadOnly(isReadOnly());
 				return dateField;
 			}
