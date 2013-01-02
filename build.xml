@@ -44,4 +44,12 @@
     	<delete file="WebContent/WEB-INF/web.xml"/>
     </target>
 
+
+    <target name="deploy" depends="war">
+        <delete dir="${hsar.deploy.dir}/hsarweb" />
+        <copy file="build/hsarweb.war" todir="${hsar.deploy.dir}" />
+        <!-- <sleep minutes="2"/> -->
+    </target>
+
+
 </project>
