@@ -12,16 +12,16 @@ public abstract class GenericModule extends AbstractModule implements InsertAble
 
 	private static final long serialVersionUID = 1L;
 
-	public void insertRow(Map<String, AbstractProperty> paramHash) throws HsarwebException {
+	public void insertRow(Map<String, XmlrpcProperty> paramHash) throws HsarwebException {
 		getApplication().getRemote().callAdd(getModuleConfig().getRemoteName(), paramHash);
 	}
 
-	public void deleteRow(Map<String, AbstractProperty> paramHash) throws HsarwebException {
+	public void deleteRow(Map<String, XmlrpcProperty> paramHash) throws HsarwebException {
 		getApplication().getRemote().callDelete(getModuleConfig().getRemoteName(), paramHash);
 	}
 	
-	public void updateRow(Map<String, AbstractProperty> paramHash) throws HsarwebException {
-		Map<String, AbstractProperty> whereHash = new HashMap<String, AbstractProperty>();
+	public void updateRow(Map<String, XmlrpcProperty> paramHash) throws HsarwebException {
+		Map<String, XmlrpcProperty> whereHash = new HashMap<String, XmlrpcProperty>();
 		String idKey = findIdKey();
 		whereHash.put(idKey, paramHash.get(idKey));
 		getApplication().getRemote().callUpdate(getModuleConfig().getRemoteName(), paramHash, whereHash);
@@ -43,7 +43,7 @@ public abstract class GenericModule extends AbstractModule implements InsertAble
 	public List<String> getUsers() {
 		ArrayList<String> list = new ArrayList<String>();
 		try {
-			Object callSearch = getApplication().getRemote().callSearch("user", new HashMap<String, AbstractProperty>());
+			Object callSearch = getApplication().getRemote().callSearch("user", new HashMap<String, XmlrpcProperty>());
 			if (callSearch instanceof Object[]) {
 				for (Object row : ((Object[])callSearch)) {
 					if (row instanceof Map<?, ?>) {
@@ -64,7 +64,7 @@ public abstract class GenericModule extends AbstractModule implements InsertAble
 	public List<String> getEMailAliases() {
 		ArrayList<String> list = new ArrayList<String>();
 		try {
-			Object callSearch = getApplication().getRemote().callSearch("emailalias", new HashMap<String, AbstractProperty>());
+			Object callSearch = getApplication().getRemote().callSearch("emailalias", new HashMap<String, XmlrpcProperty>());
 			if (callSearch instanceof Object[]) {
 				for (Object row : ((Object[])callSearch)) {
 					if (row instanceof Map<?, ?>) {
@@ -85,7 +85,7 @@ public abstract class GenericModule extends AbstractModule implements InsertAble
 	public List<String> getDomains() {
 		ArrayList<String> list = new ArrayList<String>();
 		try {
-			Object callSearch = getApplication().getRemote().callSearch("domain", new HashMap<String, AbstractProperty>());
+			Object callSearch = getApplication().getRemote().callSearch("domain", new HashMap<String, XmlrpcProperty>());
 			if (callSearch instanceof Object[]) {
 				for (Object row : ((Object[])callSearch)) {
 					if (row instanceof Map<?, ?>) {
@@ -106,7 +106,7 @@ public abstract class GenericModule extends AbstractModule implements InsertAble
 	public List<String> getPackets() {
 		ArrayList<String> list = new ArrayList<String>();
 		try {
-			Object callSearch = getApplication().getRemote().callSearch("pac", new HashMap<String, AbstractProperty>());
+			Object callSearch = getApplication().getRemote().callSearch("pac", new HashMap<String, XmlrpcProperty>());
 			if (callSearch instanceof Object[]) {
 				for (Object row : ((Object[])callSearch)) {
 					if (row instanceof Map<?, ?>) {

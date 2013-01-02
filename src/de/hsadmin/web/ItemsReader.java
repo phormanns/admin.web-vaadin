@@ -9,7 +9,7 @@ public class ItemsReader {
 	
 	public static List<Object>  readItemList(MainApplication app, String module, String property) throws HsarwebException {
 		final List<Object> itemsList = new ArrayList<Object>();
-		Object custListObj = app.getRemote().callSearch(module, new HashMap<String, AbstractProperty>());
+		Object custListObj = app.getRemote().callSearch(module, new HashMap<String, XmlrpcProperty>());
 		if (custListObj instanceof Object[]) {
 			Object[] custList = (Object[]) custListObj;
 			for (Object custObj : custList) {

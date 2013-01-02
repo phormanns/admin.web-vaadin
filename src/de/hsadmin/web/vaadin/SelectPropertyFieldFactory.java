@@ -8,6 +8,7 @@ import com.vaadin.ui.Select;
 import de.hsadmin.web.AbstractProperty;
 import de.hsadmin.web.HsarwebException;
 import de.hsadmin.web.StringProperty;
+import de.hsadmin.web.XmlrpcProperty;
 import de.hsadmin.web.config.PropertyConfig;
 import de.hsadmin.web.config.PropertyFieldFactory;
 
@@ -17,7 +18,7 @@ public class SelectPropertyFieldFactory implements PropertyFieldFactory {
 	private boolean writeOnce = false;
 
 	@Override
-	public Object createFieldComponent(PropertyConfig prop, Object value) {
+	public Object createFieldComponent(PropertyConfig prop, XmlrpcProperty value) {
 		Select sel = new Select(prop.getLabel());
 		sel.setData(prop.getId());
 		sel.setNullSelectionAllowed(false);
@@ -28,7 +29,11 @@ public class SelectPropertyFieldFactory implements PropertyFieldFactory {
 			sel.setItemCaption(key, selectValues.get(key));
 		}
 		sel.setWidth(480.0f, Sizeable.UNITS_PIXELS);
-		sel.setValue(value != null ? value : prop.getDefaultValue());
+		String valueOrDefault = prop.getDefaultValue();
+		if (value instanceof AbstractProperty) {
+			valueOrDefault = ((AbstractProperty) value).toStringValue();
+		}
+		sel.setValue(valueOrDefault);
 		sel.setReadOnly(readOnly);
 		sel.setInvalidAllowed(prop.newItemsAllowed());
 		return sel;

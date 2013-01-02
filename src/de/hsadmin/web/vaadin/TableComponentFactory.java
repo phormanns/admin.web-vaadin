@@ -21,13 +21,13 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.themes.BaseTheme;
 
-import de.hsadmin.web.AbstractProperty;
 import de.hsadmin.web.DeleteAble;
 import de.hsadmin.web.HsarwebException;
 import de.hsadmin.web.MainApplication;
 import de.hsadmin.web.Module;
 import de.hsadmin.web.StringProperty;
 import de.hsadmin.web.UpdateAble;
+import de.hsadmin.web.XmlrpcProperty;
 import de.hsadmin.web.config.ComponentFactory;
 import de.hsadmin.web.config.LocaleConfig;
 import de.hsadmin.web.config.ModuleConfig;
@@ -108,7 +108,7 @@ public class TableComponentFactory implements ComponentFactory, Serializable {
 		table.removeAllItems();
 		try {
 			ModuleConfig moduleConfig = module.getModuleConfig();
-			Object callSearch = module.getApplication().getRemote().callSearch(moduleConfig.getRemoteName(), new HashMap<String, AbstractProperty>());
+			Object callSearch = module.getApplication().getRemote().callSearch(moduleConfig.getRemoteName(), new HashMap<String, XmlrpcProperty>());
 			List<PropertyConfig> propertyList = moduleConfig.getPropertyList();
 			if (callSearch instanceof Object[]) {
 				for (Object row : ((Object[])callSearch)) {
@@ -230,7 +230,7 @@ public class TableComponentFactory implements ComponentFactory, Serializable {
 					public void buttonClick(ClickEvent event) {
 						application.getMainWindow().removeWindow(childWindow);
 						try {
-							Map<String, AbstractProperty> map = new HashMap<String, AbstractProperty>();
+							Map<String, XmlrpcProperty> map = new HashMap<String, XmlrpcProperty>();
 							genericForm.transferToHash(map, form);
 							((UpdateAble) module).updateRow(map);
 							loadData();
@@ -289,7 +289,7 @@ public class TableComponentFactory implements ComponentFactory, Serializable {
 					public void buttonClick(ClickEvent event) {
 						application.getMainWindow().removeWindow(childWindow);
 						try {
-							Map<String, AbstractProperty> map = new HashMap<String, AbstractProperty>();
+							Map<String, XmlrpcProperty> map = new HashMap<String, XmlrpcProperty>();
 							map.put(findIdKey(), new StringProperty(((Long) button.getData()).toString()));
 							((DeleteAble) module).deleteRow(map);
 							loadData();

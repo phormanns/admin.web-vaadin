@@ -1,9 +1,10 @@
 package de.hsadmin.web;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
-public class ListOfStringsProperty extends AbstractProperty {
+public class ListOfStringsProperty implements XmlrpcProperty {
 	
 	public final List<String> properties; 
 	
@@ -24,5 +25,9 @@ public class ListOfStringsProperty extends AbstractProperty {
 			idx++;
 		}
 		return result;
+	}
+
+	public Iterator<String> stringsIterator() {
+		return properties.iterator();
 	}
 }

@@ -11,6 +11,7 @@ import de.hsadmin.web.AbstractProperty;
 import de.hsadmin.web.HsarwebException;
 import de.hsadmin.web.Module;
 import de.hsadmin.web.StringProperty;
+import de.hsadmin.web.XmlrpcProperty;
 import de.hsadmin.web.config.ModuleConfig;
 import de.hsadmin.web.config.PropertyConfig;
 import de.hsadmin.web.config.PropertyFieldFactory;
@@ -28,7 +29,7 @@ public class PacPrefixedNamePropertyFieldFactory implements PropertyFieldFactory
 	}
 
 	@Override
-	public Object createFieldComponent(PropertyConfig prop, Object value) {
+	public Object createFieldComponent(PropertyConfig prop, XmlrpcProperty value) {
 		ModuleConfig config = module.getModuleConfig();
 		HorizontalLayout layout = new HorizontalLayout();
 		layout.setCaption(prop.getLabel());
@@ -55,7 +56,10 @@ public class PacPrefixedNamePropertyFieldFactory implements PropertyFieldFactory
 		tf.setData(prop.getId());
 		tf.setWidth(384.0f, Sizeable.UNITS_PIXELS);
 		layout.addComponent(tf);
-		String valueOrDefault = (value != null && value instanceof String) ? ((String) value) : prop.getDefaultValue();
+		String valueOrDefault =  prop.getDefaultValue();
+		if (value instanceof AbstractProperty) {
+			valueOrDefault = ((AbstractProperty) value).toStringValue();
+		}
 		if (valueOrDefault.length() >= 5) {
 			sel.setValue(valueOrDefault.substring(0, 5));
 			tf.setValue(valueOrDefault.length() > 6 ? valueOrDefault.substring(6) : "");

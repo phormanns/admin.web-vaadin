@@ -1,13 +1,13 @@
 package de.hsadmin.web.config;
 
-import de.hsadmin.web.AbstractProperty;
 import de.hsadmin.web.HsarwebException;
+import de.hsadmin.web.XmlrpcProperty;
 
 public interface PropertyFieldFactory {
 
-	public Object createFieldComponent(PropertyConfig prop, Object value);
+	public Object createFieldComponent(PropertyConfig prop, XmlrpcProperty value);
 	
-	public AbstractProperty getValue(PropertyConfig prop, Object component) throws HsarwebException;
+	public XmlrpcProperty getValue(PropertyConfig prop, Object component) throws HsarwebException;
 
 	public void setReadOnly(boolean readOnly);
 

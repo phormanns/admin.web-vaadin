@@ -10,11 +10,12 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.Form;
 import com.vaadin.ui.Layout;
 
-import de.hsadmin.web.AbstractProperty;
 import de.hsadmin.web.HsarwebException;
+import de.hsadmin.web.ListOfStringsProperty;
 import de.hsadmin.web.MainApplication;
 import de.hsadmin.web.Module;
 import de.hsadmin.web.StringProperty;
+import de.hsadmin.web.XmlrpcProperty;
 import de.hsadmin.web.config.ModuleConfig;
 import de.hsadmin.web.config.PropertyConfig;
 import de.hsadmin.web.config.PropertyFieldFactory;
@@ -48,7 +49,7 @@ public class GenericForm {
 		try {
 			MainApplication application = module.getApplication();
 			ModuleConfig config = module.getModuleConfig();
-			Map<String, AbstractProperty> where = new HashMap<String, AbstractProperty>();
+			Map<String, XmlrpcProperty> where = new HashMap<String, XmlrpcProperty>();
 			where.put(findIdKey(), new StringProperty(entityId.toString()));
 			Object searchResult = application.getRemote().callSearch(config.getRemoteName(), where);
 			if (searchResult instanceof Object[]) {
@@ -60,7 +61,18 @@ public class GenericForm {
 				for (PropertyConfig prop : config.getPropertyList()) {
 					if (!prop.getPropTableColumn().equals(PropertyTableColumn.INTERNAL_KEY) && prop.isShowInForm()) {
 						PropertyFieldFactory propFieldFactory = prop.getPropFieldFactory();
-						Object value = row.get(prop.getId());
+						Object propValue = row.get(prop.getId());
+						XmlrpcProperty value = new StringProperty("");
+						if (propValue instanceof Object[]) {
+							ListOfStringsProperty list = new ListOfStringsProperty();
+							for (Object o : ((Object[]) propValue)) {
+								list.add(o.toString());
+							}
+							value = list;
+						}
+						if (propValue instanceof String)  {
+							value = new StringProperty(propValue);
+						}
 						Component component = (Component) propFieldFactory.createFieldComponent(prop, value);
 						if (propFieldFactory.isWriteOnce()) {
 							component.setReadOnly(true);
@@ -81,7 +93,7 @@ public class GenericForm {
 		try {
 			MainApplication application = module.getApplication();
 			ModuleConfig config = module.getModuleConfig();
-			Map<String, AbstractProperty> where = new HashMap<String, AbstractProperty>();
+			Map<String, XmlrpcProperty> where = new HashMap<String, XmlrpcProperty>();
 			where.put(findIdKey(), new StringProperty(entityId.toString()));
 			Object searchResult = application.getRemote().callSearch(config.getRemoteName(), where);
 			if (searchResult instanceof Object[]) {
@@ -96,7 +108,8 @@ public class GenericForm {
 								&& prop.getPropTableColumn().equals(PropertyTableColumn.DISPLAY)) {
 						PropertyFieldFactory propFieldFactory = prop.getPropFieldFactory();
 						Object value = row.get(prop.getId());
-						Component component = (Component) propFieldFactory.createFieldComponent(prop, value);
+						StringProperty propValue = new StringProperty(value);
+						Component component = (Component) propFieldFactory.createFieldComponent(prop, propValue);
 						component.setReadOnly(true);
 						layout.addComponent(component);
 					}
@@ -123,7 +136,7 @@ public class GenericForm {
 		return idKey;
 	}
 
-	public void transferToHash(Map<String, AbstractProperty> map, Form form) throws HsarwebException {
+	public void transferToHash(Map<String, XmlrpcProperty> map, Form form) throws HsarwebException {
 		Iterator<Component> iterator = form.getLayout().getComponentIterator();
 		Object formData = form.getData();
 		if (formData != null && formData instanceof Long) {
