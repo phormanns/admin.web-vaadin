@@ -6,7 +6,7 @@ import java.util.List;
 
 public class ListOfStringsProperty implements XmlrpcProperty {
 	
-	public final List<String> properties; 
+	private final List<String> properties; 
 	
 	public ListOfStringsProperty(){
 		this.properties = new ArrayList<String>();
@@ -14,6 +14,10 @@ public class ListOfStringsProperty implements XmlrpcProperty {
 	
 	public boolean add(String string){
 		 return properties.add(string);
+	}
+	
+	public boolean contains(String string){
+		 return properties.contains(string);
 	}
 
 	@Override

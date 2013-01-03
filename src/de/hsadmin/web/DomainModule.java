@@ -11,6 +11,7 @@ import de.hsadmin.web.config.PropertyDefaultValue;
 import de.hsadmin.web.config.PropertySelectValues;
 import de.hsadmin.web.config.PropertyTableColumn;
 import de.hsadmin.web.vaadin.DatePropertyFieldFactory;
+import de.hsadmin.web.vaadin.DomainOptionsPropertyFieldFactory;
 import de.hsadmin.web.vaadin.SelectPropertyFieldFactory;
 
 public class DomainModule extends GenericModule {
@@ -56,6 +57,8 @@ public class DomainModule extends GenericModule {
 			}
 		});
 		userProp.setWriteOnce(true);
+		PropertyConfig optionsProp = new PropertyConfig(moduleConfig, "domainoptions", String.class, PropertyTableColumn.HIDDEN, new DomainOptionsPropertyFieldFactory(this));
+		optionsProp.setWriteOnce(true);
 		PropertyConfig pacProp = new PropertyConfig(moduleConfig, "pac", String.class, PropertyTableColumn.HIDDEN);
 		pacProp.setDefaultValue(new PropertyDefaultValue() {
 			@Override
@@ -74,6 +77,7 @@ public class DomainModule extends GenericModule {
 		moduleConfig.addProperty(idProp);
 		moduleConfig.addProperty(nameProp);
 		moduleConfig.addProperty(userProp);
+		moduleConfig.addProperty(optionsProp);
 		moduleConfig.addProperty(pacProp);
 		moduleConfig.addProperty(hiveProp);
 		moduleConfig.addProperty(sinceProp);

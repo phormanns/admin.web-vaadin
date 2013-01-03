@@ -19,6 +19,7 @@ public class DomainReadonlyModule extends AbstractModule {
 		moduleConfig.addProperty(new PropertyConfig(moduleConfig, "id", Long.class, PropertyTableColumn.INTERNAL_KEY));
 		moduleConfig.addProperty(new PropertyConfig(moduleConfig, "name", String.class));
 		moduleConfig.addProperty(new PropertyConfig(moduleConfig, "user", String.class));
+		moduleConfig.addProperty(new PropertyConfig(moduleConfig, "domainoptions", String.class, PropertyTableColumn.HIDDEN));
 		moduleConfig.addProperty(new PropertyConfig(moduleConfig, "pac", String.class, PropertyTableColumn.HIDDEN));
 		moduleConfig.addProperty(new PropertyConfig(moduleConfig, "hive", String.class, PropertyTableColumn.HIDDEN));
 		moduleConfig.addProperty(new PropertyConfig(moduleConfig, "since", Date.class, new DatePropertyFieldFactory()));

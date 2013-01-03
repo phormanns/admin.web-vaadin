@@ -1,57 +1,90 @@
 package de.hsadmin.web.vaadin;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.vaadin.terminal.Sizeable;
 import com.vaadin.ui.AbstractField;
+import com.vaadin.ui.Button;
+import com.vaadin.ui.Component;
 import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.Label;
+import com.vaadin.ui.Select;
 import com.vaadin.ui.VerticalLayout;
 
 import de.hsadmin.web.AbstractProperty;
+import de.hsadmin.web.GenericModule;
 import de.hsadmin.web.HsarwebException;
 import de.hsadmin.web.ListOfStringsProperty;
+import de.hsadmin.web.Module;
 import de.hsadmin.web.XmlrpcProperty;
+import de.hsadmin.web.config.LocaleConfig;
+import de.hsadmin.web.config.ModuleConfig;
 import de.hsadmin.web.config.PropertyConfig;
 import de.hsadmin.web.config.PropertyFieldFactory;
 
 /**
- * @author pblissenbach
+ * @author Purodha Blissenbach
  *
  */
 public class DomainOptionsPropertyFieldFactory implements PropertyFieldFactory {
-	private Map<String,AbstractProperty> optionTypes ; // TODO: auf Vorrat hier
-	private ListOfStringsProperty setOptions ;
+	private final Module module;
+	private final ModuleConfig config ;
+	// TODO: besorge Options und ihre Typen aus der DB
+	private static final String[] OPTION_NAMES = new String[] { "backupmxforexternalmx", "greylisting", "htdocsfallback", "includes", "indexes", "multiviews", "php"};
+//	private final Map<String,AbstractProperty> optionTypes ; // TODO: auf Vorrat hier
+	// TODO: besorge Options  .... Ende
 	private boolean readOnly = false;
 	private boolean writeOnce = false;
 	private VerticalLayout layout;
+	private List<SingleDomainOption> optionLayout ;
+	private ListOfStringsProperty setOptions ;
 
-	public DomainOptionsPropertyFieldFactory() {
-		// TODO: besorge Options und ihre Typen aus der DB
-		optionTypes = new HashMap<String,AbstractProperty>() ;
-		optionTypes.put("backupmxforexternalmx", null);
-		optionTypes.put("greylisting", null);
-		optionTypes.put("htdocsfallback", null);
-		optionTypes.put("includes", null);
-		optionTypes.put("indexes", null);
-		optionTypes.put("multiviews", null);
-		optionTypes.put("nonexistiondomainoptionfortesting", null); // TESTCASE
-		optionTypes.put("php", null);
-		// TODO: besorge Options  .... Ende
-//		setOptions = null ;
+	public DomainOptionsPropertyFieldFactory(Module module) {
+		this.module = module;
+		this.config = module.getModuleConfig();
+		optionLayout = new ArrayList<SingleDomainOption>() ;
 		setOptions = new ListOfStringsProperty() ;
-		// TODO Auto-generated constructor stub
+	}
+	
+	private void repaint() {
+		layout.removeAllComponents();
+		for (int idx=0 ; idx<OPTION_NAMES.length ; ++idx ) {
+			layout.addComponent(optionLayout.get(idx).getComponent());
+		}
 	}
 
 	@Override
 	public Object createFieldComponent(PropertyConfig prop, XmlrpcProperty value) {
-		// TODO Auto-generated method stub
-		return null;
+		this.setOptions = (ListOfStringsProperty) value ;
+		layout = new VerticalLayout();
+		layout.setCaption(prop.getLabel());
+		layout.setData(prop.getId());
+		if (value instanceof ListOfStringsProperty) {
+			ListOfStringsProperty list = (ListOfStringsProperty) value;
+			for (int idx=0 ; idx<OPTION_NAMES.length ; ++idx ) {
+				optionLayout.add(new SingleDomainOption(this, OPTION_NAMES[idx], list.contains(OPTION_NAMES[idx]) ));
+			}
+		}
+		else
+		{
+			// Eine leere Liste von Domainoptionen wird angezeigt werden.
+		}
+		repaint();
+		return layout;
 	}
 
 	@Override
-	public XmlrpcProperty getValue(PropertyConfig prop, Object component)
-			throws HsarwebException {
+	public XmlrpcProperty getValue(PropertyConfig prop, Object component) throws HsarwebException {
+		setOptions = new ListOfStringsProperty() ; 
+		for (int idx=0 ; idx<OPTION_NAMES.length ; ++idx ) {
+			if(Boolean.TRUE.equals(optionLayout.get(idx).getValue()))
+			{
+				setOptions.add(OPTION_NAMES[idx]);
+			}
+		}
 		return setOptions;
 	}
 
@@ -76,35 +109,49 @@ public class DomainOptionsPropertyFieldFactory implements PropertyFieldFactory {
 	}
 	
 	class SingleDomainOption {
+		private final DomainOptionsPropertyFieldFactory owner;
+		private final String optionName;
 		private HorizontalLayout targetLine;
-		private HorizontalLayout leftPart;
-		private HorizontalLayout rightPart;
-		private int index;
-		private String optionName;
-		private String testunusedoptionName;
-		private DomainOptionsPropertyFieldFactory owner;
+		private Select select ;
 		
-		protected SingleDomainOption(DomainOptionsPropertyFieldFactory owner, int key, String optionName, Object optionValue) {
+		protected SingleDomainOption(DomainOptionsPropertyFieldFactory owner, String optionName, boolean optionValue) {
 			this.owner = owner;
-			this.index = key;
 			this.optionName = optionName;
 			targetLine = new HorizontalLayout();
-			targetLine.setWidth(480.0f, Sizeable.UNITS_PIXELS);
-			leftPart = new HorizontalLayout();
-			leftPart.setWidth(100.0f, Sizeable.UNITS_PIXELS);
-			leftPart.setCaption(optionName);
-			rightPart = new HorizontalLayout();
-			rightPart.setWidth(380.0f, Sizeable.UNITS_PIXELS);
-			// ToDO: Fallunterscheidungen nach Optionsart. Z.Z. nur Boolean.
+			targetLine.setWidth(500.0f, Sizeable.UNITS_PIXELS);
+			HorizontalLayout leftPart = new HorizontalLayout();
+			leftPart.setWidth(220.0f, Sizeable.UNITS_PIXELS);
+			Label label = new Label(owner.config.getLabel("domainoption."+optionName),Label.CONTENT_RAW);
+			leftPart.addComponent( label); // setCaption(owner.config.getLabel("domainoption."+optionName));
+			HorizontalLayout rightPart = new HorizontalLayout();
+			// ToDO: Fallunterscheidungen nach Optionsart. Z.Z. nur Boolean:
+			{
+				this.select = new Select();
+				this.select.setWidth(90.0f, Sizeable.UNITS_PIXELS);
+				this.select.setImmediate(true);
+				this.select.setNewItemsAllowed(false);
+				this.select.setNullSelectionAllowed(false);
+				this.select.addItem("y");
+				this.select.setItemCaption("y" , owner.config.getLabel("yes"));
+				this.select.addItem("n");
+				this.select.setItemCaption("n" , owner.config.getLabel("no"));
+				this.select.setValue(optionValue ? "y" : "n");
+				rightPart.addComponent(this.select);
+			}
+			targetLine.addComponent(leftPart);
+			targetLine.addComponent(rightPart);
 		}
 		
-		public String getValue() {
-			String value = null;
-			if (rightPart.getComponentCount() > 0) {
-				Object object = ((AbstractField) rightPart.getComponent(0)).getValue();
-				if (object != null && object instanceof String) {
-					value = ((String) object).trim();
-				}
+		public Component getComponent() {
+			return targetLine;
+		}
+	
+		public Boolean getValue() {
+			Boolean value = null;
+			String val = (String) this.select.getValue();
+			if( val.equals("y") || val.equals("n") )
+			{
+					value = (val.equals("y"));
 			}
 			return value;
 		}

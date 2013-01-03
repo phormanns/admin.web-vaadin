@@ -28,17 +28,18 @@ import de.hsadmin.web.config.PropertyFieldFactory;
 
 public class EMailTargetPropertyFieldFactory implements PropertyFieldFactory {
 
-	private Module module;
+	private final Module module;
 	private boolean readOnly = false;
 	private boolean writeOnce = false;
 	private List<String> users;
 	private List<String> mailAliases;
-	private Map<Integer, SingleEMailTarget> targets;
+	private final Map<Integer, SingleEMailTarget> targets;
 	private int lastIndex;
 	private VerticalLayout layout;
 
 	public EMailTargetPropertyFieldFactory(Module module) {
 		this.module = module;
+		targets = new HashMap<Integer, SingleEMailTarget>();
 	}
 	
 	public void removeTarget(SingleEMailTarget target) {
@@ -66,13 +67,10 @@ public class EMailTargetPropertyFieldFactory implements PropertyFieldFactory {
 	@Override
 	public Object createFieldComponent(PropertyConfig prop, XmlrpcProperty value) {
 		GenericModule genModule = (GenericModule) module;
-		users = genModule.getUsers();
-		mailAliases = genModule.getEMailAliases();
 		layout = new VerticalLayout();
 		layout.setCaption(prop.getLabel());
 		layout.setData(prop.getId());
 		
-		targets = new HashMap<Integer, SingleEMailTarget>();
 		lastIndex = 0;
 		if (value instanceof AbstractProperty) {
 			String stringValue = ((AbstractProperty) value).toStringValue();
