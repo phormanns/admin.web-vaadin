@@ -33,14 +33,19 @@ public class GenericForm {
 	
 	public Form createAddForm() {
 		Form f = new Form();
-		ModuleConfig config = module.getModuleConfig();
-		f.setCaption(config.getLabel("new"));
-		Layout layout = f.getLayout();
-		for (PropertyConfig prop : config.getPropertyList()) {
-			PropertyFieldFactory propFieldFactory = prop.getPropFieldFactory();
-			if (!propFieldFactory.isReadOnly()) {
-				layout.addComponent((Component) propFieldFactory.createFieldComponent(prop, null));
+		try {
+			ModuleConfig config = module.getModuleConfig();
+			f.setCaption(config.getLabel("new"));
+			Layout layout = f.getLayout();
+			for (PropertyConfig prop : config.getPropertyList()) {
+				PropertyFieldFactory propFieldFactory = prop.getPropFieldFactory();
+				if (!propFieldFactory.isReadOnly()) {
+					layout.addComponent((Component) propFieldFactory.createFieldComponent(prop, null));
+				}
 			}
+		} catch (HsarwebException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		return f;
 	}
@@ -148,7 +153,10 @@ public class GenericForm {
 				Object data = ((AbstractComponent) component).getData();
 				String propName = (String) data;
 				PropertyConfig property = module.getModuleConfig().getProperty(propName);
-				map.put(propName, property.getPropFieldFactory().getValue(property, component));
+				PropertyFieldFactory fieldFactory = property.getPropFieldFactory();
+				if (!fieldFactory.isReadOnly() && !fieldFactory.isWriteOnce()) {
+					map.put(propName, property.getPropFieldFactory().getValue(property, component));
+				}
 			}
 		}
 	}

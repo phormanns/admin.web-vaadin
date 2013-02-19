@@ -58,7 +58,6 @@ public class DomainModule extends GenericModule {
 		});
 		userProp.setWriteOnce(true);
 		PropertyConfig optionsProp = new PropertyConfig(moduleConfig, "domainoptions", String.class, PropertyTableColumn.HIDDEN, new DomainOptionsPropertyFieldFactory(this));
-		optionsProp.setWriteOnce(true);
 		PropertyConfig pacProp = new PropertyConfig(moduleConfig, "pac", String.class, PropertyTableColumn.HIDDEN);
 		pacProp.setDefaultValue(new PropertyDefaultValue() {
 			@Override

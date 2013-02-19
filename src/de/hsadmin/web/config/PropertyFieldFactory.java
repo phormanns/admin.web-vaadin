@@ -5,7 +5,7 @@ import de.hsadmin.web.XmlrpcProperty;
 
 public interface PropertyFieldFactory {
 
-	public Object createFieldComponent(PropertyConfig prop, XmlrpcProperty value);
+	public Object createFieldComponent(PropertyConfig prop, XmlrpcProperty value) throws HsarwebException;
 	
 	public XmlrpcProperty getValue(PropertyConfig prop, Object component) throws HsarwebException;
 

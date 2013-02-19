@@ -1,26 +1,19 @@
 package de.hsadmin.web.vaadin;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import com.vaadin.terminal.Sizeable;
-import com.vaadin.ui.AbstractField;
-import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Select;
 import com.vaadin.ui.VerticalLayout;
 
-import de.hsadmin.web.AbstractProperty;
-import de.hsadmin.web.GenericModule;
 import de.hsadmin.web.HsarwebException;
 import de.hsadmin.web.ListOfStringsProperty;
 import de.hsadmin.web.Module;
 import de.hsadmin.web.XmlrpcProperty;
-import de.hsadmin.web.config.LocaleConfig;
 import de.hsadmin.web.config.ModuleConfig;
 import de.hsadmin.web.config.PropertyConfig;
 import de.hsadmin.web.config.PropertyFieldFactory;
@@ -39,14 +32,12 @@ public class DomainOptionsPropertyFieldFactory implements PropertyFieldFactory {
 	private boolean readOnly = false;
 	private boolean writeOnce = false;
 	private VerticalLayout layout;
-	private List<SingleDomainOption> optionLayout ;
-	private ListOfStringsProperty setOptions ;
+	private final List<SingleDomainOption> optionLayout ;
 
 	public DomainOptionsPropertyFieldFactory(Module module) {
 		this.module = module;
 		this.config = module.getModuleConfig();
 		optionLayout = new ArrayList<SingleDomainOption>() ;
-		setOptions = new ListOfStringsProperty() ;
 	}
 	
 	private void repaint() {
@@ -57,11 +48,11 @@ public class DomainOptionsPropertyFieldFactory implements PropertyFieldFactory {
 	}
 
 	@Override
-	public Object createFieldComponent(PropertyConfig prop, XmlrpcProperty value) {
-		this.setOptions = (ListOfStringsProperty) value ;
+	public Object createFieldComponent(PropertyConfig prop, XmlrpcProperty value) throws HsarwebException {
 		layout = new VerticalLayout();
 		layout.setCaption(prop.getLabel());
 		layout.setData(prop.getId());
+		optionLayout.clear();
 		if (value instanceof ListOfStringsProperty) {
 			ListOfStringsProperty list = (ListOfStringsProperty) value;
 			for (int idx=0 ; idx<OPTION_NAMES.length ; ++idx ) {
@@ -71,6 +62,7 @@ public class DomainOptionsPropertyFieldFactory implements PropertyFieldFactory {
 		else
 		{
 			// Eine leere Liste von Domainoptionen wird angezeigt werden.
+			throw new HsarwebException("Keine Liste: ListOfStringsProperty");
 		}
 		repaint();
 		return layout;
@@ -78,7 +70,7 @@ public class DomainOptionsPropertyFieldFactory implements PropertyFieldFactory {
 
 	@Override
 	public XmlrpcProperty getValue(PropertyConfig prop, Object component) throws HsarwebException {
-		setOptions = new ListOfStringsProperty() ; 
+		ListOfStringsProperty setOptions = new ListOfStringsProperty() ; 
 		for (int idx=0 ; idx<OPTION_NAMES.length ; ++idx ) {
 			if(Boolean.TRUE.equals(optionLayout.get(idx).getValue()))
 			{
