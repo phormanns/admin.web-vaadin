@@ -141,7 +141,7 @@ public class GenericForm {
 		return idKey;
 	}
 
-	public void transferToHash(Map<String, XmlrpcProperty> map, Form form) throws HsarwebException {
+	public void transferToHash(Map<String, XmlrpcProperty> map, Form form, boolean update) throws HsarwebException {
 		Iterator<Component> iterator = form.getLayout().getComponentIterator();
 		Object formData = form.getData();
 		if (formData != null && formData instanceof Long) {
@@ -154,7 +154,7 @@ public class GenericForm {
 				String propName = (String) data;
 				PropertyConfig property = module.getModuleConfig().getProperty(propName);
 				PropertyFieldFactory fieldFactory = property.getPropFieldFactory();
-				if (!fieldFactory.isReadOnly() && !fieldFactory.isWriteOnce()) {
+				if (!fieldFactory.isReadOnly() && (!update || !fieldFactory.isWriteOnce())) {
 					map.put(propName, property.getPropFieldFactory().getValue(property, component));
 				}
 			}

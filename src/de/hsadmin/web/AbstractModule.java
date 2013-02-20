@@ -83,7 +83,7 @@ public abstract class AbstractModule implements Module, Serializable {
 								application.getMainWindow().removeWindow(childWindow);
 								try {
 									Map<String, XmlrpcProperty> map = new HashMap<String, XmlrpcProperty>();
-									genericForm.transferToHash(map, form);
+									genericForm.transferToHash(map, form,false);
 									((InsertAble) thisModule).insertRow(map);
 									componentFactory.loadData();
 								} catch (HsarwebException e) {

@@ -231,7 +231,7 @@ public class TableComponentFactory implements ComponentFactory, Serializable {
 						application.getMainWindow().removeWindow(childWindow);
 						try {
 							Map<String, XmlrpcProperty> map = new HashMap<String, XmlrpcProperty>();
-							genericForm.transferToHash(map, form);
+							genericForm.transferToHash(map, form,true);
 							((UpdateAble) module).updateRow(map);
 							loadData();
 						} catch (HsarwebException e) {
