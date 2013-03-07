@@ -167,7 +167,7 @@ public abstract class AbstractModule implements Module, Serializable {
 		initLayout();
 	}
 	
-	protected abstract void initModule();
+	protected abstract void initModule() throws HsarwebException;
 
 	public MainApplication getApplication() {
 		return application;

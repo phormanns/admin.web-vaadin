@@ -21,7 +21,7 @@ public class DomainModule extends GenericModule {
 	private ModuleConfig moduleConfig;
 
 	@Override
-	protected void initModule() {
+	protected void initModule() throws HsarwebException {
 		MainApplication application = getApplication();
 		moduleConfig = new ModuleConfig("domain", application.getLocale());
 		String login = application.getRunAs();
