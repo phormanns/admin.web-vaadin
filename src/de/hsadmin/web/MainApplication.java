@@ -198,8 +198,16 @@ public class MainApplication extends Application implements HttpServletRequestLi
 		}
 	}
 
+	public void showHsarWebException(Exception e) {
+		if (e instanceof HsarwebUserException) {
+			showUserException(e);
+		} else {
+			showSystemException(e);
+		}		
+	}
+
 	public void showUserException(Exception e) {
-		getMainWindow().showNotification("Anwendungs-Fehler", "<br/ >" + e.getMessage(), Notification.TYPE_ERROR_MESSAGE);			
+		getMainWindow().showNotification("Anwendungs-Fehler", "<br />" + e.getMessage(), Notification.TYPE_ERROR_MESSAGE);			
 	}
 
 	public void showSystemException(Exception e) {

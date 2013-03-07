@@ -146,7 +146,7 @@ public class HomeModule extends AbstractModule implements ComponentFactory, Upda
 							}
 							((UpdateAble) thisModule).updateRow(map);
 						} catch (HsarwebException e) {
-							application.showUserException(e);
+							application.showHsarWebException(e);
 						}
 					}
 				});

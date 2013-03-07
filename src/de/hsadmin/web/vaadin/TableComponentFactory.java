@@ -235,7 +235,7 @@ public class TableComponentFactory implements ComponentFactory, Serializable {
 							((UpdateAble) module).updateRow(map);
 							loadData();
 						} catch (HsarwebException e) {
-							application.showUserException(e);
+							application.showHsarWebException(e);
 						}
 					}
 				});
@@ -294,7 +294,7 @@ public class TableComponentFactory implements ComponentFactory, Serializable {
 							((DeleteAble) module).deleteRow(map);
 							loadData();
 						} catch (HsarwebException e) {
-							application.showUserException(e);
+							application.showHsarWebException(e);
 						}
 					}
 				});

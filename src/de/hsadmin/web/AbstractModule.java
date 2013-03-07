@@ -87,7 +87,7 @@ public abstract class AbstractModule implements Module, Serializable {
 									((InsertAble) thisModule).insertRow(map);
 									componentFactory.loadData();
 								} catch (HsarwebException e) {
-									application.showUserException(e);
+									application.showHsarWebException(e);
 								}
 							}
 						});
