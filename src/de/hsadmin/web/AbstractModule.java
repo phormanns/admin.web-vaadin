@@ -35,6 +35,7 @@ public abstract class AbstractModule implements Module, Serializable {
 	private Component component;
 	private ComponentFactory componentFactory;
 	private Select selRunAs;
+	private Map<String,Map<String, Object>> moduleProps = null;
 
 	public Component getComponent() {
 		return layout;
@@ -180,4 +181,11 @@ public abstract class AbstractModule implements Module, Serializable {
 	@Override
 	public abstract ModuleConfig getModuleConfig();
 
+	@Override
+	public Map<String,Map<String,Object>> getModuleProps() {
+		if (this.moduleProps == null) {
+			this.moduleProps = (Map<String,Map<String,Object>>) getApplication().getModuleProps().get(getModuleConfig().getName());
+		}
+		return moduleProps;
+	}
 }

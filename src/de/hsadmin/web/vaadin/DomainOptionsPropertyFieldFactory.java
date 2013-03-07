@@ -28,6 +28,7 @@ public class DomainOptionsPropertyFieldFactory implements PropertyFieldFactory {
 	private final Module module;
 	private final ModuleConfig config;
 	private static String[] OPTION_NAMES; // {"backupmxforexternalmx", "php", ...};
+//	private static String[] OPTION_NAMES = {"backupmxforexternalmx", "php"};
 	// private final Map<String,AbstractProperty> optionTypes ; // TODO: auf Vorrat hier
 	private boolean readOnly = false;
 	private boolean writeOnce = false;
@@ -37,12 +38,19 @@ public class DomainOptionsPropertyFieldFactory implements PropertyFieldFactory {
 	public DomainOptionsPropertyFieldFactory(Module module) throws HsarwebInternalException {
 		this.module = module;
 		this.config = this.module.getModuleConfig();
-		// Liste der Namen der Domainoptions besorgen
-		DomainModule domainModule = (DomainModule) module;
-		Map<String, Map<String, Object>> moduleProps = domainModule.getModuleProps();
-		Object p1 = moduleProps.get("domain").get("domainoptions");
+		// Liste der Namen der Domainoptions besorgen. TODO: mögliche Werte.
+//if(true)
+//		throw new HsarwebInternalException("p9");
+	//	DomainModule domainModule = (DomainModule) module;
+	//	Map<String, Map<String, Object>> moduleProps = domainModule.getModuleProps();
+		Map<String, Map<String, Object>> moduleProps = module.getModuleProps();
+		if (moduleProps == null)OPTION_NAMES[1] ="XXXXX"+module.getModuleConfig().getName();
+//		Object p0 = moduleProps.get("domain");
+//		Object p1 = moduleProps.get("domain").get("domainoptions");
+		Object p1 = moduleProps.get("domainoptions");
 		Map<String, Object> p2 = (Map<String, Object>) p1;
 		Object p3 = p2.get("selectableValues");
+		
 		if (p3 instanceof Map<?, ?>) {
 			Map<String, Object> p4 = (Map<String, Object>) p3;
 			if (p4.get("kind").equals("DOMAINOPTIONS")) {
@@ -68,6 +76,7 @@ public class DomainOptionsPropertyFieldFactory implements PropertyFieldFactory {
 		} else {
 			throw new HsarwebInternalException("p3");
 		}
+	/* */
 		optionLayout = new ArrayList<SingleDomainOption>();
 	}
 

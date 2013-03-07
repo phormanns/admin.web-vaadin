@@ -122,44 +122,5 @@ public abstract class GenericModule extends AbstractModule implements InsertAble
 			getApplication().showSystemException(e);
 		}
 		return list;
-	}
-
-	public Map<String,Map<String,Object>> getModuleProps() {
-		Map<String,Map<String,Object>> moduleList = new HashMap<String,Map<String,Object>>();
-		Object callSearch = null;
-		try {
-			callSearch = getApplication().getRemote().callSearch("moduleprop", new HashMap<String, XmlrpcProperty>());
-			if (!(callSearch instanceof Object[])) {
-				throw new HsarwebException("getModuleProps hat keine Liste bekommen.");
-			}
-			for (Object row : ((Object[])callSearch)) {
-				if (row instanceof Map<?, ?>) {
-					Map<?, ?> rowAsMap = (Map<?, ?>) row;
-					Object moduleName = rowAsMap.get("module");
-					if (moduleName instanceof String) {
-						Object properties = rowAsMap.get("properties");
-						if (properties instanceof Object[]) {
-							Map<String,Object> propertyList = new HashMap<String,Object>();
-							moduleList.put((String) moduleName, propertyList	);
-							for (Object property : (Object[]) properties){
-								if (property instanceof Map<?,?>) {
-									Object propertyName = ((Map<?, ?>) property).get("property");
-									if (propertyName instanceof String) {
-										propertyList.put((String) propertyName, property);
-//										propertyList.put((String) propertyName, (Map<String,Object>) property);
-									}
-								}
-							}
-							/* */
-						}
-					}
-				}
-			}
-		} catch (HsarwebException e) {
-			e.printStackTrace();
-			getApplication().showSystemException(e);
-		}
-		return moduleList;
-	}
-	
+	}	
 }

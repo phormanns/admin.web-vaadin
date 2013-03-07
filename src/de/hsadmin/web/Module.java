@@ -1,5 +1,7 @@
 package de.hsadmin.web;
 
+import java.util.Map;
+
 import de.hsadmin.web.config.ModuleConfig;
 
 public interface Module {
@@ -13,5 +15,7 @@ public interface Module {
 	public abstract void setApplication(MainApplication mainApplication) throws HsarwebException;
 
 	public abstract Object getComponent();
+
+	public abstract Map<String,Map<String,Object>> getModuleProps();
 
 }

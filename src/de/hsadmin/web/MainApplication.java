@@ -2,9 +2,11 @@ package de.hsadmin.web;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.TreeMap;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -29,7 +31,8 @@ import com.vaadin.ui.Window.Notification;
 import de.hsadmin.web.config.LocaleConfig;
 import de.hsadmin.web.config.ModuleConfig;
 
-public class MainApplication extends Application implements HttpServletRequestListener, TabSheet.SelectedTabChangeListener {
+public class MainApplication extends Application implements
+		HttpServletRequestListener, TabSheet.SelectedTabChangeListener {
 
 	private static final long serialVersionUID = 1L;
 	private static final String LOGIN_URL = "https://login.hostsharing.net:443/cas/v1/tickets";
@@ -40,7 +43,7 @@ public class MainApplication extends Application implements HttpServletRequestLi
 		Object loginURL = config.getProperty("loginURL", LOGIN_URL);
 		isTestEnvironment = "TestUmgebung".equals(loginURL);
 	}
-	
+
 	private HttpSession httpSession;
 	private ServletContext servletContext;
 	private AttributePrincipal userPrincipal;
@@ -53,7 +56,7 @@ public class MainApplication extends Application implements HttpServletRequestLi
 	private TabSheet tabSheet;
 	private Window mainWindow;
 	private List<Object> runAsList = null;
-
+	private Map<String, Map<String, Map<String, Object>>> moduleProps = null;
 
 	@Override
 	public void init() {
@@ -69,6 +72,7 @@ public class MainApplication extends Application implements HttpServletRequestLi
 		setMainWindow(mainWindow);
 		setErrorHandler(new Terminal.ErrorListener() {
 			private static final long serialVersionUID = 1L;
+
 			@Override
 			public void terminalError(Terminal.ErrorEvent event) {
 				event.getThrowable().printStackTrace();
@@ -99,7 +103,8 @@ public class MainApplication extends Application implements HttpServletRequestLi
 	private Module initTabSheet() {
 		tabSheet = new TabSheet();
 		tabSheet.setSizeFull();
-		String modulesParamString = localeConfig.getText("modules." + readUserRole());
+		String modulesParamString = localeConfig.getText("modules."
+				+ readUserRole());
 		modules = new HashMap<String, Module>();
 		Module firstModule = null;
 		for (String className : modulesParamString.split(",")) {
@@ -112,7 +117,8 @@ public class MainApplication extends Application implements HttpServletRequestLi
 				ModuleConfig moduleConfig = module.getModuleConfig();
 				String label = moduleConfig.getLabel("moduletitle");
 				modules.put(label, module);
-				tabSheet.addTab((Component) module.getComponent(), label, new ThemeResource(moduleConfig.getLabel("moduleicon")));
+				tabSheet.addTab((Component) module.getComponent(), label,
+						new ThemeResource(moduleConfig.getLabel("moduleicon")));
 			} catch (Exception e) {
 				showSystemException(e);
 			}
@@ -121,13 +127,14 @@ public class MainApplication extends Application implements HttpServletRequestLi
 		mainWindow.setContent(tabSheet);
 		return firstModule;
 	}
-	
+
 	public String getLoginUserRole() {
 		return loginUserRole;
 	}
 
 	public String getProxyTicket() {
-		return userPrincipal.getProxyTicketFor(servletContext.getInitParameter("backendURL"));
+		return userPrincipal.getProxyTicketFor(servletContext
+				.getInitParameter("backendURL"));
 	}
 
 	public String getContextParam(String string) {
@@ -159,14 +166,17 @@ public class MainApplication extends Application implements HttpServletRequestLi
 		if (isTestEnvironment) {
 			userPrincipal = new AttributePrincipal() {
 				private static final long serialVersionUID = 1L;
+
 				@Override
 				public String getName() {
 					return "ad";
 				}
+
 				@Override
 				public String getProxyTicketFor(String arg0) {
 					return "user:ad";
 				}
+
 				@SuppressWarnings("rawtypes")
 				@Override
 				public Map getAttributes() {
@@ -174,14 +184,16 @@ public class MainApplication extends Application implements HttpServletRequestLi
 				}
 			};
 		} else {
-			userPrincipal = ((Assertion) httpSession.getAttribute(AuthenticationFilter.CONST_CAS_ASSERTION)).getPrincipal();
+			userPrincipal = ((Assertion) httpSession
+					.getAttribute(AuthenticationFilter.CONST_CAS_ASSERTION))
+					.getPrincipal();
 		}
 	}
 
 	@Override
 	public void onRequestEnd(HttpServletRequest request,
 			HttpServletResponse response) {
-		
+
 	}
 
 	@Override
@@ -203,15 +215,19 @@ public class MainApplication extends Application implements HttpServletRequestLi
 			showUserException(e);
 		} else {
 			showSystemException(e);
-		}		
+		}
 	}
 
 	public void showUserException(Exception e) {
-		getMainWindow().showNotification("Anwendungs-Fehler", "<br />" + e.getMessage(), Notification.TYPE_ERROR_MESSAGE);			
+		getMainWindow().showNotification("Anwendungs-Fehler",
+				"<br />" + e.getMessage(), Notification.TYPE_ERROR_MESSAGE);
 	}
 
 	public void showSystemException(Exception e) {
-		getMainWindow().showNotification("System-Fehler", "<br />Bitte informieren Sie den Support<br/ >" + e.getMessage(), Notification.TYPE_ERROR_MESSAGE);			
+		getMainWindow().showNotification(
+				"System-Fehler",
+				"<br />Bitte informieren Sie den Support<br/ >"
+						+ e.getMessage(), Notification.TYPE_ERROR_MESSAGE);
 	}
 
 	public String getRunAs() {
@@ -239,7 +255,8 @@ public class MainApplication extends Application implements HttpServletRequestLi
 		if (runAsList == null) {
 			runAsList = new ArrayList<Object>();
 			if ("HOSTMASTER".equals(loginUserRole)) {
-				runAsList = ItemsReader.readItemList(this, "member", "membercode");
+				runAsList = ItemsReader.readItemList(this, "member",
+						"membercode");
 			}
 			if ("CUSTOMER".equals(loginUserRole)) {
 				runAsList = ItemsReader.readItemList(this, "pac", "name");
@@ -249,6 +266,46 @@ public class MainApplication extends Application implements HttpServletRequestLi
 			}
 		}
 		return runAsList;
+	}
+
+	public Map<String, Map<String, Map<String, Object>>> getModuleProps() {
+		if (this.moduleProps == null) {
+			Object callSearch = null;
+			try {
+				callSearch = getRemote().callSearch("moduleprop", new HashMap<String, XmlrpcProperty>());
+				if (!(callSearch instanceof Object[])) {
+					throw new HsarwebInternalException("getModuleProps hat keine Liste bekommen.");
+				}
+				moduleProps = new HashMap<String, Map<String, Map<String, Object>>>();
+				for (Object row : ((Object[]) callSearch)) {
+					if (row instanceof Map<?, ?>) {
+						Map<?, ?> rowAsMap = (Map<?, ?>) row;
+						Object moduleName = rowAsMap.get("module");
+						if (moduleName instanceof String) {
+							Object properties = rowAsMap.get("properties");
+							if (properties instanceof Object[]) {
+								Map<String, Map<String, Object>> propertyList = new HashMap<String, Map<String, Object>>();
+								moduleProps.put((String) moduleName, propertyList);
+								for (Object property : (Object[]) properties) {
+									if (property instanceof Map<?, ?>) {
+										Map<String, Object> propertyAsMap = (Map<String, Object>) property;
+										Object propertyName = propertyAsMap.get("property");
+										if (propertyName instanceof String) {
+											propertyList.put( (String) propertyName, propertyAsMap);
+										}
+									}
+								}
+
+							}
+						}
+					}
+				}
+			} catch (HsarwebException e) {
+				e.printStackTrace();
+				showSystemException(e);
+			}
+		}
+		return moduleProps;
 	}
 
 }
