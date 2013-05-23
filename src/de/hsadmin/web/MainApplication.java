@@ -2,11 +2,9 @@ package de.hsadmin.web;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.TreeMap;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -288,6 +286,7 @@ public class MainApplication extends Application implements
 								moduleProps.put((String) moduleName, propertyList);
 								for (Object property : (Object[]) properties) {
 									if (property instanceof Map<?, ?>) {
+										@SuppressWarnings("unchecked")
 										Map<String, Object> propertyAsMap = (Map<String, Object>) property;
 										Object propertyName = propertyAsMap.get("property");
 										if (propertyName instanceof String) {
