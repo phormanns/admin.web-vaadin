@@ -7,6 +7,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import com.vaadin.data.Property;
@@ -37,7 +38,7 @@ import de.hsadmin.web.config.PropertyTableColumn;
 public class TableComponentFactory implements ComponentFactory, Serializable {
 
 	private static final long serialVersionUID = 1L;
-	private static final DateFormat serverDateFormat = DateFormat.getDateInstance(DateFormat.SHORT);
+	private static final DateFormat serverDateFormat = DateFormat.getDateInstance(DateFormat.SHORT, Locale.GERMAN);
 
 	private Module module;
 	private Table table;

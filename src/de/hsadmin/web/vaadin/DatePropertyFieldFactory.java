@@ -3,6 +3,7 @@ package de.hsadmin.web.vaadin;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.Date;
+import java.util.Locale;
 
 import com.vaadin.data.Property.ConversionException;
 import com.vaadin.data.Property.ReadOnlyException;
@@ -19,7 +20,7 @@ import de.hsadmin.web.config.PropertyFieldFactory;
 
 public class DatePropertyFieldFactory implements PropertyFieldFactory {
 
-	public static final DateFormat serverDf = DateFormat.getDateInstance(DateFormat.SHORT);
+	public static final DateFormat serverDf = DateFormat.getDateInstance(DateFormat.SHORT, Locale.GERMAN);
 	
 	private boolean readOnly = false;
 	private boolean writeOnce = false;

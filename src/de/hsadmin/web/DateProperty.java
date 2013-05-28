@@ -3,10 +3,11 @@ package de.hsadmin.web;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.Date;
+import java.util.Locale;
 
 public class DateProperty extends AbstractProperty {
 
-	public static final DateFormat serverDf = DateFormat.getDateInstance(DateFormat.SHORT);
+	public static final DateFormat serverDf = DateFormat.getDateInstance(DateFormat.SHORT, Locale.GERMAN);
 
 	final private Date property;
 
