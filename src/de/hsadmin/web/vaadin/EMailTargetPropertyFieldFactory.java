@@ -67,10 +67,12 @@ public class EMailTargetPropertyFieldFactory implements PropertyFieldFactory {
 	@Override
 	public Object createFieldComponent(PropertyConfig prop, XmlrpcProperty value) {
 		GenericModule genModule = (GenericModule) module;
+		users = genModule.getUsers();
+		mailAliases = genModule.getEMailAliases();
 		layout = new VerticalLayout();
 		layout.setCaption(prop.getLabel());
 		layout.setData(prop.getId());
-		
+		targets.clear();
 		lastIndex = 0;
 		if (value instanceof AbstractProperty) {
 			String stringValue = ((AbstractProperty) value).toStringValue();
