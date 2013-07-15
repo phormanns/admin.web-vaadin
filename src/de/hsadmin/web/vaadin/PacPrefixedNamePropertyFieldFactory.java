@@ -39,10 +39,18 @@ public class PacPrefixedNamePropertyFieldFactory implements PropertyFieldFactory
 		sel.setNullSelectionAllowed(false);
 		sel.setNewItemsAllowed(prop.newItemsAllowed());
 		Map<String, String> selectValues = prop.getSelectValues();
-		for (Object key : selectValues.keySet()) {
+		if (selectValues.size() == 1) {
+			String key = selectValues.keySet().iterator().next();
 			sel.addItem(key);
 			sel.setItemCaption(key, selectValues.get(key));
+			sel.select(key);
+		} else {
+			for (Object key : selectValues.keySet()) {
+				sel.addItem(key);
+				sel.setItemCaption(key, selectValues.get(key));
+			}
 		}
+		
 		sel.setWidth(80.0f, Sizeable.UNITS_PIXELS);
 		sel.setInvalidAllowed(prop.newItemsAllowed());
 		layout.addComponent(sel);
