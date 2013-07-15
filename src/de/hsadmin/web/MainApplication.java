@@ -33,8 +33,11 @@ public class MainApplication extends Application implements
 		HttpServletRequestListener, TabSheet.SelectedTabChangeListener {
 
 	private static final long serialVersionUID = 1L;
+	
 	private static final String LOGIN_URL = "https://login.hostsharing.net:443/cas/v1/tickets";
+	
 	private static boolean isTestEnvironment = false;
+	private static final String TEST_LOGIN = "aaa00";
 
 	static {
 		Config config = Config.getInstance();
@@ -167,12 +170,12 @@ public class MainApplication extends Application implements
 
 				@Override
 				public String getName() {
-					return "ad";
+					return TEST_LOGIN;
 				}
 
 				@Override
 				public String getProxyTicketFor(String arg0) {
-					return "user:ad";
+					return "user:" + TEST_LOGIN;
 				}
 
 				@SuppressWarnings("rawtypes")

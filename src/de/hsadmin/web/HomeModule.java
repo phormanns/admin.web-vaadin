@@ -91,6 +91,7 @@ public class HomeModule extends AbstractModule implements ComponentFactory, Upda
 	public Object initComponent() throws HsarwebException {
 		final Module thisModule = this;
 		VerticalLayout layout = new VerticalLayout();
+		HorizontalLayout toolbar = new HorizontalLayout();
 		Button button = new Button(moduleConfig.getLabel("change_password"));
 		ThemeResource icon = new ThemeResource(moduleConfig.getLabel("change_password_icon"));
 		button.setIcon(icon);
@@ -166,7 +167,9 @@ public class HomeModule extends AbstractModule implements ComponentFactory, Upda
 				application.getMainWindow().addWindow(childWindow);
 			}
 		});
-		layout.addComponent(button);
+		toolbar.addComponent(button);
+		createLogoutButton(toolbar, moduleConfig.getLabel("logout"));
+		layout.addComponent(toolbar);
 		return layout;
 	}
 

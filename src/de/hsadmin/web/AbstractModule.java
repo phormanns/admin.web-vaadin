@@ -116,22 +116,27 @@ public abstract class AbstractModule implements Module, Serializable {
 			toolbar.addComponent(space);
 			toolbar.setExpandRatio(space, 1.0f);
 			createRunAsSelect(toolbar);
-			Button btLogout = new Button(localeConfig.getText("logout"));
-			btLogout.addListener(new ClickListener() {
-				private static final long serialVersionUID = 1L;
-				@Override
-				public void buttonClick(ClickEvent event) {
-					ExternalResource logoutLink = new ExternalResource("logout");
-					application.getMainWindow().open(logoutLink);
-				}
-			});
-			toolbar.addComponent(btLogout);
-			ThemeResource icon = new ThemeResource("../runo/icons/16/cancel.png");
-			btLogout.setIcon(icon);
+			createLogoutButton(toolbar, localeConfig.getText("logout"));
 			layout.addComponent(toolbar);
 		}
 		layout.addComponent(component);
 		layout.setExpandRatio(component, 1.0f);
+	}
+
+	protected void createLogoutButton(HorizontalLayout toolbar,
+			final String buttonText) {
+		Button btLogout = new Button(buttonText);
+		btLogout.addListener(new ClickListener() {
+			private static final long serialVersionUID = 1L;
+			@Override
+			public void buttonClick(ClickEvent event) {
+				ExternalResource logoutLink = new ExternalResource("logout");
+				application.getMainWindow().open(logoutLink);
+			}
+		});
+		toolbar.addComponent(btLogout);
+		ThemeResource icon = new ThemeResource("../runo/icons/16/cancel.png");
+		btLogout.setIcon(icon);
 	}
 
 	private void createRunAsSelect(HorizontalLayout toolbar) throws UnsupportedOperationException, HsarwebException {
