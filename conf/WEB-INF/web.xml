@@ -57,7 +57,6 @@
 		</init-param>
 	</filter>
 	
-
     <filter-mapping>
         <filter-name>CAS Validation Filter</filter-name>
 		<url-pattern>/*</url-pattern>
