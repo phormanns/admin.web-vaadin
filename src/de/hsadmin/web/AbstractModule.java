@@ -130,7 +130,7 @@ public abstract class AbstractModule implements Module, Serializable {
 			private static final long serialVersionUID = 1L;
 			@Override
 			public void buttonClick(ClickEvent event) {
-				ExternalResource logoutLink = new ExternalResource("logout");
+				ExternalResource logoutLink = new ExternalResource("/hasrweb/logout");
 				application.getMainWindow().open(logoutLink);
 			}
 		});
