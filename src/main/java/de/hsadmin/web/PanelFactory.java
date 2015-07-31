@@ -1,6 +1,6 @@
 package main.java.de.hsadmin.web;
 
-public class PanelFactory extends AbstractPanelFactory{
+public class PanelFactory extends AbstractFactory{
 
 	@Override
 	IHSPanel getPanel(String panelType) {
@@ -17,6 +17,11 @@ public class PanelFactory extends AbstractPanelFactory{
 		if(panelType.equalsIgnoreCase("PACKAGE"))
 			return new PackagePanel();
 		
+		return null;
+	}
+
+	@Override
+	IHSWindow getSubWindow(String type, String subType) {
 		return null;
 	}
 

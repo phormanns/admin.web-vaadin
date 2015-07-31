@@ -11,7 +11,7 @@ public class ServerPanel extends CustomComponent implements IHSPanel{
 	public ServerPanel() {
 
 		final Panel panel  = new Panel();
-		
+
 		TabSheet tabsheet = createTabs();
 		tabsheet.setSizeFull();
         panel.setContent(tabsheet);
@@ -24,8 +24,8 @@ public class ServerPanel extends CustomComponent implements IHSPanel{
 	public TabSheet createTabs() {
 
 		TabSheet tabsheet = new TabSheet();
-		tabsheet.addTab(new HSTab(), "Packages");
-		tabsheet.addTab(new HSTab(), "Network");
+		tabsheet.addTab(new HSTab("package"), "Packages");
+		tabsheet.addTab(new HSTab("network"), "Network");
 		
 		return tabsheet;
 	}

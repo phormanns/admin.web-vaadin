@@ -65,7 +65,7 @@ public class MainWindow extends CustomComponent {
 	}
 
 	public static void setCenterPanel(String source) {
-		AbstractPanelFactory panelFactory = new PanelFactory();
+		AbstractFactory panelFactory = FactoryProducer.getFactory("panel");
 		content.setSecondComponent(panelFactory.getPanel(source));
 	}
 }

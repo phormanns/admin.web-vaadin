@@ -23,9 +23,9 @@ public class PackagePanel extends CustomComponent implements IHSPanel{
 	public TabSheet createTabs() {
 
 		TabSheet tabsheet = new TabSheet();
-		tabsheet.addTab(new HSTab(), "User");
-		tabsheet.addTab(new HSTab(), "Data Base");
-		tabsheet.addTab(new HSTab(), "Aliases");
+		tabsheet.addTab(new HSTab("user"), "User");
+		tabsheet.addTab(new HSTab("database"), "Data Base");
+		tabsheet.addTab(new HSTab("alias"), "Aliases");
 
 		return tabsheet;
 	}

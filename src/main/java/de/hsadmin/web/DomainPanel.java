@@ -22,7 +22,7 @@ public class DomainPanel extends CustomComponent implements IHSPanel{
 	public TabSheet createTabs() {
 
 		TabSheet tabsheet = new TabSheet();
-		tabsheet.addTab(new HSTab(), "Email Address");
+		tabsheet.addTab(new HSTab("email"), "Email Address");
 
 		return tabsheet;
 	}

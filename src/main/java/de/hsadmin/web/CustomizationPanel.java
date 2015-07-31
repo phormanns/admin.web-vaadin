@@ -42,8 +42,8 @@ public class CustomizationPanel extends CustomComponent{
 		availableOptions.add(IMenuOption.PACKAGE);
 		availableOptions.add(IMenuOption.MANAGED_SERVERS);
 		
-		selectedOptions.add(IMenuOption.DOMAINS);
 		selectedOptions.add(IMenuOption.PACKAGE);
+		selectedOptions.add(IMenuOption.DOMAINS);
 		selectedOptions.add(IMenuOption.MANAGED_SERVERS);
 	}
 	

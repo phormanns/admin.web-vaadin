@@ -52,6 +52,6 @@ public class EntryPointsSelector extends CustomComponent implements ItemClickLis
 	@Override
 	public void itemClick(ItemClickEvent event) {
 		Table table = (Table) event.getSource();
-		MainWindow.setCenterPanel(/*event.getItem().toString()*/table.getCaption());
+		MainWindow.setCenterPanel(table.getCaption());
 	}
 }

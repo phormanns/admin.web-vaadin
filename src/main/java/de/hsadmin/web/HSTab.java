@@ -11,10 +11,9 @@ public class HSTab extends VerticalLayout{
 	private HorizontalLayout panelToolbar;
 	private Table grid;
 	
-	public HSTab(){
+	public HSTab(String source){
 		super();
-		panelToolbar = new PanelToolbar();
-		
+		panelToolbar = new PanelToolbar(source);
 		addComponent(panelToolbar);
 		setComponentAlignment(panelToolbar, Alignment.MIDDLE_RIGHT);
 		addComponent(getGrid());
