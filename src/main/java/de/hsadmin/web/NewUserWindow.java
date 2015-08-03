@@ -1,5 +1,6 @@
 package main.java.de.hsadmin.web;
 
+import com.vaadin.data.Validator;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.NativeSelect;
@@ -36,7 +37,16 @@ public class NewUserWindow extends Window implements IHSWindow{
        
        subContent.addComponent(list);
        
-       subContent.addComponent(new TextField("quota soft limit"));
+       TextField quotaSoft = new TextField("quota soft limit");
+       quotaSoft.addValidator(new Validator() {
+		private static final long serialVersionUID = 3547770706160134789L;
+		@Override
+           public void validate(Object value) throws InvalidValueException {
+               if(!((String) value).matches("[0-9]+"))
+                   throw new InvalidValueException("Only AlphaNumeric!");
+           }
+       });
+       subContent.addComponent(quotaSoft);
        subContent.addComponent(new TextField("quota hard limit"));
        subContent.addComponent(new HSConfirmBox());
 
