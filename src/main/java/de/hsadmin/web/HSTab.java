@@ -1,8 +1,8 @@
-package main.java.de.hsadmin.web;
+package de.hsadmin.web;
 
 import java.util.ArrayList;
 
-import main.java.de.hsadmin.model.TestDR;
+import de.hsadmin.model.TestDR;
 
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.HorizontalLayout;

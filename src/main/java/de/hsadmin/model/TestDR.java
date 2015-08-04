@@ -1,4 +1,4 @@
-package main.java.de.hsadmin.model;
+package de.hsadmin.model;
 
 import java.io.Serializable;
 import java.net.MalformedURLException;

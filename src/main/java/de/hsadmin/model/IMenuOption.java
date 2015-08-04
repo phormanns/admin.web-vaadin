@@ -1,4 +1,4 @@
-package main.java.de.hsadmin.model;
+package de.hsadmin.model;
 
 /**
  * This Interface has the names of the available options 

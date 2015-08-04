@@ -1,10 +1,10 @@
-package main.java.de.hsadmin.web;
+package de.hsadmin.web;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 
-import main.java.de.hsadmin.model.IMenuOption;
+import de.hsadmin.model.IMenuOption;
 
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;

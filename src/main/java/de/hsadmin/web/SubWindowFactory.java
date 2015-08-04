@@ -1,4 +1,4 @@
-package main.java.de.hsadmin.web;
+package de.hsadmin.web;
 
 public class SubWindowFactory extends AbstractFactory{
 

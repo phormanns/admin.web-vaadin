@@ -1,4 +1,4 @@
-package main.java.de.hsadmin.model;
+package de.hsadmin.model;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;

@@ -1,4 +1,4 @@
-package main.java.de.hsadmin.web;
+package de.hsadmin.web;
 
 import com.vaadin.data.Validator;
 import com.vaadin.ui.FormLayout;
