@@ -35,6 +35,16 @@ public class ModulesManager {
 	public ModuleInfo module(String moduleName) {
 		return modulesRepository.get(moduleName);
 	}
+	
+	public String[] entryPointColumns(String moduleName) {
+		if (hasModule(moduleName) && "customer".equals(moduleName)) {
+			return new String[] { "name", "memberNo" };
+		}
+		if (hasModule(moduleName) && "hive".equals(moduleName)) {
+			return new String[] { "name", "description" };
+		}
+		return null;
+	}
 
 	public IRemote proxy(final String moduleName) {
 		return new IRemote() {

@@ -16,7 +16,7 @@ import de.hsadmin.model.TicketService;
 
 public class ModulesManagerTest {
 
-	private static final String USER_NAME = "hsh98";
+	private static final String USERNAME = "hsh98";
 	private static final String PASSWORD = "Diego.R!";
 
 	private ModulesManager modulesManager;
@@ -26,7 +26,7 @@ public class ModulesManagerTest {
 	@Before
 	public void setUp() throws Exception {
 		service = new TicketService();
-		final String username = USER_NAME;
+		final String username = USERNAME;
 		final String password = PASSWORD;
 		grantingTicket = service.getGrantingTicket(username, password);
 		final ModulesManagerFactory managerFactory = new ModulesManagerFactory(grantingTicket, username);
@@ -63,7 +63,7 @@ public class ModulesManagerTest {
 	}
 
 	public void testSearchCustomer() throws XmlRpcException, RpcException {
-		final List<Map<String,Object>> list = modulesManager.proxy("customer").search(USER_NAME, service.getServiceTicket(grantingTicket), new HashMap<String, String>());
+		final List<Map<String,Object>> list = modulesManager.proxy("customer").search(USERNAME, service.getServiceTicket(grantingTicket), new HashMap<String, String>());
 		assertNotNull(list);
 		assertEquals(1, list.size());
 		assertEquals("hsh00-hsh", list.get(0).get("name"));
@@ -73,7 +73,7 @@ public class ModulesManagerTest {
 		final Map<String, Object> custData = new HashMap<String, Object>();
 		custData.put("name", "hsh00-drz");
 		custData.put("memberNo", "19019");
-		final Map<String,Object> cust = modulesManager.proxy("customer").add(USER_NAME, service.getServiceTicket(grantingTicket), custData);
+		final Map<String,Object> cust = modulesManager.proxy("customer").add(USERNAME, service.getServiceTicket(grantingTicket), custData);
 		assertNotNull(cust);
 		assertEquals("hsh00-drz", cust.get("name"));
 		assertEquals("false", cust.get("free"));
@@ -84,7 +84,7 @@ public class ModulesManagerTest {
 		final Map<String, Object> setData = new HashMap<String, Object>();
 		whereData.put("name", "hsh00-drz");
 		setData.put("free", "true");
-		final List<Map<String,Object>> list = modulesManager.proxy("customer").update(USER_NAME, service.getServiceTicket(grantingTicket), setData, whereData);
+		final List<Map<String,Object>> list = modulesManager.proxy("customer").update(USERNAME, service.getServiceTicket(grantingTicket), setData, whereData);
 		assertNotNull(list);
 		assertEquals(1, list.size());
 		assertEquals("true", list.get(0).get("free"));
@@ -93,7 +93,7 @@ public class ModulesManagerTest {
 	public void testDeleteCustomer() throws XmlRpcException, RpcException {
 		final Map<String, String> custData = new HashMap<String, String>();
 		custData.put("name", "hsh00-drz");
-		modulesManager.proxy("customer").delete(USER_NAME, service.getServiceTicket(grantingTicket), custData);
+		modulesManager.proxy("customer").delete(USERNAME, service.getServiceTicket(grantingTicket), custData);
 	}
 
 }
