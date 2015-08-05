@@ -43,6 +43,9 @@ public class ModulesManager {
 		if (hasModule(moduleName) && "hive".equals(moduleName)) {
 			return new String[] { "name", "description" };
 		}
+		if (hasModule(moduleName) && "pac".equals(moduleName)) {
+			return new String[] { "name", "basePac" };
+		}
 		return null;
 	}
 

@@ -20,7 +20,7 @@ public class EntryPointsSelector extends CustomComponent implements ItemClickLis
 
 	public EntryPointsSelector(final MainWindow mainWindow) {
 		this.mainWindow = mainWindow;
-		final Panel panel = new Panel("Entry Point");
+		final Panel panel = new Panel();
 		content = new Accordion();
 
 		createTabs();
