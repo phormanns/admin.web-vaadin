@@ -9,6 +9,8 @@ import java.net.URLEncoder;
 
 import javax.net.ssl.HttpsURLConnection;
 
+import de.hsadmin.rpc.RpcException;
+
 /**
  * Helper for service tickets.
  * Hostsharing uses the CAS authentication service to authenticate 
@@ -18,15 +20,7 @@ import javax.net.ssl.HttpsURLConnection;
  */
 public class TicketService {
 
-	final String user;
-	final String password;
-
-	public TicketService(final String user, final String password) {
-		this.user = user;
-		this.password = password;
-	}
-
-	public String getGrantingTicket() {
+	public String getGrantingTicket(final String user, final String password) throws RpcException {
 		String ticket = null;
 		try {
 			String userParam = "username=" + URLEncoder.encode(user, "UTF-8");
@@ -47,14 +41,13 @@ public class TicketService {
 			connection.connect();
 			ticket = connection.getHeaderField("Location");
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new RpcException(e);
 		}
 
 		return ticket;
 	}
 
-	public String getServiceTicket(String grantingTicket) {
+	public String getServiceTicket(String grantingTicket) throws RpcException {
 		String ticket = null;
 		try {
 			String serviceParam = "service=" + URLEncoder.encode("https://config.hostsharing.net:443/hsar/backend", "UTF-8");
@@ -78,8 +71,7 @@ public class TicketService {
 				readLine = reader.readLine();
 			} while (readLine != null);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new RpcException(e);
 		}
 
 		return ticket;

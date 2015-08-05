@@ -2,6 +2,10 @@ package de.hsadmin.rpc;
 
 import java.io.Serializable;
 
+import de.hsadmin.rpc.enums.DisplayPolicy;
+import de.hsadmin.rpc.enums.ReadWritePolicy;
+import de.hsadmin.rpc.enums.SearchPolicy;
+
 public class PropertyInfo implements Serializable {
 	
 	private static final long serialVersionUID = 1L;

@@ -25,6 +25,10 @@ public class ModuleInfo implements Serializable {
 		return name;
 	}
 	
+	public boolean hasProperty(final String name) {
+		return propertiesByName.containsKey(name);
+	}
+	
 	public PropertyInfo propertyInfo(final String name) {
 		return propertiesByName.get(name);
 	}

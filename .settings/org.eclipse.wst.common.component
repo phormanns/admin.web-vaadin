@@ -2,6 +2,7 @@
     <wb-module deploy-name="hs.admin.peter">
         <wb-resource deploy-path="/" source-path="/WebContent" tag="defaultRootSource"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/java"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/test"/>
         <property name="context-root" value="hs.admin.peter"/>
         <property name="java-output-path" value="/hs.admin.peter/build/classes"/>
     </wb-module>

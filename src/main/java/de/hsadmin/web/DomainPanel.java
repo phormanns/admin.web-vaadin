@@ -4,6 +4,8 @@ import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.TabSheet;
 
+import de.hsadmin.rpc.RpcException;
+
 public class DomainPanel extends CustomComponent implements IHSPanel{
 
 	private static final long serialVersionUID = 2223638269308264340L;
@@ -23,7 +25,12 @@ public class DomainPanel extends CustomComponent implements IHSPanel{
 
 		TabSheet tabsheet = new TabSheet();
 		HSTab emailTab = new HSTab("email");
-		emailTab.fillTable();
+		try {
+			emailTab.fillTable();
+		} catch (RpcException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		tabsheet.addTab(emailTab, "Email Address");
 
 		return tabsheet;
