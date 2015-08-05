@@ -14,12 +14,12 @@ import org.apache.xmlrpc.client.XmlRpcClientConfigImpl;
 
 import de.hsadmin.model.TicketService;
 
-public class ModuleManagerFactory {
+public class ModulesManagerFactory {
 	
 	private final String ticketGrantingTicket;
 	private final String runAsUser;
 	
-	public ModuleManagerFactory(final String ticketGrantingTicket, final String runAsUser) {
+	public ModulesManagerFactory(final String ticketGrantingTicket, final String runAsUser) {
 		this.ticketGrantingTicket = ticketGrantingTicket;
 		this.runAsUser = runAsUser;
 	}

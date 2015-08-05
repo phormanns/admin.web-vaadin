@@ -1,6 +1,5 @@
 package de.hsadmin.rpc;
 
-import java.io.Serializable;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -28,7 +27,7 @@ public class ModulesManager {
 		return modulesRepository.containsKey(name);
 	}
 
-	public void add(final ModuleInfo module, final URL serverURL) {
+	void add(final ModuleInfo module, final URL serverURL) {
 		modulesRepository.put(module.getName(), module);
 		serviceRepository.put(module.getName(), serverURL);
 	}

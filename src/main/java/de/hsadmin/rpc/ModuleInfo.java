@@ -37,7 +37,7 @@ public class ModuleInfo implements Serializable {
 		return propertiesBySequence.values().iterator();
 	}
 	
-	public void add(final PropertyInfo propInfo) {
+	void add(final PropertyInfo propInfo) {
 		propertiesByName.put(propInfo.getName(), propInfo);
 		propertiesBySequence.put(propInfo.getDisplaySequence(), propInfo);
 	}

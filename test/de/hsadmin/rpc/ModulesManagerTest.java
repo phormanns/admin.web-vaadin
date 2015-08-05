@@ -1,18 +1,15 @@
 package de.hsadmin.rpc;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.sound.midi.SysexMessage;
-
 import org.apache.xmlrpc.XmlRpcException;
 import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import de.hsadmin.model.TicketService;
@@ -32,7 +29,7 @@ public class ModulesManagerTest {
 		final String username = USER_NAME;
 		final String password = PASSWORD;
 		grantingTicket = service.getGrantingTicket(username, password);
-		final ModuleManagerFactory managerFactory = new ModuleManagerFactory(grantingTicket, username);
+		final ModulesManagerFactory managerFactory = new ModulesManagerFactory(grantingTicket, username);
 		modulesManager = managerFactory.newModulesManager("https://config1-test.hostsharing.net:443/hsar/xmlrpc/hsadmin");
 	}
 

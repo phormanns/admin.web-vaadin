@@ -25,7 +25,7 @@ public class PropertyInfo implements Serializable {
 		return module;
 	}
 	
-	public void setModule(String module) {
+	void setModule(String module) {
 		this.module = module;
 	}
 
@@ -33,7 +33,7 @@ public class PropertyInfo implements Serializable {
 		return name;
 	}
 
-	public void setName(String name) {
+	void setName(String name) {
 		this.name = name;
 	}
 
@@ -41,7 +41,7 @@ public class PropertyInfo implements Serializable {
 		return type;
 	}
 
-	public void setType(String type) {
+	void setType(String type) {
 		this.type = type;
 	}
 
@@ -49,7 +49,7 @@ public class PropertyInfo implements Serializable {
 		return minLength;
 	}
 
-	public void setMinLength(int minLength) {
+	void setMinLength(int minLength) {
 		this.minLength = minLength;
 	}
 
@@ -57,7 +57,7 @@ public class PropertyInfo implements Serializable {
 		return maxLength;
 	}
 
-	public void setMaxLength(int maxLength) {
+	void setMaxLength(int maxLength) {
 		this.maxLength = maxLength;
 	}
 
@@ -65,7 +65,7 @@ public class PropertyInfo implements Serializable {
 		return validationRegexp;
 	}
 
-	public void setValidationRegexp(String validationRegexp) {
+	void setValidationRegexp(String validationRegexp) {
 		this.validationRegexp = validationRegexp;
 	}
 
@@ -73,7 +73,7 @@ public class PropertyInfo implements Serializable {
 		return displaySequence;
 	}
 
-	public void setDisplaySequence(int displaySequence) {
+	void setDisplaySequence(int displaySequence) {
 		this.displaySequence = displaySequence;
 	}
 
@@ -81,7 +81,7 @@ public class PropertyInfo implements Serializable {
 		return displayVisible;
 	}
 
-	public void setDisplayVisible(final String displayVisible) {
+	void setDisplayVisible(final String displayVisible) {
 		this.displayVisible = DisplayPolicy.valueOf(displayVisible.toUpperCase());
 	}
 
@@ -89,7 +89,7 @@ public class PropertyInfo implements Serializable {
 		return readwriteable;
 	}
 
-	public void setReadwriteable(final String readwriteable) {
+	void setReadwriteable(final String readwriteable) {
 		this.readwriteable = ReadWritePolicy.valueOf(readwriteable.toUpperCase());
 	}
 
@@ -97,7 +97,7 @@ public class PropertyInfo implements Serializable {
 		return searchable;
 	}
 
-	public void setSearchable(final String searchable) {
+	void setSearchable(final String searchable) {
 		this.searchable = SearchPolicy.valueOf(searchable.toUpperCase());
 	}
 	
