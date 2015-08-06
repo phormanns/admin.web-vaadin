@@ -1,4 +1,4 @@
-package main.java.de.hsadmin.model;
+package de.hsadmin.model;
 
 /**
  * This Interface has the names of the available options 
@@ -16,8 +16,8 @@ public interface IMenuOption {
 	public static final String POSTGRES_USER = "Postgres User";
 	public static final String QUEUED_TASKS = "Queued Tasks";
 	public static final String DOMAINS = "Domains";
-	public static final String PACKAGE = "Package";
-	public static final String MANAGED_SERVERS = "Managed Servers";
-
+	public static final String PACKAGE = "pac";
+	public static final String MANAGED_SERVERS = "hive";
+	public static final String CUSTOMER = "customer";
 	
 }

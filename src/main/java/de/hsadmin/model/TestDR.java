@@ -1,4 +1,4 @@
-package main.java.de.hsadmin.model;
+package de.hsadmin.model;
 
 import java.io.Serializable;
 import java.net.MalformedURLException;
@@ -12,6 +12,8 @@ import org.apache.xmlrpc.XmlRpcException;
 import org.apache.xmlrpc.client.XmlRpcClient;
 import org.apache.xmlrpc.client.XmlRpcClientConfigImpl;
 
+import de.hsadmin.rpc.RpcException;
+
 public class TestDR {
 
 	final XmlRpcClient client = new XmlRpcClient();
@@ -20,14 +22,15 @@ public class TestDR {
 	/** 
 	 * Do a single call to the hsadmin api.
 	 * @param args expects username and password
+	 * @throws RpcException 
 	 *  
 	 */
-	public void init(String user, String pwd) {
+	public void init(String user, String pwd) throws RpcException {
 		try {
 			final String username = user;
 			final String password = pwd;
-			final TicketService ticketService = new TicketService(username, password);
-			final String grantingTicket = ticketService.getGrantingTicket();
+			final TicketService ticketService = new TicketService();
+			final String grantingTicket = ticketService.getGrantingTicket(username, password);
 			
 			final String ticket = ticketService.getServiceTicket(grantingTicket);
 			

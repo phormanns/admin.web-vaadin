@@ -1,4 +1,4 @@
-package main.java.de.hsadmin.web;
+package de.hsadmin.web;
 
 import javax.servlet.annotation.WebServlet;
 

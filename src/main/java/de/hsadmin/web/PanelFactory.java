@@ -1,4 +1,5 @@
-package main.java.de.hsadmin.web;
+package de.hsadmin.web;
+
 
 public class PanelFactory extends AbstractFactory{
 
@@ -8,13 +9,13 @@ public class PanelFactory extends AbstractFactory{
 		if(panelType == null)
 			return null;
 		
-		if(panelType.equalsIgnoreCase("MANAGED SERVERS"))
+		if(panelType.equals("hive"))
 			return new ServerPanel();
 		
 		if(panelType.equalsIgnoreCase("DOMAINS"))
 			return new DomainPanel();
 		
-		if(panelType.equalsIgnoreCase("PACKAGE"))
+		if(panelType.equals("pac"))
 			return new PackagePanel();
 		
 		return null;

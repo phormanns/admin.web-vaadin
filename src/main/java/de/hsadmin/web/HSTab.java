@@ -1,8 +1,9 @@
-package main.java.de.hsadmin.web;
+package de.hsadmin.web;
 
 import java.util.ArrayList;
 
-import main.java.de.hsadmin.model.TestDR;
+import de.hsadmin.model.TestDR;
+import de.hsadmin.rpc.RpcException;
 
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.HorizontalLayout;
@@ -43,7 +44,7 @@ public class HSTab extends VerticalLayout{
 		return grid;
 	}
 	
-	public void fillTable(){
+	public void fillTable() throws RpcException{
 		TestDR dataSource = new TestDR();
 		
 		dataSource.init(USER_NAME, PASSWORD);
