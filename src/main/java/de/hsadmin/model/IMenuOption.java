@@ -7,15 +7,15 @@ package de.hsadmin.model;
  */
 public interface IMenuOption {
 
-	public static final String UNIX_USERS = "Unix Users";
-	public static final String EMAIL_ADDRESSES = "Email Addresses";
-	public static final String EMAIL_ALIASES = "Email Aliases";
-	public static final String MYSQL_DB = "MySql DB";
-	public static final String MYSQL_USER = "MySql User";
-	public static final String POSTGRES_DB = "Postgres DB";
-	public static final String POSTGRES_USER = "Postgres User";
-	public static final String QUEUED_TASKS = "Queued Tasks";
-	public static final String DOMAINS = "Domains";
+	public static final String UNIX_USERS = "user";
+	public static final String EMAIL_ADDRESSES = "emailaddress";
+	public static final String EMAIL_ALIASES = "emailalias";
+	public static final String MYSQL_DB = "mysqldb";
+	public static final String MYSQL_USER = "mysqluser";
+	public static final String POSTGRES_DB = "postgresqldb";
+	public static final String POSTGRES_USER = "postgresqluser";
+	public static final String QUEUED_TASKS = "q";
+	public static final String DOMAINS = "domain";
 	public static final String PACKAGE = "pac";
 	public static final String MANAGED_SERVERS = "hive";
 	public static final String CUSTOMER = "customer";

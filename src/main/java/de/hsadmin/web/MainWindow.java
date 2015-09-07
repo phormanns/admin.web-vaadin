@@ -7,15 +7,9 @@ import java.util.Map;
 
 import org.apache.xmlrpc.XmlRpcException;
 
-import com.vaadin.server.ThemeResource;
 import com.vaadin.ui.AbstractSplitPanel;
-import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.CustomComponent;
-import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.HorizontalSplitPanel;
-import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.VerticalLayout;
 
@@ -28,9 +22,13 @@ public class MainWindow extends CustomComponent {
 
 	private static final long serialVersionUID = 1L;
 	
-	public static final String SERVICE_URL = "https://config1-test.hostsharing.net:443/hsar/xmlrpc/hsadmin";
-	private static final String USERNAME = "hsh98";
-	private static final String PASSWORD = "Diego.R!";
+	public static final String SERVICE_URL = "https://config-test.hostsharing.net:443/hsar/xmlrpc/hsadmin";
+
+//	private static final String USERNAME = "hsh98";
+//	private static final String PASSWORD = "Diego.R!";
+
+	private static final String USERNAME = "ad";
+	private static final String PASSWORD = "adA$M123";
 
 	private ModulesManager modulesManager;
 	private TicketService service;
@@ -58,34 +56,11 @@ public class MainWindow extends CustomComponent {
 		mainPanel.setSizeFull();
 		VerticalLayout vl = new VerticalLayout();
 		
-		HorizontalLayout hl = new HorizontalLayout();
-		hl.addStyleName("panelstyle");
-		hl.setSpacing(true);
-		hl.addComponent(new Label("HS Admin Main Window"));
-
-		//Customization Button to set up the left panel
-		Button customButton = new Button();
-		customButton.setStyleName("tiny");
-		customButton.setIcon(new ThemeResource("../icons/settings-icon.png"));
 		content = new HorizontalSplitPanel();
-
-		customButton.addClickListener(new ClickListener() {
-			private static final long serialVersionUID = 1L;
-			@Override
-            public void buttonClick(final ClickEvent event) {
-				content.setSecondComponent(CustomizationPanel.getInstance());
-            }
-        });
-		hl.addComponent(customButton);
-		
-		vl.addComponent(hl);
-		
-		//final AbstractSplitPanel content = new HorizontalSplitPanel();
 		content.setSizeFull();
 		vl.addComponent(content);
 
 		final EntryPointsSelector entryPoints = new EntryPointsSelector(this);
-		entryPoints.setSizeFull();
 		entryPoints.setSizeFull();
 		content.setFirstComponent(entryPoints);
 

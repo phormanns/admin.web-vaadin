@@ -2,7 +2,8 @@ package de.hsadmin.web;
 
 public abstract class AbstractFactory {
 
-	abstract IHSPanel getPanel(String panelType);
-	abstract IHSWindow getSubWindow(String type, String action);
+	public abstract IHSPanel getPanel(String panelType);
+	
+	public abstract IHSWindow getSubWindow(String type, String action);
 
 }

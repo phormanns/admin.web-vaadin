@@ -25,7 +25,9 @@ import com.vaadin.ui.VerticalLayout;
 public class CustomizationPanel extends CustomComponent{
 
 	private static final long serialVersionUID = -416356626041492748L;
+	
 	private static CustomizationPanel custom = null;
+	
 	private ArrayList<String> availableOptions= new ArrayList<String>();
 	private ArrayList<String> selectedOptions= new ArrayList<String>();
 	
@@ -44,8 +46,8 @@ public class CustomizationPanel extends CustomComponent{
 		
 		selectedOptions.add(IMenuOption.PACKAGE);
 		selectedOptions.add(IMenuOption.DOMAINS);
-		selectedOptions.add(IMenuOption.MANAGED_SERVERS);
-		selectedOptions.add(IMenuOption.CUSTOMER);
+//		selectedOptions.add(IMenuOption.MANAGED_SERVERS);
+//		selectedOptions.add(IMenuOption.CUSTOMER);
 	}
 	
 	private CustomizationPanel() {

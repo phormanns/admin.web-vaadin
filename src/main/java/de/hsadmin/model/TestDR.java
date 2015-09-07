@@ -35,7 +35,7 @@ public class TestDR {
 			final String ticket = ticketService.getServiceTicket(grantingTicket);
 			
 			final XmlRpcClientConfigImpl config = new XmlRpcClientConfigImpl();
-			config.setServerURL(new URL("https://config.hostsharing.net:443/hsar/xmlrpc/hsadmin"));
+			config.setServerURL(new URL("https://config-test.hostsharing.net:443/hsar/xmlrpc/hsadmin"));
 			config.setEnabledForExtensions(true);
 
 			client.setConfig(config);

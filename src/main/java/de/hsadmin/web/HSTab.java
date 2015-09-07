@@ -10,7 +10,7 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
 
-public class HSTab extends VerticalLayout{
+public class HSTab extends VerticalLayout {
 	
 	private static final long serialVersionUID = 8755003327696243905L;
 	
@@ -21,7 +21,7 @@ public class HSTab extends VerticalLayout{
 	private HorizontalLayout panelToolbar;
 	private Table grid;
 	
-	public HSTab(String source){
+	public HSTab(String source) {
 		super();
 		panelToolbar = new PanelToolbar(source);
 		addComponent(panelToolbar);
@@ -44,7 +44,7 @@ public class HSTab extends VerticalLayout{
 		return grid;
 	}
 	
-	public void fillTable() throws RpcException{
+	public void fillTable() throws RpcException {
 		TestDR dataSource = new TestDR();
 		
 		dataSource.init(USER_NAME, PASSWORD);

@@ -4,7 +4,7 @@ import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.TabSheet;
 
-public class ServerPanel extends CustomComponent implements IHSPanel{
+public class ServerPanel extends CustomComponent implements IHSPanel {
 
 	private static final long serialVersionUID = 5720017114380927259L;
 	

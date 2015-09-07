@@ -8,6 +8,7 @@ import com.vaadin.ui.Accordion;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.Table;
+import com.vaadin.ui.Table.ColumnHeaderMode;
 
 public class EntryPointsSelector extends CustomComponent implements ItemClickListener{
 
@@ -38,6 +39,7 @@ public class EntryPointsSelector extends CustomComponent implements ItemClickLis
 
 	public Table getLeftComponent(String name){
 		Table leftComponent = new Table(name);
+		leftComponent.setData(name);
 
 		final String[] entryPointColumns = mainWindow.entryPointColumns(name);
 		
@@ -50,16 +52,9 @@ public class EntryPointsSelector extends CustomComponent implements ItemClickLis
 			for (Object[] row : list) {
 				leftComponent.addItem(row, idx++);
 			}
-		} else {
-		
-			leftComponent.addContainerProperty("Id", String.class, null);
-			leftComponent.addContainerProperty("Description", String.class, null);
-	
-			leftComponent.addItem(new Object[]{"AAA", "BBB"}, 1);
-			leftComponent.addItem(new Object[]{"AAAA", "BBBB"}, 2);
-			leftComponent.addItem(new Object[]{"CCCC", "DDDD"}, 3);
 		}
 		leftComponent.setPageLength(leftComponent.size());
+		leftComponent.setColumnHeaderMode(ColumnHeaderMode.HIDDEN);
 		leftComponent.addItemClickListener(this);
 		leftComponent.setSelectable(true);
 		leftComponent.setImmediate(true);
@@ -71,6 +66,6 @@ public class EntryPointsSelector extends CustomComponent implements ItemClickLis
 	@Override
 	public void itemClick(ItemClickEvent event) {
 		Table table = (Table) event.getSource();
-		mainWindow.setCenterPanel(table.getCaption());
+		mainWindow.setCenterPanel((String) table.getData());
 	}
 }

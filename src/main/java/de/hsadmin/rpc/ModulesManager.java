@@ -1,5 +1,6 @@
 package de.hsadmin.rpc;
 
+import java.io.Serializable;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -13,8 +14,10 @@ import org.apache.xmlrpc.client.XmlRpcClientConfigImpl;
 import de.hsadmin.model.IRemote;
 
 
-public class ModulesManager {
+public class ModulesManager implements Serializable {
 
+	private static final long serialVersionUID = 1L;
+	
 	private final Map<String, ModuleInfo> modulesRepository; 
 	private final Map<String, URL> serviceRepository; 
 	
@@ -43,10 +46,13 @@ public class ModulesManager {
 		if (hasModule(moduleName) && "hive".equals(moduleName)) {
 			return new String[] { "name", "description" };
 		}
-		if (hasModule(moduleName) && "pac".equals(moduleName)) {
-			return new String[] { "name", "basePac" };
+		if (hasModule(moduleName) && "domain".equals(moduleName)) {
+			return new String[] { "name", "user" };
 		}
-		return null;
+		if (hasModule(moduleName) && "pac".equals(moduleName)) {
+			return new String[] { "name", "customer" };
+		}
+		return new String[] { "name" };
 	}
 
 	public IRemote proxy(final String moduleName) {
