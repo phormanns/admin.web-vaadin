@@ -14,11 +14,12 @@ import com.vaadin.ui.Panel;
 import com.vaadin.ui.VerticalLayout;
 
 import de.hsadmin.model.TicketService;
+import de.hsadmin.rpc.HSAdminSession;
 import de.hsadmin.rpc.ModulesManager;
 import de.hsadmin.rpc.ModulesManagerFactory;
 import de.hsadmin.rpc.RpcException;
 
-public class MainWindow extends CustomComponent {
+public class MainWindow extends CustomComponent implements HSAdminSession {
 
 	private static final long serialVersionUID = 1L;
 	
@@ -31,7 +32,7 @@ public class MainWindow extends CustomComponent {
 	private static final String PASSWORD = "adA$M123";
 
 	private ModulesManager modulesManager;
-	private TicketService service;
+	private TicketService ticketService;
 	private String grantingTicket;
 
 	private AbstractSplitPanel content;
@@ -39,11 +40,11 @@ public class MainWindow extends CustomComponent {
 	
 	
 	public MainWindow() {
-		service = new TicketService();
+		ticketService = new TicketService();
 		final String username = USERNAME;
 		final String password = PASSWORD;
 		try {
-			grantingTicket = service.getGrantingTicket(username, password);
+			grantingTicket = ticketService.getGrantingTicket(username, password);
 			final ModulesManagerFactory modulesManagerFactory = new ModulesManagerFactory(grantingTicket, username);
 			modulesManager = modulesManagerFactory.newModulesManager(SERVICE_URL);
 		} catch (RpcException e) {
@@ -72,15 +73,21 @@ public class MainWindow extends CustomComponent {
 
 	}
 
-	public void setCenterPanel(String source) {
+	/**
+	 * Update center panel.
+	 * @param source module name
+	 * @param itemId 
+	 */
+	public void setCenterPanel(String source, Object itemId) {
 		final AbstractFactory panelFactory = FactoryProducer.getFactory("panel");
-		content.setSecondComponent(panelFactory.getPanel(source));
+		final IHSPanel panel = panelFactory.getPanel(source, this, itemId);
+		content.setSecondComponent(panel);
 	}
 
 	public List<Object[]> list(final String moduleName, String... columnNames) {
 		final List<Object[]> resultList = new ArrayList<Object[]>();
 		try {
-			final List<Map<String, Object>> searchResult = modulesManager.proxy(moduleName).search(USERNAME, service.getServiceTicket(grantingTicket), new HashMap<String, String>());
+			final List<Map<String, Object>> searchResult = modulesManager.proxy(moduleName).search(USERNAME, ticketService.getServiceTicket(grantingTicket), new HashMap<String, String>());
 			for (Map<String, Object> valueMap : searchResult) {
 				final Object[] valueArr = new Object[columnNames.length];
 				for (int idx = 0; idx < columnNames.length; idx++) {
@@ -97,5 +104,25 @@ public class MainWindow extends CustomComponent {
 	
 	public String[] entryPointColumns(final String moduleName) {
 		return modulesManager.entryPointColumns(moduleName);
+	}
+
+	@Override
+	public String getGrantingTicket() {
+		return grantingTicket;
+	}
+
+	@Override
+	public TicketService getTicketService() {
+		return ticketService;
+	}
+
+	@Override
+	public ModulesManager getModulesManager() {
+		return modulesManager;
+	}
+
+	@Override
+	public String getUser() {
+		return USERNAME;
 	}
 }

@@ -4,35 +4,39 @@ import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.TabSheet;
 
+import de.hsadmin.rpc.HSAdminSession;
 import de.hsadmin.rpc.RpcException;
 
-public class DomainPanel extends CustomComponent implements IHSPanel{
+public class DomainPanel extends CustomComponent implements IHSPanel {
 
-	private static final long serialVersionUID = 2223638269308264340L;
+	private static final long serialVersionUID = 1L;
+	
+	private final HSAdminSession session;
 
-	public DomainPanel() {
+	public DomainPanel(HSAdminSession session, Object itemId) {
+		this.session = session;
+		final Panel panel = new Panel();
 
-		final Panel panel  = new Panel();
-		
-		TabSheet tabsheet = createTabs();
-        panel.setContent(tabsheet);
+		TabSheet tabsheet = createTabs(itemId);
+		panel.setContent(tabsheet);
 
 		setCompositionRoot(panel);
 	}
 
 	@Override
-	public TabSheet createTabs() {
+	public TabSheet createTabs(Object itemId) {
 
 		TabSheet tabsheet = new TabSheet();
-		HSTab emailTab = new HSTab("email");
+		HSTab emailTab = new HSTab("emailaddress", session, "domain", itemId);
 		try {
 			emailTab.fillTable();
 		} catch (RpcException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		tabsheet.addTab(emailTab, "Email Address");
+		tabsheet.addTab(emailTab, "emailaddress");
 
 		return tabsheet;
 	}
+
 }

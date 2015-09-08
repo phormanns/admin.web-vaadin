@@ -5,6 +5,6 @@ import com.vaadin.ui.TabSheet;
 
 public interface IHSPanel extends Component{
 
-	public TabSheet createTabs();
-
+	public TabSheet createTabs(Object itemId);
+	
 }

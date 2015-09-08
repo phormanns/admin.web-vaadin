@@ -1,5 +1,7 @@
 package de.hsadmin.web;
 
+import de.hsadmin.rpc.HSAdminSession;
+
 public class SubWindowFactory extends AbstractFactory {
 
 	@Override
@@ -31,7 +33,7 @@ public class SubWindowFactory extends AbstractFactory {
 	}
 
 	@Override
-	public IHSPanel getPanel(String panelType) {
+	public IHSPanel getPanel(String panelType, HSAdminSession session, Object itemId) {
 		return null;
 	}
 

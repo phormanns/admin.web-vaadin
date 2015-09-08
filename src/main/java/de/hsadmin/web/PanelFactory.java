@@ -1,23 +1,24 @@
 package de.hsadmin.web;
 
+import de.hsadmin.rpc.HSAdminSession;
+
 public class PanelFactory extends AbstractFactory {
 
 	@Override
-	public IHSPanel getPanel(String panelType) {
+	public IHSPanel getPanel(String panelType, HSAdminSession session, Object itemId) {
 
-		if (panelType == null)
-			return null;
-
+		IHSPanel instance = null;
+		
 		if (panelType.equals("hive"))
-			return new ServerPanel();
+			instance = new ServerPanel(session, itemId);
 
 		if (panelType.equals("domain"))
-			return new DomainPanel();
+			instance = new DomainPanel(session, itemId);
 
 		if (panelType.equals("pac"))
-			return new PackagePanel();
-
-		return null;
+			instance = new PackagePanel(session, itemId);
+		
+		return instance;
 	}
 
 	@Override

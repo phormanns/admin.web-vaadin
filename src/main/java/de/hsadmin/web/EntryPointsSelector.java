@@ -16,7 +16,6 @@ public class EntryPointsSelector extends CustomComponent implements ItemClickLis
 	
 	private final MainWindow mainWindow;
 	
-	private CustomizationPanel custom = CustomizationPanel.getInstance();
 	private Accordion content;
 
 	public EntryPointsSelector(final MainWindow mainWindow) {
@@ -32,12 +31,12 @@ public class EntryPointsSelector extends CustomComponent implements ItemClickLis
 	}
 
 	private void createTabs() {
-		for(String tabName : custom.getSelectedOptions()){
+		for(String tabName : new String[] { "pac", "domain" }){
 			content.addTab(getLeftComponent(tabName));
 		}
 	}
 
-	public Table getLeftComponent(String name){
+	private Table getLeftComponent(String name){
 		Table leftComponent = new Table(name);
 		leftComponent.setData(name);
 
@@ -48,9 +47,8 @@ public class EntryPointsSelector extends CustomComponent implements ItemClickLis
 				leftComponent.addContainerProperty(col, String.class, null);
 			}
 			final List<Object[]> list = mainWindow.list(name, entryPointColumns);
-			int idx = 1;
 			for (Object[] row : list) {
-				leftComponent.addItem(row, idx++);
+				leftComponent.addItem(row, row[0]);
 			}
 		}
 		leftComponent.setPageLength(leftComponent.size());
@@ -66,6 +64,6 @@ public class EntryPointsSelector extends CustomComponent implements ItemClickLis
 	@Override
 	public void itemClick(ItemClickEvent event) {
 		Table table = (Table) event.getSource();
-		mainWindow.setCenterPanel((String) table.getData());
+		mainWindow.setCenterPanel((String) table.getData(), event.getItemId());
 	}
 }
