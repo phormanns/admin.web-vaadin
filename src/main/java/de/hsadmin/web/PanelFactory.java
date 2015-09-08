@@ -23,7 +23,7 @@ public class PanelFactory extends AbstractFactory {
 	}
 
 	@Override
-	public IHSWindow getSubWindow(String type, String subType) {
+	public IHSWindow getSubWindow(String type, String subType, HSAdminSession sess) {
 		return null;
 	}
 

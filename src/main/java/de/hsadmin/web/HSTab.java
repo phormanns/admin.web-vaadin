@@ -40,7 +40,7 @@ public class HSTab extends VerticalLayout {
 		this.session = session;
 		this.idPropertyName = idPropertyName;
 		this.itemId = itemId;
-		panelToolbar = new PanelToolbar(source);
+		panelToolbar = new PanelToolbar(source, session);
 		addComponent(panelToolbar);
 		setComponentAlignment(panelToolbar, Alignment.MIDDLE_RIGHT);
 		addComponent(getGrid(session.getModulesManager().module(source)));

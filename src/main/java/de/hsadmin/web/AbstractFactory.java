@@ -7,6 +7,6 @@ public abstract class AbstractFactory {
 
 	public abstract IHSPanel getPanel(String panelType, HSAdminSession mainWindow, Object itemId) throws RpcException;
 	
-	public abstract IHSWindow getSubWindow(String type, String action);
+	public abstract IHSWindow getSubWindow(String type, String action, HSAdminSession session);
 
 }
