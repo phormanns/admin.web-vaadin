@@ -5,6 +5,7 @@ import com.vaadin.ui.Panel;
 import com.vaadin.ui.TabSheet;
 
 import de.hsadmin.rpc.HSAdminSession;
+import de.hsadmin.rpc.RpcException;
 
 public class PackagePanel extends CustomComponent implements IHSPanel {
 
@@ -12,27 +13,26 @@ public class PackagePanel extends CustomComponent implements IHSPanel {
 	
 	private final HSAdminSession session;
 
-	public PackagePanel(HSAdminSession session, Object itemId) {
+	public PackagePanel(HSAdminSession session, Object itemId) throws RpcException {
 		this.session = session;
 		final Panel panel = new Panel();
-
-		TabSheet tabsheet = createTabs(itemId);
+		final TabSheet tabsheet = createTabs(itemId);
+		tabsheet.setSizeFull();
 		panel.setContent(tabsheet);
-
 		setCompositionRoot(panel);
-		setSizeFull();
 	}
 
 	@Override
-	public TabSheet createTabs(Object itemId) {
-
+	public TabSheet createTabs(Object itemId) throws RpcException 
+	{
 		TabSheet tabsheet = new TabSheet();
-		tabsheet.addTab(new HSTab("user", session, "pac", itemId), "User");
-		tabsheet.addTab(new HSTab("database", session, "pac", itemId), "Data Base");
-		tabsheet.addTab(new HSTab("alias", session, "pac", itemId), "Aliases");
-
+		HSTab usersTab = new HSTab("user", session, "pac", itemId);
+		usersTab.fillTable();
+		tabsheet.addTab(usersTab, "user");
+		HSTab aliasTab = new HSTab("emailalias", session, "pac", itemId);
+		aliasTab.fillTable();
+		tabsheet.addTab(aliasTab, "emailalias");
 		return tabsheet;
 	}
-
 
 }

@@ -80,8 +80,14 @@ public class MainWindow extends CustomComponent implements HSAdminSession {
 	 */
 	public void setCenterPanel(String source, Object itemId) {
 		final AbstractFactory panelFactory = FactoryProducer.getFactory("panel");
-		final IHSPanel panel = panelFactory.getPanel(source, this, itemId);
-		content.setSecondComponent(panel);
+		try {
+			IHSPanel panel = panelFactory.getPanel(source, this, itemId);
+			panel.setSizeFull();
+			content.setSecondComponent(panel);
+		} catch (RpcException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	public List<Object[]> list(final String moduleName, String... columnNames) {

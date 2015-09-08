@@ -1,11 +1,12 @@
 package de.hsadmin.web;
 
 import de.hsadmin.rpc.HSAdminSession;
+import de.hsadmin.rpc.RpcException;
 
 public class PanelFactory extends AbstractFactory {
 
 	@Override
-	public IHSPanel getPanel(String panelType, HSAdminSession session, Object itemId) {
+	public IHSPanel getPanel(String panelType, HSAdminSession session, Object itemId) throws RpcException {
 
 		IHSPanel instance = null;
 		

@@ -13,29 +13,22 @@ public class DomainPanel extends CustomComponent implements IHSPanel {
 	
 	private final HSAdminSession session;
 
-	public DomainPanel(HSAdminSession session, Object itemId) {
+	public DomainPanel(HSAdminSession session, Object itemId) throws RpcException {
 		this.session = session;
 		final Panel panel = new Panel();
-
-		TabSheet tabsheet = createTabs(itemId);
+		final TabSheet tabsheet = createTabs(itemId);
+		tabsheet.setSizeFull();
 		panel.setContent(tabsheet);
-
 		setCompositionRoot(panel);
 	}
 
 	@Override
-	public TabSheet createTabs(Object itemId) {
-
+	public TabSheet createTabs(Object itemId) throws RpcException 
+	{
 		TabSheet tabsheet = new TabSheet();
 		HSTab emailTab = new HSTab("emailaddress", session, "domain", itemId);
-		try {
-			emailTab.fillTable();
-		} catch (RpcException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		emailTab.fillTable();
 		tabsheet.addTab(emailTab, "emailaddress");
-
 		return tabsheet;
 	}
 

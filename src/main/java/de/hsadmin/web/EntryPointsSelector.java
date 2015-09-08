@@ -22,6 +22,7 @@ public class EntryPointsSelector extends CustomComponent implements ItemClickLis
 		this.mainWindow = mainWindow;
 		final Panel panel = new Panel();
 		content = new Accordion();
+		content.setHeight(100.0f, Unit.PERCENTAGE);
 
 		createTabs();
 

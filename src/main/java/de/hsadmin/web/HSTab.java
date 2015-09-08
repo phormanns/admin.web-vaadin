@@ -83,22 +83,26 @@ public class HSTab extends VerticalLayout {
 					final PropertyInfo propertyInfo = properties.next();
 					if (DisplayPolicy.ALWAYS.equals(propertyInfo.getDisplayVisible())) {
 						final Object value = emailaddressHash.get(propertyInfo.getName());
-						itemsList.add(value == null ? "" : value.toString());
+						if (value == null) {
+							itemsList.add("");
+						} else {
+							if (value instanceof Object[]) {
+								final StringBuffer buff = new StringBuffer();
+								final Object[] items = (Object[]) value;
+								if (items.length > 0) {
+									buff.append(items[0].toString());
+								}
+								for (int idx=1; idx < items.length; idx++) {
+									buff.append(", ");
+									buff.append(items[idx].toString());
+								}
+								itemsList.add(buff.toString());
+							} else {
+								itemsList.add(value.toString());
+							}
+						}
 					}
 				}
-
-//				final String emailaddress = emailaddressHash.get("emailaddress").toString();
-//				final Object[] targets = (Object[]) emailaddressHash.get("target");
-//				final StringBuffer targetsBuff = new StringBuffer();
-//				if (targets.length > 0) {
-//					targetsBuff.append(targets[0]);
-//				}
-//				for (int idx = 1; idx < targets.length; idx++) {
-//					targetsBuff.append(", ");
-//					targetsBuff.append(targets[idx]);
-//				}
-//				final String target = targetsBuff.toString();
-				
 				grid.addItem(itemsList.toArray(), emailaddressHash.get("id"));
 			}
 		} catch (UnsupportedOperationException | XmlRpcException e) {
