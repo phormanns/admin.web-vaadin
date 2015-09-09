@@ -21,8 +21,8 @@ import de.hsadmin.rpc.RpcException;
  */
 public class TicketService implements Serializable {
 
-	public static final String SERVICE_URL = "https://config-test.hostsharing.net:443/hsar/backend";
-	public static final String CAS_URL = "https://login-test.hostsharing.net/cas/v1/tickets";
+	public static final String SERVICE_URL = "https://config.hostsharing.net:443/hsar/backend";
+	public static final String CAS_URL = "https://login.hostsharing.net/cas/v1/tickets";
 	
 	private static final long serialVersionUID = 1L;
 

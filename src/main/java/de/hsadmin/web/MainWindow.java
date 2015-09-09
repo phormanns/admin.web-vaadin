@@ -23,39 +23,34 @@ public class MainWindow extends CustomComponent implements HSAdminSession {
 
 	private static final long serialVersionUID = 1L;
 	
-	public static final String SERVICE_URL = "https://config-test.hostsharing.net:443/hsar/xmlrpc/hsadmin";
-
-//	private static final String USERNAME = "hsh98";
-//	private static final String PASSWORD = "Diego.R!";
-
-	private static final String USERNAME = "ad";
-	private static final String PASSWORD = "adA$M123";
+	public static final String SERVICE_URL = "https://config.hostsharing.net:443/hsar/xmlrpc/hsadmin";
 
 	private ModulesManager modulesManager;
 	private TicketService ticketService;
 	private String grantingTicket;
-
+	private String username;
 	private AbstractSplitPanel content;
 	
-	
-	
-	public MainWindow() {
-		ticketService = new TicketService();
-		final String username = USERNAME;
-		final String password = PASSWORD;
+	public MainWindow(TicketService ticketService, String grantingTicket, String username) {
+		this.ticketService = ticketService;
+		this.grantingTicket = grantingTicket;
+		this.username = username;
+		
+		setSizeFull();
+		Panel mainPanel = new Panel();
+		mainPanel.setSizeFull();
+		VerticalLayout vl = new VerticalLayout();
+		vl.setSizeFull();
+		setCompositionRoot(mainPanel);
+		mainPanel.setContent(vl);
+		
 		try {
-			grantingTicket = ticketService.getGrantingTicket(username, password);
 			final ModulesManagerFactory modulesManagerFactory = new ModulesManagerFactory(grantingTicket, username);
 			modulesManager = modulesManagerFactory.newModulesManager(SERVICE_URL);
 		} catch (RpcException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		setSizeFull();
-
-		Panel mainPanel = new Panel();
-		mainPanel.setSizeFull();
-		VerticalLayout vl = new VerticalLayout();
 		
 		content = new HorizontalSplitPanel();
 		content.setSizeFull();
@@ -68,8 +63,6 @@ public class MainWindow extends CustomComponent implements HSAdminSession {
 		content.setSecondComponent(new MainPanel());
 
 		content.setSplitPosition(30.0f);
-		setCompositionRoot(mainPanel);
-		mainPanel.setContent(vl);
 
 	}
 
@@ -93,7 +86,7 @@ public class MainWindow extends CustomComponent implements HSAdminSession {
 	public List<Object[]> list(final String moduleName, String... columnNames) {
 		final List<Object[]> resultList = new ArrayList<Object[]>();
 		try {
-			final List<Map<String, Object>> searchResult = modulesManager.proxy(moduleName).search(USERNAME, ticketService.getServiceTicket(grantingTicket), new HashMap<String, String>());
+			final List<Map<String, Object>> searchResult = modulesManager.proxy(moduleName).search(username, ticketService.getServiceTicket(grantingTicket), new HashMap<String, String>());
 			for (Map<String, Object> valueMap : searchResult) {
 				final Object[] valueArr = new Object[columnNames.length];
 				for (int idx = 0; idx < columnNames.length; idx++) {
@@ -129,6 +122,6 @@ public class MainWindow extends CustomComponent implements HSAdminSession {
 
 	@Override
 	public String getUser() {
-		return USERNAME;
+		return username;
 	}
 }

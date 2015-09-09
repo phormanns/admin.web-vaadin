@@ -1,5 +1,5 @@
 package de.hsadmin.web;
 
-public interface IHSWindow{
-	
+public interface IHSWindow {
+
 }
