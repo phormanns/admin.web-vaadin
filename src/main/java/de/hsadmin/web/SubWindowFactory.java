@@ -1,11 +1,13 @@
 package de.hsadmin.web;
 
+import com.vaadin.ui.Window;
+
 import de.hsadmin.rpc.HSAdminSession;
 
-public class SubWindowFactory extends AbstractFactory {
+public class SubWindowFactory extends AbstractWindowFactory {
 
 	@Override
-	public IHSWindow getSubWindow(String type, String action, HSAdminSession session) {
+	public Window getSubWindow(HSTab parent, String type, String action, HSAdminSession session) {
 
 		if (type == null) {
 			return null;
@@ -13,12 +15,7 @@ public class SubWindowFactory extends AbstractFactory {
 		if (action.equalsIgnoreCase("help")) {
 			return new HelpWindow();
 		}
-		return new GenericFormWindow(type, action, session);
-	}
-
-	@Override
-	public IHSPanel getPanel(String panelType, HSAdminSession session, Object itemId) {
-		return null;
+		return new GenericFormWindow(parent, type, action, session);
 	}
 
 }

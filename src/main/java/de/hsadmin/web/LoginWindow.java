@@ -3,10 +3,12 @@ package de.hsadmin.web;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.vaadin.event.ShortcutAction.KeyCode;
 import com.vaadin.ui.AbstractTextField;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
+import com.vaadin.ui.themes.ValoTheme;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.HasComponents;
@@ -17,7 +19,7 @@ import com.vaadin.ui.Window;
 import de.hsadmin.model.TicketService;
 import de.hsadmin.rpc.RpcException;
 
-public class LoginWindow extends Window implements IHSWindow {
+public class LoginWindow extends Window {
 
 	private static final long serialVersionUID = 1L;
 
@@ -36,7 +38,9 @@ public class LoginWindow extends Window implements IHSWindow {
 		subContent.addComponent(password);
 		
 		
-		final Button okButton = new Button("OK");
+		final Button okButton = new Button("Login");
+		okButton.setStyleName(ValoTheme.BUTTON_PRIMARY);
+		okButton.setClickShortcut(KeyCode.ENTER);
 		okButton.addClickListener(new ClickListener() 
 		{
 			private static final long serialVersionUID = 1L;
@@ -81,5 +85,5 @@ public class LoginWindow extends Window implements IHSWindow {
 
 		setContent(subContent);
 	}
-	
+
 }

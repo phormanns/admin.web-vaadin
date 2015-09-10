@@ -3,7 +3,7 @@ package de.hsadmin.web;
 import de.hsadmin.rpc.HSAdminSession;
 import de.hsadmin.rpc.RpcException;
 
-public class PanelFactory extends AbstractFactory {
+public class PanelFactory extends AbstractPanelFactory {
 
 	@Override
 	public IHSPanel getPanel(String panelType, HSAdminSession session, Object itemId) throws RpcException 
@@ -18,12 +18,10 @@ public class PanelFactory extends AbstractFactory {
 		if (panelType.equals("pac")) {
 			instance = new PackagePanel(session, itemId);
 		}
+		if (panelType.equals("customer")) {
+			instance = new CustomerPanel(session, itemId);
+		}
 		return instance;
-	}
-
-	@Override
-	public IHSWindow getSubWindow(String type, String subType, HSAdminSession sess) {
-		return null;
 	}
 
 }

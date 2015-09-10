@@ -1,5 +1,15 @@
 package de.hsadmin.web;
 
+import java.util.Map;
+
 public interface IHSWindow {
+	
+	public void setFormData(Map<String, Object> value, Map<String, String> selector);
+	
+	public Map<String, Object> getFormData();
+	
+	public Map<String, String> getSelector();
+
+	public void reload();
 
 }

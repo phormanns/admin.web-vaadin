@@ -23,7 +23,10 @@ public class MainWindow extends CustomComponent implements HSAdminSession {
 
 	private static final long serialVersionUID = 1L;
 	
-	public static final String SERVICE_URL = "https://config.hostsharing.net:443/hsar/xmlrpc/hsadmin";
+	public static final String[] SERVICE_URLS = new String[] { 
+		"https://config2.hostsharing.net:443/hsar/xmlrpc/hsadmin", 
+		"https://config.hostsharing.net:443/hsar/xmlrpc/hsadmin" 
+	};
 
 	private ModulesManager modulesManager;
 	private TicketService ticketService;
@@ -46,7 +49,7 @@ public class MainWindow extends CustomComponent implements HSAdminSession {
 		
 		try {
 			final ModulesManagerFactory modulesManagerFactory = new ModulesManagerFactory(grantingTicket, username);
-			modulesManager = modulesManagerFactory.newModulesManager(SERVICE_URL);
+			modulesManager = modulesManagerFactory.newModulesManager(SERVICE_URLS);
 		} catch (RpcException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -59,11 +62,8 @@ public class MainWindow extends CustomComponent implements HSAdminSession {
 		final EntryPointsSelector entryPoints = new EntryPointsSelector(this);
 		entryPoints.setSizeFull();
 		content.setFirstComponent(entryPoints);
-
 		content.setSecondComponent(new MainPanel());
-
-		content.setSplitPosition(30.0f);
-
+		content.setSplitPosition(26.6f);
 	}
 
 	/**
@@ -72,7 +72,7 @@ public class MainWindow extends CustomComponent implements HSAdminSession {
 	 * @param itemId 
 	 */
 	public void setCenterPanel(String source, Object itemId) {
-		final AbstractFactory panelFactory = FactoryProducer.getFactory("panel");
+		final AbstractPanelFactory panelFactory = FactoryProducer.getPanelFactory("panel");
 		try {
 			IHSPanel panel = panelFactory.getPanel(source, this, itemId);
 			panel.setSizeFull();

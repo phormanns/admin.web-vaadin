@@ -10,13 +10,13 @@ import com.vaadin.ui.TabSheet.SelectedTabChangeListener;
 import de.hsadmin.rpc.HSAdminSession;
 import de.hsadmin.rpc.RpcException;
 
-public class DomainPanel extends CustomComponent implements IHSPanel, SelectedTabChangeListener {
+public class CustomerPanel extends CustomComponent implements IHSPanel, SelectedTabChangeListener {
 
 	private static final long serialVersionUID = 1L;
 	
 	private final HSAdminSession session;
 
-	public DomainPanel(HSAdminSession session, Object itemId) throws RpcException {
+	public CustomerPanel(HSAdminSession session, Object itemId) throws RpcException {
 		this.session = session;
 		final Panel panel = new Panel();
 		final TabSheet tabsheet = createTabs(itemId);
@@ -29,15 +29,18 @@ public class DomainPanel extends CustomComponent implements IHSPanel, SelectedTa
 	public TabSheet createTabs(Object itemId) throws RpcException 
 	{
 		TabSheet tabsheet = new TabSheet();
-		HSTab emailTab = new HSTab("emailaddress", session, "domain", itemId);
-		emailTab.fillTable();
-		tabsheet.addTab(emailTab, "emailaddress");
+		tabsheet.addSelectedTabChangeListener(this);
+		HSTab usersTab = new HSTab("contact", session, "customer", itemId);
+		usersTab.fillTable();
+		tabsheet.addTab(usersTab, "contact");
+		HSTab aliasTab = new HSTab("mandat", session, "customer", itemId);
+		tabsheet.addTab(aliasTab, "mandat");
 		return tabsheet;
 	}
 
 	@Override
 	public void selectedTabChange(SelectedTabChangeEvent event) {
-		Component tab = event.getTabSheet().getSelectedTab();
+		final Component tab = event.getTabSheet().getSelectedTab();
 		if (tab instanceof HSTab) {
 			((HSTab) tab).fillTable();
 		}

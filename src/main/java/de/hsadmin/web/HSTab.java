@@ -40,10 +40,11 @@ public class HSTab extends VerticalLayout {
 		this.session = session;
 		this.idPropertyName = idPropertyName;
 		this.itemId = itemId;
-		panelToolbar = new PanelToolbar(source, session);
+		final Table dataTable = getGrid(session.getModulesManager().module(source));
+		panelToolbar = new PanelToolbar(source, session, this);
 		addComponent(panelToolbar);
 		setComponentAlignment(panelToolbar, Alignment.MIDDLE_RIGHT);
-		addComponent(getGrid(session.getModulesManager().module(source)));
+		addComponent(dataTable);
 	}
 
 	private Table getGrid(ModuleInfo moduleInfo) 
@@ -63,52 +64,64 @@ public class HSTab extends VerticalLayout {
 		return grid;
 	}
 	
-	public void fillTable() throws RpcException 
+	public void fillTable() 
 	{
-		final ModulesManager modulesManager = session.getModulesManager();
-		final String grantingTicket = session.getGrantingTicket();
-		final TicketService ticketService = session.getTicketService();
-		final String serviceTicket = ticketService.getServiceTicket(grantingTicket);
-		final String user = session.getUser();
-		final HashMap<String, String> whereParams = new HashMap<String, String>();
-		whereParams.put(idPropertyName, itemId.toString());
+		grid.removeAllItems();
 		try {
-			final List<Map<String, Object>> emailaddressList = modulesManager.proxy(module).search(user, serviceTicket, whereParams);
-			
-			for (Map<String, Object> emailaddressHash : emailaddressList) {
+			final ModulesManager modulesManager = session.getModulesManager();
+			final String grantingTicket = session.getGrantingTicket();
+			final TicketService ticketService = session.getTicketService();
+			final String serviceTicket = ticketService.getServiceTicket(grantingTicket);
+			final String user = session.getUser();
+			final HashMap<String, String> whereParams = new HashMap<String, String>();
+			whereParams.put(idPropertyName, itemId.toString());
+			try {
+				final List<Map<String, Object>> objectsList = modulesManager.proxy(module).search(user, serviceTicket, whereParams);
+				
+				for (Map<String, Object> objectHash : objectsList) {
 
-				final Iterator<PropertyInfo> properties = session.getModulesManager().module(module).properties();
-				final List<String> itemsList = new ArrayList<String>();
-				while (properties.hasNext()) {
-					final PropertyInfo propertyInfo = properties.next();
-					if (DisplayPolicy.ALWAYS.equals(propertyInfo.getDisplayVisible())) {
-						final Object value = emailaddressHash.get(propertyInfo.getName());
-						if (value == null) {
-							itemsList.add("");
-						} else {
-							if (value instanceof Object[]) {
-								final StringBuffer buff = new StringBuffer();
-								final Object[] items = (Object[]) value;
-								if (items.length > 0) {
-									buff.append(items[0].toString());
-								}
-								for (int idx=1; idx < items.length; idx++) {
-									buff.append(", ");
-									buff.append(items[idx].toString());
-								}
-								itemsList.add(buff.toString());
+					final Iterator<PropertyInfo> properties = session.getModulesManager().module(module).properties();
+					final List<String> itemsList = new ArrayList<String>();
+					while (properties.hasNext()) {
+						final PropertyInfo propertyInfo = properties.next();
+						if (DisplayPolicy.ALWAYS.equals(propertyInfo.getDisplayVisible())) {
+							final Object value = objectHash.get(propertyInfo.getName());
+							if (value == null) {
+								itemsList.add("");
 							} else {
-								itemsList.add(value.toString());
+								if (value instanceof Object[]) {
+									final StringBuffer buff = new StringBuffer();
+									final Object[] items = (Object[]) value;
+									if (items.length > 0) {
+										buff.append(items[0].toString());
+									}
+									for (int idx=1; idx < items.length; idx++) {
+										buff.append(", ");
+										buff.append(items[idx].toString());
+									}
+									itemsList.add(buff.toString());
+								} else {
+									itemsList.add(value.toString());
+								}
 							}
 						}
 					}
+					grid.addItem(itemsList.toArray(), objectHash.get(idPropertyName));
 				}
-				grid.addItem(itemsList.toArray(), emailaddressHash.get("id"));
+			} catch (UnsupportedOperationException | XmlRpcException e) {
+				throw new RpcException(e);
 			}
-		} catch (UnsupportedOperationException | XmlRpcException e) {
-			throw new RpcException(e);
+		} catch (RpcException e) {
+			// FIXME error handling
 		}
-		
+	}
+
+	public Object getSelection() {
+		return grid.getValue();
+	}
+
+	public String getIdPropertyName() {
+		return idPropertyName;
 	}
 
 }

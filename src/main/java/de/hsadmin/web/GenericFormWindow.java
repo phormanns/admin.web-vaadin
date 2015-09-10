@@ -1,36 +1,49 @@
 package de.hsadmin.web;
 
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 
 import com.vaadin.data.Validator;
+import com.vaadin.ui.AbstractTextField;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.Window;
 
-import de.hsadmin.model.TicketService;
 import de.hsadmin.rpc.HSAdminSession;
 import de.hsadmin.rpc.PropertyInfo;
-import de.hsadmin.rpc.RpcException;
 import de.hsadmin.rpc.enums.ReadWritePolicy;
 
 public class GenericFormWindow extends Window implements IHSWindow {
 
 	private static final long serialVersionUID = 1L;
 
-	public GenericFormWindow(final String module, final String action, final HSAdminSession session) 
+	final private FormLayout contentForm;
+	final private Map<String, AbstractTextField> inputFields;
+	final private HSTab parent;
+	
+	private Map<String, String> selector;
+	
+	public GenericFormWindow(final HSTab parent, final String module, final String action, final HSAdminSession session) 
 	{
 		super(action + " " + module);
+		this.parent = parent;
 		center();
 		setModal(true);
 		setWidth("480px");
 
-		final FormLayout subContent = new FormLayout();
-		subContent.setMargin(true);
+		inputFields = new HashMap<String, AbstractTextField>();
+		contentForm = new FormLayout();
+		contentForm.setMargin(true);
 
 		final Iterator<PropertyInfo> iterator = session.getModulesManager().module(module).properties();
 		while (iterator.hasNext()) {
 			final PropertyInfo propertyInfo = iterator.next();
-			final TextField field = new TextField(propertyInfo.getName());
+			final String inputName = propertyInfo.getName();
+			final TextField field = new TextField(inputName);
+			field.setWidth("100%");
+			inputFields.put(inputName, field);
 			if (isWriteAble(propertyInfo, action)) {
 				final String regexp = propertyInfo.getValidationRegexp();
 				final int minLength = propertyInfo.getMinLength();
@@ -54,22 +67,45 @@ public class GenericFormWindow extends Window implements IHSWindow {
 			} else {
 				field.setEnabled(false);
 			}
-			subContent.addComponent(field);
+			contentForm.addComponent(field);
 		}
-		final TicketService ticketService = session.getTicketService();
-		final String grantingTicket = session.getGrantingTicket();
-		try {
-			subContent.addComponent(new HSConfirmBox(session.getModulesManager().proxy(module), action, session.getUser(), ticketService.getServiceTicket(grantingTicket)));
-		} catch (RpcException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		setContent(subContent);
+		contentForm.addComponent(new HSConfirmBox(this, module, action, session));
+		setContent(contentForm);
 	}
 
 	private boolean isWriteAble(PropertyInfo propertyInfo, String action) {
 		return (ReadWritePolicy.WRITEONCE.equals(propertyInfo.getReadwriteable()) && action.equals("new")) ||
 				 (ReadWritePolicy.READWRITE.equals(propertyInfo.getReadwriteable()) && ( action.equals("edit") || action.equals("new") ));
+	}
+
+	@Override
+	public void setFormData(Map<String, Object> valuesMap, Map<String, String> selector) {
+		this.selector = selector;
+		final Set<String> keySet = inputFields.keySet();
+		for (String key : keySet) {
+			final Object value = valuesMap.get(key);
+			inputFields.get(key).setValue(value == null ? "" : value.toString());
+		}
+	}
+
+	@Override
+	public Map<String, Object> getFormData() {
+		Map<String, Object> formData = new HashMap<String, Object>(); 
+		final Set<String> keySet = inputFields.keySet();
+		for (String key : keySet) {
+			formData.put(key, inputFields.get(key).getValue());
+		}
+		return formData;
+	}
+
+	@Override
+	public Map<String, String> getSelector() {
+		return selector;
+	}
+
+	@Override
+	public void reload() {
+		parent.fillTable();
 	}
 
 }

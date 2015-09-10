@@ -1,12 +1,15 @@
 package de.hsadmin.web;
 
+import com.vaadin.ui.Component;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.TabSheet;
+import com.vaadin.ui.TabSheet.SelectedTabChangeEvent;
+import com.vaadin.ui.TabSheet.SelectedTabChangeListener;
 
 import de.hsadmin.rpc.HSAdminSession;
 
-public class ServerPanel extends CustomComponent implements IHSPanel {
+public class ServerPanel extends CustomComponent implements IHSPanel, SelectedTabChangeListener {
 
 	private static final long serialVersionUID = 5720017114380927259L;
 	
@@ -32,6 +35,14 @@ public class ServerPanel extends CustomComponent implements IHSPanel {
 		tabsheet.addTab(new HSTab("network", session, "hive", itemId), "Network");
 		
 		return tabsheet;
+	}
+
+	@Override
+	public void selectedTabChange(SelectedTabChangeEvent event) {
+		Component tab = event.getTabSheet().getSelectedTab();
+		if (tab instanceof HSTab) {
+			((HSTab) tab).fillTable();
+		}
 	}
 
 }
