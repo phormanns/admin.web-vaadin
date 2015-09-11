@@ -1,5 +1,11 @@
 package de.hsadmin.web;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.xmlrpc.XmlRpcException;
+
 import com.vaadin.event.ItemClickEvent;
 import com.vaadin.event.ItemClickEvent.ItemClickListener;
 import com.vaadin.ui.Accordion;
@@ -10,6 +16,10 @@ import com.vaadin.ui.TabSheet.SelectedTabChangeEvent;
 import com.vaadin.ui.TabSheet.SelectedTabChangeListener;
 import com.vaadin.ui.Table;
 
+import de.hsadmin.model.IRemote;
+import de.hsadmin.model.TicketService;
+import de.hsadmin.rpc.RpcException;
+
 public class EntryPointsSelector extends CustomComponent implements ItemClickListener, SelectedTabChangeListener {
 
 	private static final long serialVersionUID = 1L;
@@ -18,12 +28,11 @@ public class EntryPointsSelector extends CustomComponent implements ItemClickLis
 	
 	private Accordion accordion;
 
-	public EntryPointsSelector(final MainWindow mainWindow) {
+	public EntryPointsSelector(final MainWindow mainWindow) throws RpcException {
 		this.mainWindow = mainWindow;
 		final Panel panel = new Panel();
 		accordion = new Accordion();
 		accordion.setSizeFull();
-//		content.setHeight(100.0f, Unit.PERCENTAGE);
 		createTabs();
 		panel.setContent(accordion);
 		panel.setSizeFull();
@@ -31,13 +40,33 @@ public class EntryPointsSelector extends CustomComponent implements ItemClickLis
 		accordion.addSelectedTabChangeListener(this);
 	}
 
-	private void createTabs() {
-		for(String tabName : new String[] { "customer", "pac", "domain" }){
+	private void createTabs() throws RpcException {
+		final String role = getRole();
+		final AbstractEntryPointsFactory entryPointsFactory = FactoryProducer.getEntryPointsFactory("default");
+		boolean hasFirstTab = false;
+		for(String tabName : entryPointsFactory.getEntryPointNames(role)) {
 			accordion.addTab(new EntryPoint(this, tabName), tabName);
+			hasFirstTab = true;
 		}
-		final Component component = accordion.getTab(0).getComponent();
-		if (component instanceof EntryPoint) {
-			((EntryPoint) component).fillTable();
+		if (hasFirstTab) {
+			final Component component = accordion.getTab(0).getComponent();
+			if (component instanceof EntryPoint) {
+				((EntryPoint) component).fillTable();
+			}
+		}
+	}
+
+	public String getRole() throws RpcException {
+		final IRemote rolesProxy = mainWindow.getModulesManager().proxy("role");
+		final String user = mainWindow.getUser();
+		final TicketService ticketService = mainWindow.getTicketService();
+		final String grantingTicket = mainWindow.getGrantingTicket();
+		final String serviceTicket = ticketService.getServiceTicket(grantingTicket);
+		try {
+			final List<Map<String,Object>> list = rolesProxy.search(user, serviceTicket, new HashMap<String, String>());
+			return (String) list.get(0).get("role");
+		} catch (XmlRpcException e) {
+			throw new RpcException(e);
 		}
 	}
 

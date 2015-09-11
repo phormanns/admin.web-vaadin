@@ -29,7 +29,7 @@ public class DomainPanel extends CustomComponent implements IHSPanel, SelectedTa
 	public TabSheet createTabs(Object itemId) throws RpcException 
 	{
 		TabSheet tabsheet = new TabSheet();
-		HSTab emailTab = new HSTab("emailaddress", session, "domain", itemId);
+		HSTab emailTab = new HSTab("emailaddress", session, "domain", itemId, "id");
 		emailTab.fillTable();
 		tabsheet.addTab(emailTab, "emailaddress");
 		return tabsheet;

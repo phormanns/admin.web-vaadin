@@ -27,19 +27,21 @@ public class HSTab extends VerticalLayout {
 	
 	private final HSAdminSession session;
 	private final String module;
-	private final Object itemId;
-	private final String idPropertyName;
+	private final Object selectPropertyValue;
+	private final String selectPropertyName;
+	private final String rowIdPropertyName;
 	
 	private HorizontalLayout panelToolbar;
 	private Table grid;
 
 
-	public HSTab(String source, HSAdminSession session, String idPropertyName, Object itemId) {
+	public HSTab(String source, HSAdminSession session, String selectPropertyName, Object selectPropertyValue, String rowIdPropertyName) {
 		super();
 		this.module = source;
 		this.session = session;
-		this.idPropertyName = idPropertyName;
-		this.itemId = itemId;
+		this.selectPropertyName = selectPropertyName;
+		this.selectPropertyValue = selectPropertyValue;
+		this.rowIdPropertyName = rowIdPropertyName;
 		final Table dataTable = getGrid(session.getModulesManager().module(source));
 		panelToolbar = new PanelToolbar(source, session, this);
 		addComponent(panelToolbar);
@@ -67,6 +69,7 @@ public class HSTab extends VerticalLayout {
 	public void fillTable() 
 	{
 		grid.removeAllItems();
+		Object firstId = null;
 		try {
 			final ModulesManager modulesManager = session.getModulesManager();
 			final String grantingTicket = session.getGrantingTicket();
@@ -74,7 +77,7 @@ public class HSTab extends VerticalLayout {
 			final String serviceTicket = ticketService.getServiceTicket(grantingTicket);
 			final String user = session.getUser();
 			final HashMap<String, String> whereParams = new HashMap<String, String>();
-			whereParams.put(idPropertyName, itemId.toString());
+			whereParams.put(selectPropertyName, selectPropertyValue.toString());
 			try {
 				final List<Map<String, Object>> objectsList = modulesManager.proxy(module).search(user, serviceTicket, whereParams);
 				
@@ -106,7 +109,11 @@ public class HSTab extends VerticalLayout {
 							}
 						}
 					}
-					grid.addItem(itemsList.toArray(), objectHash.get(idPropertyName));
+					final Object rowId = objectHash.get(rowIdPropertyName);
+					if (firstId == null) {
+						firstId = rowId;
+					}
+					grid.addItem(itemsList.toArray(), rowId);
 				}
 			} catch (UnsupportedOperationException | XmlRpcException e) {
 				throw new RpcException(e);
@@ -114,14 +121,21 @@ public class HSTab extends VerticalLayout {
 		} catch (RpcException e) {
 			// FIXME error handling
 		}
+		grid.setPageLength(grid.size());
+		if (grid.size() == 1) {
+			grid.select(firstId);
+		}
+		grid.setSelectable(true);
+		grid.setImmediate(true);
+		grid.setSizeFull();
 	}
 
 	public Object getSelection() {
 		return grid.getValue();
 	}
 
-	public String getIdPropertyName() {
-		return idPropertyName;
+	public String getRowIdName() {
+		return rowIdPropertyName;
 	}
 
 }

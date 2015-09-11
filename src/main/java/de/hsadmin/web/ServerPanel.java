@@ -31,8 +31,8 @@ public class ServerPanel extends CustomComponent implements IHSPanel, SelectedTa
 	public TabSheet createTabs(Object itemId) {
 
 		TabSheet tabsheet = new TabSheet();
-		tabsheet.addTab(new HSTab("package", session, "hive", itemId), "Packages");
-		tabsheet.addTab(new HSTab("network", session, "hive", itemId), "Network");
+		tabsheet.addTab(new HSTab("package", session, "hive", itemId, "name"), "Packages");
+		tabsheet.addTab(new HSTab("network", session, "hive", itemId, "name"), "Network");
 		
 		return tabsheet;
 	}

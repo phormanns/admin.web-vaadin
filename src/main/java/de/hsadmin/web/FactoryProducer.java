@@ -1,5 +1,6 @@
 package de.hsadmin.web;
 
+
 public class FactoryProducer {
 
 	public static AbstractPanelFactory getPanelFactory(String choice) 
@@ -12,5 +13,13 @@ public class FactoryProducer {
 		return new SubWindowFactory();
 	}
 
+	public static AbstractEditorFactory getEditorFactory(String choice) 
+	{
+		return new GenericEditorFactory();
+	}
+
+	public static AbstractEntryPointsFactory getEntryPointsFactory(String choice) {
+		return new EntryPointsFactory();
+	}
 	
 }

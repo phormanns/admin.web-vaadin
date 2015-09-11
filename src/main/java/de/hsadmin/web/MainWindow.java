@@ -50,20 +50,19 @@ public class MainWindow extends CustomComponent implements HSAdminSession {
 		try {
 			final ModulesManagerFactory modulesManagerFactory = new ModulesManagerFactory(grantingTicket, username);
 			modulesManager = modulesManagerFactory.newModulesManager(SERVICE_URLS);
+			content = new HorizontalSplitPanel();
+			content.setSizeFull();
+			vl.addComponent(content);
+
+			final EntryPointsSelector entryPoints = new EntryPointsSelector(this);
+			entryPoints.setSizeFull();
+			content.setFirstComponent(entryPoints);
+			content.setSecondComponent(new MainPanel());
+			content.setSplitPosition(26.6f);
 		} catch (RpcException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		content = new HorizontalSplitPanel();
-		content.setSizeFull();
-		vl.addComponent(content);
-
-		final EntryPointsSelector entryPoints = new EntryPointsSelector(this);
-		entryPoints.setSizeFull();
-		content.setFirstComponent(entryPoints);
-		content.setSecondComponent(new MainPanel());
-		content.setSplitPosition(26.6f);
 	}
 
 	/**

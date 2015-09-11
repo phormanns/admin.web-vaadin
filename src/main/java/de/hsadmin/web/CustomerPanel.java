@@ -30,11 +30,13 @@ public class CustomerPanel extends CustomComponent implements IHSPanel, Selected
 	{
 		TabSheet tabsheet = new TabSheet();
 		tabsheet.addSelectedTabChangeListener(this);
-		HSTab usersTab = new HSTab("contact", session, "customer", itemId);
+		HSTab usersTab = new HSTab("contact", session, "customer", itemId, "email");
 		usersTab.fillTable();
 		tabsheet.addTab(usersTab, "contact");
-		HSTab aliasTab = new HSTab("mandat", session, "customer", itemId);
+		HSTab aliasTab = new HSTab("mandat", session, "customer", itemId, "mandatRef");
 		tabsheet.addTab(aliasTab, "mandat");
+		HSTab pacTab = new HSTab("pac", session, "customer", itemId, "name");
+		tabsheet.addTab(pacTab, "pac");
 		return tabsheet;
 	}
 

@@ -30,11 +30,24 @@ public class PackagePanel extends CustomComponent implements IHSPanel, SelectedT
 	{
 		TabSheet tabsheet = new TabSheet();
 		tabsheet.addSelectedTabChangeListener(this);
-		HSTab usersTab = new HSTab("user", session, "pac", itemId);
+		HSTab usersTab = new HSTab("user", session, "pac", itemId, "name");
 		usersTab.fillTable();
 		tabsheet.addTab(usersTab, "user");
-		HSTab aliasTab = new HSTab("emailalias", session, "pac", itemId);
+		HSTab aliasTab = new HSTab("emailalias", session, "pac", itemId, "name");
 		tabsheet.addTab(aliasTab, "emailalias");
+
+		HSTab domainTab = new HSTab("domain", session, "pac", itemId, "name");
+		tabsheet.addTab(domainTab, "domain");
+
+		HSTab mysqluserTab = new HSTab("mysqluser", session, "pac", itemId, "name");
+		tabsheet.addTab(mysqluserTab, "mysqluser");
+		HSTab mysqldbTab = new HSTab("mysqldb", session, "pac", itemId, "name");
+		tabsheet.addTab(mysqldbTab, "mysqldb");
+		HSTab postgresqluserTab = new HSTab("postgresqluser", session, "pac", itemId, "name");
+		tabsheet.addTab(postgresqluserTab, "postgresqluser");
+		HSTab postgresqldbTab = new HSTab("postgresqldb", session, "pac", itemId, "name");
+		tabsheet.addTab(postgresqldbTab, "postgresqldb");
+		
 		return tabsheet;
 	}
 

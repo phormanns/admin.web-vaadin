@@ -96,7 +96,7 @@ public class PanelToolbar extends HorizontalLayout implements ClickListener {
 		if ("edit".equals(action) || "delete".equals(action)) {
 			final IRemote remote = session.getModulesManager().proxy(module);
 			final HashMap<String, String> whereParams = new HashMap<String, String>();
-			whereParams.put(parent.getIdPropertyName(), value.toString());
+			whereParams.put(parent.getRowIdName(), value.toString());
 			try {
 				final TicketService ticketService = session.getTicketService();
 				final String grantingTicket = session.getGrantingTicket();

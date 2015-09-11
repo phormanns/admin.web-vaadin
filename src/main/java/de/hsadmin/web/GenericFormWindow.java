@@ -5,10 +5,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-import com.vaadin.data.Validator;
-import com.vaadin.ui.AbstractTextField;
 import com.vaadin.ui.FormLayout;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.Window;
 
 import de.hsadmin.rpc.HSAdminSession;
@@ -20,7 +17,7 @@ public class GenericFormWindow extends Window implements IHSWindow {
 	private static final long serialVersionUID = 1L;
 
 	final private FormLayout contentForm;
-	final private Map<String, AbstractTextField> inputFields;
+	final private Map<String, IHSEditor> inputFields;
 	final private HSTab parent;
 	
 	private Map<String, String> selector;
@@ -32,50 +29,24 @@ public class GenericFormWindow extends Window implements IHSWindow {
 		center();
 		setModal(true);
 		setWidth("480px");
-
-		inputFields = new HashMap<String, AbstractTextField>();
+		inputFields = new HashMap<String, IHSEditor>();
 		contentForm = new FormLayout();
 		contentForm.setMargin(true);
 
 		final Iterator<PropertyInfo> iterator = session.getModulesManager().module(module).properties();
 		while (iterator.hasNext()) {
 			final PropertyInfo propertyInfo = iterator.next();
-			final String inputName = propertyInfo.getName();
-			final TextField field = new TextField(inputName);
-			field.setWidth("100%");
-			inputFields.put(inputName, field);
-			if (isWriteAble(propertyInfo, action)) {
-				final String regexp = propertyInfo.getValidationRegexp();
-				final int minLength = propertyInfo.getMinLength();
-				final int maxLength = propertyInfo.getMaxLength();
-				field.addValidator(new Validator() {
-					private static final long serialVersionUID = 1L;
-					@Override
-					public void validate(Object value) throws InvalidValueException {
-						final String inputString = (String) value;
-						if (!inputString.matches(regexp)) {
-							throw new InvalidValueException("input must match " + regexp);
-						}
-						if (inputString.length() < minLength) {
-							throw new InvalidValueException("minimal length is " + minLength);
-						}
-						if (inputString.length() > maxLength) {
-							throw new InvalidValueException("maximal length is " + maxLength);
-						}
-					}
-				});
-			} else {
-				field.setEnabled(false);
+			if ("new".equals(action) && ReadWritePolicy.READ.equals(propertyInfo.getReadwriteable())) {
+				continue;
 			}
+			final String inputName = propertyInfo.getName();
+			final AbstractEditorFactory editorFactory = FactoryProducer.getEditorFactory(module);
+			final IHSEditor field = editorFactory.getEditor(action, propertyInfo, inputName, session);
+			inputFields.put(inputName, field);
 			contentForm.addComponent(field);
 		}
 		contentForm.addComponent(new HSConfirmBox(this, module, action, session));
 		setContent(contentForm);
-	}
-
-	private boolean isWriteAble(PropertyInfo propertyInfo, String action) {
-		return (ReadWritePolicy.WRITEONCE.equals(propertyInfo.getReadwriteable()) && action.equals("new")) ||
-				 (ReadWritePolicy.READWRITE.equals(propertyInfo.getReadwriteable()) && ( action.equals("edit") || action.equals("new") ));
 	}
 
 	@Override

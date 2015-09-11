@@ -45,6 +45,7 @@ public class EntryPoint extends CustomComponent {
 	}
 
 	public void fillTable() {
+		selectTable.removeAllItems();
 		final MainWindow mainWindow = parent.getMainWindow();
 		final String[] entryPointColumns = mainWindow.entryPointColumns(module);
 		final List<Object[]> list = mainWindow.list(module, entryPointColumns);
@@ -53,6 +54,11 @@ public class EntryPoint extends CustomComponent {
 		}
 		selectTable.setSortContainerPropertyId(entryPointColumns[0]);
 		selectTable.sort();
+		selectTable.setPageLength(selectTable.size());
+		selectTable.setColumnHeaderMode(ColumnHeaderMode.HIDDEN);
+		selectTable.setSelectable(true);
+		selectTable.setImmediate(true);
+		selectTable.setSizeFull();
 	}
 
 }
