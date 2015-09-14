@@ -1,12 +1,16 @@
 package de.hsadmin.web;
 
+import java.io.Serializable;
+
 import com.vaadin.data.Validator;
 
 import de.hsadmin.rpc.HSAdminSession;
 import de.hsadmin.rpc.PropertyInfo;
 import de.hsadmin.rpc.enums.ReadWritePolicy;
 
-public class GenericEditorFactory extends AbstractEditorFactory {
+public class GenericEditorFactory extends AbstractEditorFactory implements Serializable {
+
+	private static final long serialVersionUID = 1L;
 
 	@Override
 	public IHSEditor getEditor(final String action, final PropertyInfo propertyInfo, final String inputName, final HSAdminSession session) {
@@ -52,6 +56,9 @@ public class GenericEditorFactory extends AbstractEditorFactory {
 	}
 
 	private boolean isWriteAble(PropertyInfo propertyInfo, String action) {
+		if ("view".equals(action)) {
+			return false;
+		}
 		return (ReadWritePolicy.WRITEONCE.equals(propertyInfo.getReadwriteable()) && action.equals("new")) ||
 				 (ReadWritePolicy.READWRITE.equals(propertyInfo.getReadwriteable()) && ( action.equals("edit") || action.equals("new") ));
 	}

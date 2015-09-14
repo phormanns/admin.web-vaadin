@@ -29,7 +29,8 @@ public class DomainPanel extends CustomComponent implements IHSPanel, SelectedTa
 	@Override
 	public TabSheet createTabs(Object itemId) throws RpcException 
 	{
-		TabSheet tabsheet = new TabSheet();
+		final TabSheet tabsheet = new TabSheet();
+		tabsheet.addTab(new GenericForm("domain", session, itemId, "name"), "domain");
 		HSTab emailTab = new HSTab("emailaddress", session, "domain", itemId, "id");
 		emailTab.fillTable();
 		tabsheet.addTab(emailTab, "emailaddress");

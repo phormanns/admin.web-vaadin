@@ -31,6 +31,7 @@ public class PackagePanel extends CustomComponent implements IHSPanel, SelectedT
 	{
 		TabSheet tabsheet = new TabSheet();
 		tabsheet.addSelectedTabChangeListener(this);
+		tabsheet.addTab(new GenericForm("pac", session, itemId, "name"), "pac");
 		HSTab usersTab = new HSTab("user", session, "pac", itemId, "name");
 		usersTab.fillTable();
 		tabsheet.addTab(usersTab, "user");
