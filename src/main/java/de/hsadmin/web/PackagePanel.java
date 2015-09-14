@@ -19,6 +19,7 @@ public class PackagePanel extends CustomComponent implements IHSPanel, SelectedT
 	public PackagePanel(HSAdminSession session, Object itemId) throws RpcException {
 		this.session = session;
 		final Panel panel = new Panel();
+		panel.setSizeFull();
 		final TabSheet tabsheet = createTabs(itemId);
 		tabsheet.setSizeFull();
 		panel.setContent(tabsheet);

@@ -12,6 +12,7 @@ import com.vaadin.ui.themes.ValoTheme;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.HasComponents;
+import com.vaadin.ui.Label;
 import com.vaadin.ui.PasswordField;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.Window;
@@ -33,10 +34,17 @@ public class LoginWindow extends Window {
 		subContent.setMargin(true);
 		
 		final TextField login = new TextField("login");
+		login.setWidth("100%");
 		subContent.addComponent(login);
+		login.focus();
 		final PasswordField password = new PasswordField("password");
+		password.setWidth("100%");
 		subContent.addComponent(password);
-		
+		final Label feedback = new Label("");
+		feedback.setWidth("100%");
+		feedback.setVisible(false);
+		subContent.addComponent(feedback);
+		feedback.setStyleName(ValoTheme.LABEL_FAILURE);
 		
 		final Button okButton = new Button("Login");
 		okButton.setStyleName(ValoTheme.BUTTON_PRIMARY);
@@ -65,14 +73,21 @@ public class LoginWindow extends Window {
 					}
 					try {
 						final String user = credentials.get("login");
+						final String loginUser = user.length() == 3 ? "hsh00-" + user : user;
 						final String password = credentials.get("password");
-						final String grantingTicket = ticketService.getGrantingTicket(user, password);
+						final String grantingTicket = ticketService.getGrantingTicket(loginUser, password);
 						if (grantingTicket != null && !grantingTicket.isEmpty()) {
-							parent.setGrantingTicket(grantingTicket, user);
+							feedback.setValue("successful login");
+							feedback.setVisible(true);
+							parent.setGrantingTicket(grantingTicket, loginUser);
 							final HasComponents window = formLayout.getParent();
 							if (window != null) {
 								((Window) window).close();
 							}
+						} else {
+							feedback.setValue("login failed, please retry");
+							feedback.setVisible(true);
+							((Window)subContent.getParent()).markAsDirty();
 						}
 					} catch (RpcException e) {
 						// TODO Auto-generated catch block

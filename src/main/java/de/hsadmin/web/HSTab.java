@@ -9,6 +9,7 @@ import java.util.Map;
 import org.apache.xmlrpc.XmlRpcException;
 
 import com.vaadin.ui.Alignment;
+import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
@@ -21,7 +22,7 @@ import de.hsadmin.rpc.PropertyInfo;
 import de.hsadmin.rpc.RpcException;
 import de.hsadmin.rpc.enums.DisplayPolicy;
 
-public class HSTab extends VerticalLayout {
+public class HSTab extends CustomComponent {
 	
 	private static final long serialVersionUID = 1L;
 	
@@ -37,6 +38,7 @@ public class HSTab extends VerticalLayout {
 
 	public HSTab(String source, HSAdminSession session, String selectPropertyName, Object selectPropertyValue, String rowIdPropertyName) {
 		super();
+		setSizeFull();
 		this.module = source;
 		this.session = session;
 		this.selectPropertyName = selectPropertyName;
@@ -44,9 +46,14 @@ public class HSTab extends VerticalLayout {
 		this.rowIdPropertyName = rowIdPropertyName;
 		final Table dataTable = getGrid(session.getModulesManager().module(source));
 		panelToolbar = new PanelToolbar(source, session, this);
-		addComponent(panelToolbar);
-		setComponentAlignment(panelToolbar, Alignment.MIDDLE_RIGHT);
-		addComponent(dataTable);
+		final VerticalLayout layout = new VerticalLayout();
+		layout.setSizeFull();
+		layout.addComponent(panelToolbar);
+		layout.setComponentAlignment(panelToolbar, Alignment.TOP_RIGHT);
+		layout.addComponent(dataTable);
+		layout.setExpandRatio(dataTable, 1.0f);
+		dataTable.setHeight("100%");
+		setCompositionRoot(layout);
 	}
 
 	private Table getGrid(ModuleInfo moduleInfo) 
@@ -59,7 +66,7 @@ public class HSTab extends VerticalLayout {
 				grid.addContainerProperty(propertyInfo.getModule() + "." + propertyInfo.getName(), String.class, "");
 			}
 		}
-		grid.setPageLength(grid.size());
+//		grid.setPageLength(0);
 		grid.setSelectable(true);
 		grid.setImmediate(true);
 		grid.setSizeFull();
@@ -121,13 +128,13 @@ public class HSTab extends VerticalLayout {
 		} catch (RpcException e) {
 			// FIXME error handling
 		}
-		grid.setPageLength(grid.size());
-		if (grid.size() == 1) {
-			grid.select(firstId);
-		}
+//		grid.setPageLength(0);
 		grid.setSelectable(true);
 		grid.setImmediate(true);
 		grid.setSizeFull();
+		if (grid.size() == 1) {
+			grid.select(firstId);
+		}
 	}
 
 	public Object getSelection() {

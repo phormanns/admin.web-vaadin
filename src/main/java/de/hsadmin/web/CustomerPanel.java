@@ -19,6 +19,7 @@ public class CustomerPanel extends CustomComponent implements IHSPanel, Selected
 	public CustomerPanel(HSAdminSession session, Object itemId) throws RpcException {
 		this.session = session;
 		final Panel panel = new Panel();
+		panel.setSizeFull();
 		final TabSheet tabsheet = createTabs(itemId);
 		tabsheet.setSizeFull();
 		panel.setContent(tabsheet);
@@ -29,6 +30,7 @@ public class CustomerPanel extends CustomComponent implements IHSPanel, Selected
 	public TabSheet createTabs(Object itemId) throws RpcException 
 	{
 		TabSheet tabsheet = new TabSheet();
+		tabsheet.setSizeFull();
 		tabsheet.addSelectedTabChangeListener(this);
 		HSTab usersTab = new HSTab("contact", session, "customer", itemId, "email");
 		usersTab.fillTable();

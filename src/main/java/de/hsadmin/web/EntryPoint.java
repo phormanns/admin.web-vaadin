@@ -21,7 +21,6 @@ public class EntryPoint extends CustomComponent {
 		this.parent = parent;
 		setCaption(name);
 		final VerticalLayout tab = new VerticalLayout();
-		final Panel scrollPanel = new Panel();
 		selectTable = new Table();
 		selectTable.setData(name);
 		final MainWindow mainWindow = parent.getMainWindow();
@@ -31,15 +30,13 @@ public class EntryPoint extends CustomComponent {
 				selectTable.addContainerProperty(col, String.class, null);
 			}
 		}
-		selectTable.setPageLength(selectTable.size());
+		selectTable.setPageLength(0);
 		selectTable.setColumnHeaderMode(ColumnHeaderMode.HIDDEN);
 		selectTable.addItemClickListener(parent);
 		selectTable.setSelectable(true);
 		selectTable.setImmediate(true);
 		selectTable.setSizeFull();
-		scrollPanel.setContent(selectTable);
-		scrollPanel.setSizeFull();
-		tab.addComponent(scrollPanel);
+		tab.addComponent(selectTable);
 		tab.setSizeFull();
 		setCompositionRoot(tab);
 	}
@@ -54,7 +51,6 @@ public class EntryPoint extends CustomComponent {
 		}
 		selectTable.setSortContainerPropertyId(entryPointColumns[0]);
 		selectTable.sort();
-		selectTable.setPageLength(selectTable.size());
 		selectTable.setColumnHeaderMode(ColumnHeaderMode.HIDDEN);
 		selectTable.setSelectable(true);
 		selectTable.setImmediate(true);
