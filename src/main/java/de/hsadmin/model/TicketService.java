@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.io.Serializable;
 import java.net.URL;
 import java.net.URLEncoder;
 
@@ -18,7 +19,12 @@ import de.hsadmin.rpc.RpcException;
  * "ticket granting ticket" for a session and service ticket for 
  * individual service calls. 
  */
-public class TicketService {
+public class TicketService implements Serializable {
+
+	public static final String SERVICE_URL = "https://config.hostsharing.net:443/hsar/backend";
+	public static final String CAS_URL = "https://login.hostsharing.net/cas/v1/tickets";
+	
+	private static final long serialVersionUID = 1L;
 
 	public String getGrantingTicket(final String user, final String password) throws RpcException {
 		String ticket = null;
@@ -26,7 +32,7 @@ public class TicketService {
 			String userParam = "username=" + URLEncoder.encode(user, "UTF-8");
 			String passwordParam = "password=" + URLEncoder.encode(password, "UTF-8");
 			String encodedData = userParam + "&" + passwordParam;
-			URL url = new URL("https://login.hostsharing.net/cas/v1/tickets");
+			URL url = new URL(CAS_URL);
 
 			final HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
 			connection.setRequestMethod("POST");
@@ -50,7 +56,7 @@ public class TicketService {
 	public String getServiceTicket(String grantingTicket) throws RpcException {
 		String ticket = null;
 		try {
-			String serviceParam = "service=" + URLEncoder.encode("https://config.hostsharing.net:443/hsar/backend", "UTF-8");
+			String serviceParam = "service=" + URLEncoder.encode(SERVICE_URL, "UTF-8");
 			URL url = new URL(grantingTicket);
 
 			final HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();

@@ -1,72 +1,148 @@
 package de.hsadmin.web;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
-import de.hsadmin.model.TestDR;
-import de.hsadmin.rpc.RpcException;
+import org.apache.xmlrpc.XmlRpcException;
 
 import com.vaadin.ui.Alignment;
+import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.VerticalLayout;
 
-public class HSTab extends VerticalLayout{
+import de.hsadmin.model.TicketService;
+import de.hsadmin.rpc.HSAdminSession;
+import de.hsadmin.rpc.ModuleInfo;
+import de.hsadmin.rpc.ModulesManager;
+import de.hsadmin.rpc.PropertyInfo;
+import de.hsadmin.rpc.RpcException;
+import de.hsadmin.rpc.enums.DisplayPolicy;
+
+public class HSTab extends CustomComponent {
 	
-	private static final long serialVersionUID = 8755003327696243905L;
+	private static final long serialVersionUID = 1L;
 	
-	//Just for testing purposes
-	private static final String USER_NAME = "hsh98";
-	private static final String PASSWORD = "Diego.R!";
+	private final HSAdminSession session;
+	private final String module;
+	private final Object selectPropertyValue;
+	private final String selectPropertyName;
+	private final String rowIdPropertyName;
 	
 	private HorizontalLayout panelToolbar;
 	private Table grid;
-	
-	public HSTab(String source){
+
+
+	public HSTab(String source, HSAdminSession session, String selectPropertyName, Object selectPropertyValue, String rowIdPropertyName) {
 		super();
-		panelToolbar = new PanelToolbar(source);
-		addComponent(panelToolbar);
-		setComponentAlignment(panelToolbar, Alignment.MIDDLE_RIGHT);
-		addComponent(getGrid());
+		setSizeFull();
+		this.module = source;
+		this.session = session;
+		this.selectPropertyName = selectPropertyName;
+		this.selectPropertyValue = selectPropertyValue;
+		this.rowIdPropertyName = rowIdPropertyName;
+		final Table dataTable = getGrid(session.getModulesManager().module(source));
+		panelToolbar = new PanelToolbar(source, session, this);
+		final VerticalLayout layout = new VerticalLayout();
+		layout.setSizeFull();
+		layout.addComponent(panelToolbar);
+		layout.setComponentAlignment(panelToolbar, Alignment.TOP_RIGHT);
+		layout.addComponent(dataTable);
+		layout.setExpandRatio(dataTable, 1.0f);
+		dataTable.setHeight("100%");
+		setCompositionRoot(layout);
 	}
 
-	private Table getGrid() {
+	private Table getGrid(ModuleInfo moduleInfo) 
+	{
 		grid = new Table();
-
-		grid.addContainerProperty("Id", String.class, null);
-		grid.addContainerProperty("Description", String.class, null);
-
-		grid.setPageLength(grid.size());
-		//pkgList.addItemClickListener(this);
+		final Iterator<PropertyInfo> properties = moduleInfo.properties();
+		while (properties.hasNext()) {
+			final PropertyInfo propertyInfo = properties.next();
+			if (DisplayPolicy.ALWAYS.equals(propertyInfo.getDisplayVisible())) {
+				grid.addContainerProperty(propertyInfo.getModule() + "." + propertyInfo.getName(), String.class, "");
+			}
+		}
+//		grid.setPageLength(0);
 		grid.setSelectable(true);
 		grid.setImmediate(true);
 		grid.setSizeFull();
-
 		return grid;
 	}
 	
-	public void fillTable() throws RpcException{
-		TestDR dataSource = new TestDR();
-		
-		dataSource.init(USER_NAME, PASSWORD);
-		ArrayList<String> result = dataSource.getResult("emailaddress","search");
-		
-		int itemId = 1;
-		for(String item : result){
-			int token = item.indexOf(":");
-			if(token != -1){
-				String emailAddress = item.substring(0, token);
-				item = item.substring(token +1, item.length());
-				token = item.indexOf(",");
-				while(token != -1){
-					String target = item.substring(0, token);
-					item = item.substring(token +1, item.length());
-					grid.addItem(new Object[]{emailAddress, target}, itemId);
-					
-					token = item.indexOf(",");
-					itemId++;
+	public void fillTable() 
+	{
+		grid.removeAllItems();
+		Object firstId = null;
+		try {
+			final ModulesManager modulesManager = session.getModulesManager();
+			final String grantingTicket = session.getGrantingTicket();
+			final TicketService ticketService = session.getTicketService();
+			final String serviceTicket = ticketService.getServiceTicket(grantingTicket);
+			final String user = session.getUser();
+			final HashMap<String, String> whereParams = new HashMap<String, String>();
+			whereParams.put(selectPropertyName, selectPropertyValue.toString());
+			try {
+				final List<Map<String, Object>> objectsList = modulesManager.proxy(module).search(user, serviceTicket, whereParams);
+				
+				for (Map<String, Object> objectHash : objectsList) {
+
+					final Iterator<PropertyInfo> properties = session.getModulesManager().module(module).properties();
+					final List<String> itemsList = new ArrayList<String>();
+					while (properties.hasNext()) {
+						final PropertyInfo propertyInfo = properties.next();
+						if (DisplayPolicy.ALWAYS.equals(propertyInfo.getDisplayVisible())) {
+							final Object value = objectHash.get(propertyInfo.getName());
+							if (value == null) {
+								itemsList.add("");
+							} else {
+								if (value instanceof Object[]) {
+									final StringBuffer buff = new StringBuffer();
+									final Object[] items = (Object[]) value;
+									if (items.length > 0) {
+										buff.append(items[0].toString());
+									}
+									for (int idx=1; idx < items.length; idx++) {
+										buff.append(", ");
+										buff.append(items[idx].toString());
+									}
+									itemsList.add(buff.toString());
+								} else {
+									itemsList.add(value.toString());
+								}
+							}
+						}
+					}
+					final Object rowId = objectHash.get(rowIdPropertyName);
+					if (firstId == null) {
+						firstId = rowId;
+					}
+					grid.addItem(itemsList.toArray(), rowId);
 				}
+			} catch (UnsupportedOperationException | XmlRpcException e) {
+				throw new RpcException(e);
 			}
+		} catch (RpcException e) {
+			// FIXME error handling
 		}
+//		grid.setPageLength(0);
+		grid.setSelectable(true);
+		grid.setImmediate(true);
+		grid.setSizeFull();
+		if (grid.size() == 1) {
+			grid.select(firstId);
+		}
+	}
+
+	public Object getSelection() {
+		return grid.getValue();
+	}
+
+	public String getRowIdName() {
+		return rowIdPropertyName;
 	}
 
 }

@@ -39,7 +39,11 @@ public class ModuleInfo implements Serializable {
 	
 	void add(final PropertyInfo propInfo) {
 		propertiesByName.put(propInfo.getName(), propInfo);
-		propertiesBySequence.put(propInfo.getDisplaySequence(), propInfo);
+		int displaySequence = propInfo.getDisplaySequence();
+		while (propertiesBySequence.containsKey(displaySequence)) {
+			displaySequence++;
+		}
+		propertiesBySequence.put(displaySequence, propInfo);
 	}
 	
 }

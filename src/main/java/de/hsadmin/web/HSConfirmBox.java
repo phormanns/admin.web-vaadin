@@ -1,49 +1,89 @@
 package de.hsadmin.web;
 
+import org.apache.xmlrpc.XmlRpcException;
+
+import com.vaadin.event.ShortcutAction.KeyCode;
+import com.vaadin.server.ErrorMessage;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Window;
+import com.vaadin.ui.themes.ValoTheme;
 
-public class HSConfirmBox extends HorizontalLayout{
+import de.hsadmin.model.IRemote;
+import de.hsadmin.model.TicketService;
+import de.hsadmin.rpc.HSAdminSession;
+import de.hsadmin.rpc.RpcException;
 
-	private static final long serialVersionUID = 6110852472769497400L;
-	Button okButton, cancelButton;
+public class HSConfirmBox extends HorizontalLayout {
+
+	private static final long serialVersionUID = 1L;
 	
-	public HSConfirmBox(){
+	private Button okButton, cancelButton;
+
+	public HSConfirmBox(final GenericFormWindow parent, final String module, final String action, final HSAdminSession session) {
 		okButton = new Button("OK");
-		okButton.addClickListener(new ClickListener() {
-			private static final long serialVersionUID = -6121701552072481416L;
+		okButton.setStyleName(ValoTheme.BUTTON_PRIMARY);
+		okButton.setClickShortcut(KeyCode.ENTER);
+		okButton.addClickListener(new ClickListener() 
+		{
+			private static final long serialVersionUID = 1L;
+
 			public void buttonClick(ClickEvent event) {
-				//okButton Parent -> HSConfirmBox
-				if(okButton.getParent() != null){
-					//okButton.getParent() Parent -> FormLayout
-					if(okButton.getParent().getParent() != null){
-						//okButton.getParent().getParent() Parent -> Window
-						if(okButton.getParent().getParent().getParent() != null){
-							Window w = (Window) okButton.getParent().getParent().getParent();
-							w.close();
+				final IRemote iRemote = session.getModulesManager().proxy(module);
+				final String runAsUser = session.getUser();
+				final TicketService ticketService = session.getTicketService();
+				boolean success = false;
+				try {
+					final String ticket = ticketService.getServiceTicket(session.getGrantingTicket());
+					try {
+						if ("new".equals(action)) {
+								iRemote.add(runAsUser, ticket, parent.getFormData());
+								parent.reload();
+								success = true;
 						}
+						if ("edit".equals(action)) {
+							iRemote.update(runAsUser, ticket, parent.getFormData(), parent.getSelector());
+							parent.reload();
+							success = true;
+						}
+						if ("delete".equals(action)) {
+							iRemote.delete(runAsUser, ticket, parent.getSelector());
+							parent.reload();
+							success = true;
+						}
+					} catch (final XmlRpcException e) {
+						throw new RpcException(e);
 					}
+				} catch (final RpcException e) {
+					Button btn = event.getButton();
+					btn.setComponentError(new ErrorMessage() {
+						private static final long serialVersionUID = 1L;
+						@Override
+						public ErrorLevel getErrorLevel() {
+							return ErrorLevel.CRITICAL;
+						}
+						@Override
+						public String getFormattedHtmlMessage() {
+							return e.getLocalizedMessage();
+						}
+					});
 				}
-				//close(); // Close the sub-window
+				if (success) {
+					((Window) parent).close();
+				}
 			}
 		});
 		cancelButton = new Button("Cancel");
-		cancelButton.addClickListener(new ClickListener() {
-			private static final long serialVersionUID = -6121701552072481416L;
-			public void buttonClick(ClickEvent event) {
-				if(cancelButton.getParent() != null){
-					//cancelButton.getParent() Parent -> FormLayout
-					if(cancelButton.getParent().getParent() != null){
-						//cancelButton.getParent().getParent() Parent -> Window
-						if(cancelButton.getParent().getParent().getParent() != null){
-							Window w = (Window) cancelButton.getParent().getParent().getParent();
-							w.close();
-						}
-					}
-				}
+		cancelButton.setClickShortcut(KeyCode.ESCAPE);
+		cancelButton.addClickListener(new ClickListener() 
+		{
+			private static final long serialVersionUID = 1L;
+
+			public void buttonClick(ClickEvent event) 
+			{
+				((Window) parent).close();
 			}
 		});
 
@@ -51,4 +91,5 @@ public class HSConfirmBox extends HorizontalLayout{
 		addComponent(okButton);
 		addComponent(cancelButton);
 	}
+
 }

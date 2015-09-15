@@ -12,9 +12,7 @@ public class MainPanel extends CustomComponent{
 	public MainPanel() {
 		final Panel panel  = new Panel("Main Panel");
 		dialog.setValue("Welcome to the hostsharing admin page");
-
 		panel.setContent(dialog);
-
 		setCompositionRoot(panel);
 	}
 }

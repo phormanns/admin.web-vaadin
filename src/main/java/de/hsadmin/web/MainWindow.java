@@ -7,105 +7,85 @@ import java.util.Map;
 
 import org.apache.xmlrpc.XmlRpcException;
 
-import com.vaadin.server.ThemeResource;
 import com.vaadin.ui.AbstractSplitPanel;
-import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.CustomComponent;
-import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.HorizontalSplitPanel;
-import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.VerticalLayout;
 
 import de.hsadmin.model.TicketService;
+import de.hsadmin.rpc.HSAdminSession;
 import de.hsadmin.rpc.ModulesManager;
 import de.hsadmin.rpc.ModulesManagerFactory;
 import de.hsadmin.rpc.RpcException;
 
-public class MainWindow extends CustomComponent {
+public class MainWindow extends CustomComponent implements HSAdminSession {
 
 	private static final long serialVersionUID = 1L;
 	
-	public static final String SERVICE_URL = "https://config1-test.hostsharing.net:443/hsar/xmlrpc/hsadmin";
-	private static final String USERNAME = "hsh98";
-	private static final String PASSWORD = "Diego.R!";
+	public static final String[] SERVICE_URLS = new String[] { 
+		"https://config2.hostsharing.net:443/hsar/xmlrpc/hsadmin", 
+		"https://config.hostsharing.net:443/hsar/xmlrpc/hsadmin" 
+	};
 
 	private ModulesManager modulesManager;
-	private TicketService service;
+	private TicketService ticketService;
 	private String grantingTicket;
-
+	private String username;
 	private AbstractSplitPanel content;
 	
-	
-	
-	public MainWindow() {
-		service = new TicketService();
-		final String username = USERNAME;
-		final String password = PASSWORD;
+	public MainWindow(TicketService ticketService, String grantingTicket, String username) {
+		this.ticketService = ticketService;
+		this.grantingTicket = grantingTicket;
+		this.username = username;
+		
+		setSizeFull();
+		Panel mainPanel = new Panel();
+		mainPanel.setSizeFull();
+		VerticalLayout vl = new VerticalLayout();
+		vl.setSizeFull();
+		setCompositionRoot(mainPanel);
+		mainPanel.setContent(vl);
+		
 		try {
-			grantingTicket = service.getGrantingTicket(username, password);
 			final ModulesManagerFactory modulesManagerFactory = new ModulesManagerFactory(grantingTicket, username);
-			modulesManager = modulesManagerFactory.newModulesManager(SERVICE_URL);
+			modulesManager = modulesManagerFactory.newModulesManager(SERVICE_URLS);
+			content = new HorizontalSplitPanel();
+			content.setSizeFull();
+			vl.addComponent(content);
+
+			final EntryPointsSelector entryPoints = new EntryPointsSelector(this);
+			entryPoints.setSizeFull();
+			content.setFirstComponent(entryPoints);
+			content.setSecondComponent(new MainPanel());
+			content.setSplitPosition(26.6f);
 		} catch (RpcException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		setSizeFull();
-
-		Panel mainPanel = new Panel();
-		mainPanel.setSizeFull();
-		VerticalLayout vl = new VerticalLayout();
-		
-		HorizontalLayout hl = new HorizontalLayout();
-		hl.addStyleName("panelstyle");
-		hl.setSpacing(true);
-		hl.addComponent(new Label("HS Admin Main Window"));
-
-		//Customization Button to set up the left panel
-		Button customButton = new Button();
-		customButton.setStyleName("tiny");
-		customButton.setIcon(new ThemeResource("../icons/settings-icon.png"));
-		content = new HorizontalSplitPanel();
-
-		customButton.addClickListener(new ClickListener() {
-			private static final long serialVersionUID = 1L;
-			@Override
-            public void buttonClick(final ClickEvent event) {
-				content.setSecondComponent(CustomizationPanel.getInstance());
-            }
-        });
-		hl.addComponent(customButton);
-		
-		vl.addComponent(hl);
-		
-		//final AbstractSplitPanel content = new HorizontalSplitPanel();
-		content.setSizeFull();
-		vl.addComponent(content);
-
-		final EntryPointsSelector entryPoints = new EntryPointsSelector(this);
-		entryPoints.setSizeFull();
-		entryPoints.setSizeFull();
-		content.setFirstComponent(entryPoints);
-
-		content.setSecondComponent(new MainPanel());
-
-		content.setSplitPosition(30.0f);
-		setCompositionRoot(mainPanel);
-		mainPanel.setContent(vl);
-
 	}
 
-	public void setCenterPanel(String source) {
-		final AbstractFactory panelFactory = FactoryProducer.getFactory("panel");
-		content.setSecondComponent(panelFactory.getPanel(source));
+	/**
+	 * Update center panel.
+	 * @param source module name
+	 * @param itemId 
+	 */
+	public void setCenterPanel(String source, Object itemId) {
+		final AbstractPanelFactory panelFactory = FactoryProducer.getPanelFactory("panel");
+		try {
+			IHSPanel panel = panelFactory.getPanel(source, this, itemId);
+			panel.setSizeFull();
+			content.setSecondComponent(panel);
+		} catch (RpcException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	public List<Object[]> list(final String moduleName, String... columnNames) {
 		final List<Object[]> resultList = new ArrayList<Object[]>();
 		try {
-			final List<Map<String, Object>> searchResult = modulesManager.proxy(moduleName).search(USERNAME, service.getServiceTicket(grantingTicket), new HashMap<String, String>());
+			final List<Map<String, Object>> searchResult = modulesManager.proxy(moduleName).search(username, ticketService.getServiceTicket(grantingTicket), new HashMap<String, String>());
 			for (Map<String, Object> valueMap : searchResult) {
 				final Object[] valueArr = new Object[columnNames.length];
 				for (int idx = 0; idx < columnNames.length; idx++) {
@@ -122,5 +102,25 @@ public class MainWindow extends CustomComponent {
 	
 	public String[] entryPointColumns(final String moduleName) {
 		return modulesManager.entryPointColumns(moduleName);
+	}
+
+	@Override
+	public String getGrantingTicket() {
+		return grantingTicket;
+	}
+
+	@Override
+	public TicketService getTicketService() {
+		return ticketService;
+	}
+
+	@Override
+	public ModulesManager getModulesManager() {
+		return modulesManager;
+	}
+
+	@Override
+	public String getUser() {
+		return username;
 	}
 }
