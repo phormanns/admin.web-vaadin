@@ -1,5 +1,7 @@
 package de.hsadmin.web;
 
+import java.util.ResourceBundle;
+
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.Panel;
@@ -7,6 +9,7 @@ import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.TabSheet.SelectedTabChangeEvent;
 import com.vaadin.ui.TabSheet.SelectedTabChangeListener;
 
+import de.hsadmin.model.HSLocale;
 import de.hsadmin.rpc.HSAdminSession;
 import de.hsadmin.rpc.RpcException;
 
@@ -15,6 +18,7 @@ public class DomainPanel extends CustomComponent implements IHSPanel, SelectedTa
 	private static final long serialVersionUID = 1L;
 	
 	private final HSAdminSession session;
+	ResourceBundle resourceBundle = ResourceBundle.getBundle("Messages", HSLocale.getHSLocale().getLocale());
 
 	public DomainPanel(HSAdminSession session, Object itemId) throws RpcException {
 		this.session = session;
@@ -30,10 +34,10 @@ public class DomainPanel extends CustomComponent implements IHSPanel, SelectedTa
 	public TabSheet createTabs(Object itemId) throws RpcException 
 	{
 		final TabSheet tabsheet = new TabSheet();
-		tabsheet.addTab(new GenericForm("domain", session, itemId, "name"), "domain");
+		tabsheet.addTab(new GenericForm("domain", session, itemId, "name"), resourceBundle.getString("domain"));
 		HSTab emailTab = new HSTab("emailaddress", session, "domain", itemId, "id");
 		emailTab.fillTable();
-		tabsheet.addTab(emailTab, "emailaddress");
+		tabsheet.addTab(emailTab, resourceBundle.getString("emailaddress"));
 		return tabsheet;
 	}
 

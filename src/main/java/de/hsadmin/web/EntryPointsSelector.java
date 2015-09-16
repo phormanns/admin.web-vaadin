@@ -3,6 +3,7 @@ package de.hsadmin.web;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.ResourceBundle;
 
 import org.apache.xmlrpc.XmlRpcException;
 
@@ -16,6 +17,7 @@ import com.vaadin.ui.TabSheet.SelectedTabChangeEvent;
 import com.vaadin.ui.TabSheet.SelectedTabChangeListener;
 import com.vaadin.ui.Table;
 
+import de.hsadmin.model.HSLocale;
 import de.hsadmin.model.IRemote;
 import de.hsadmin.model.TicketService;
 import de.hsadmin.rpc.RpcException;
@@ -25,6 +27,7 @@ public class EntryPointsSelector extends CustomComponent implements ItemClickLis
 	private static final long serialVersionUID = 1L;
 	
 	private final MainWindow mainWindow;
+	ResourceBundle resourceBundle = ResourceBundle.getBundle("Messages", HSLocale.getHSLocale().getLocale());
 	
 	private Accordion accordion;
 
@@ -45,7 +48,7 @@ public class EntryPointsSelector extends CustomComponent implements ItemClickLis
 		final AbstractEntryPointsFactory entryPointsFactory = FactoryProducer.getEntryPointsFactory("default");
 		boolean hasFirstTab = false;
 		for(String tabName : entryPointsFactory.getEntryPointNames(role)) {
-			accordion.addTab(new EntryPoint(this, tabName), tabName);
+			accordion.addTab(new EntryPoint(this, tabName), resourceBundle.getString(tabName));
 			hasFirstTab = true;
 		}
 		if (hasFirstTab) {

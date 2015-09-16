@@ -40,9 +40,9 @@ public class MainWindow extends CustomComponent implements HSAdminSession {
 		this.username = username;
 		
 		setSizeFull();
-		Panel mainPanel = new Panel();
+		final Panel mainPanel = new Panel();
 		mainPanel.setSizeFull();
-		VerticalLayout vl = new VerticalLayout();
+		final VerticalLayout vl = new VerticalLayout();
 		vl.setSizeFull();
 		setCompositionRoot(mainPanel);
 		mainPanel.setContent(vl);
