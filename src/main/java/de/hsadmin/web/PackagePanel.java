@@ -29,25 +29,25 @@ public class PackagePanel extends CustomComponent implements IHSPanel, SelectedT
 	@Override
 	public TabSheet createTabs(Object itemId) throws RpcException 
 	{
-		TabSheet tabsheet = new TabSheet();
+		final TabSheet tabsheet = new TabSheet();
 		tabsheet.addSelectedTabChangeListener(this);
 		tabsheet.addTab(new GenericForm("pac", session, itemId, "name"), "pac");
-		HSTab usersTab = new HSTab("user", session, "pac", itemId, "name");
+		final HSTab usersTab = new HSTab("user", session, "pac", itemId, "name");
 		usersTab.fillTable();
 		tabsheet.addTab(usersTab, "user");
-		HSTab aliasTab = new HSTab("emailalias", session, "pac", itemId, "name");
+		final HSTab aliasTab = new HSTab("emailalias", session, "pac", itemId, "name");
 		tabsheet.addTab(aliasTab, "emailalias");
 
-		HSTab domainTab = new HSTab("domain", session, "pac", itemId, "name");
+		final HSTab domainTab = new HSTab("domain", session, "pac", itemId, "name");
 		tabsheet.addTab(domainTab, "domain");
 
-		HSTab mysqluserTab = new HSTab("mysqluser", session, "pac", itemId, "name");
+		final HSTab mysqluserTab = new HSTab("mysqluser", session, "pac", itemId, "name");
 		tabsheet.addTab(mysqluserTab, "mysqluser");
-		HSTab mysqldbTab = new HSTab("mysqldb", session, "pac", itemId, "name");
+		final HSTab mysqldbTab = new HSTab("mysqldb", session, "pac", itemId, "name");
 		tabsheet.addTab(mysqldbTab, "mysqldb");
-		HSTab postgresqluserTab = new HSTab("postgresqluser", session, "pac", itemId, "name");
+		final HSTab postgresqluserTab = new HSTab("postgresqluser", session, "pac", itemId, "name");
 		tabsheet.addTab(postgresqluserTab, "postgresqluser");
-		HSTab postgresqldbTab = new HSTab("postgresqldb", session, "pac", itemId, "name");
+		final HSTab postgresqldbTab = new HSTab("postgresqldb", session, "pac", itemId, "name");
 		tabsheet.addTab(postgresqldbTab, "postgresqldb");
 		
 		return tabsheet;
