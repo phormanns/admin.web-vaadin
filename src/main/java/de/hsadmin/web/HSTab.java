@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.MissingResourceException;
+import java.util.ResourceBundle;
 
 import org.apache.xmlrpc.XmlRpcException;
 
@@ -34,6 +36,7 @@ public class HSTab extends CustomComponent {
 	
 	private HorizontalLayout panelToolbar;
 	private Table grid;
+	private ResourceBundle resourceBundle = ResourceBundle.getBundle("Messages");
 
 
 	public HSTab(String source, HSAdminSession session, String selectPropertyName, Object selectPropertyValue, String rowIdPropertyName) {
@@ -63,7 +66,13 @@ public class HSTab extends CustomComponent {
 		while (properties.hasNext()) {
 			final PropertyInfo propertyInfo = properties.next();
 			if (DisplayPolicy.ALWAYS.equals(propertyInfo.getDisplayVisible())) {
-				grid.addContainerProperty(propertyInfo.getModule() + "." + propertyInfo.getName(), String.class, "");
+				String columnHeader;
+				try{
+					columnHeader = resourceBundle.getString(propertyInfo.getModule() + "." + propertyInfo.getName());
+				}catch(MissingResourceException e){
+					columnHeader = propertyInfo.getModule() + "." + propertyInfo.getName();
+				}
+				grid.addContainerProperty(columnHeader, String.class, "");
 			}
 		}
 //		grid.setPageLength(0);

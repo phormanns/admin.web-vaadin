@@ -4,8 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.ResourceBundle;
 
-import com.vaadin.data.Property;
-import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.event.ShortcutAction.KeyCode;
 import com.vaadin.ui.AbstractTextField;
 import com.vaadin.ui.Button;
@@ -15,29 +13,24 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.HasComponents;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.NativeSelect;
 import com.vaadin.ui.PasswordField;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.themes.ValoTheme;
 
-import de.hsadmin.model.HSLocale;
 import de.hsadmin.model.TicketService;
 import de.hsadmin.rpc.RpcException;
 
 public class LoginWindow extends Window {
 
 	private static final long serialVersionUID = 1L;
-    final HSLocale locale = HSLocale.getHSLocale();
-	final ResourceBundle resourceBundle;
+	final ResourceBundle resourceBundle = ResourceBundle.getBundle("Messages");
 
 	public LoginWindow(final HSAdminUI parent, final TicketService ticketService) {
 		super("Login");
 		center();
 		setModal(true);
 		setWidth("480px");
-		locale.setLocale("en");   //Default English
-		resourceBundle = ResourceBundle.getBundle("Messages", HSLocale.getHSLocale().getLocale());
 
 		final FormLayout subContent = new FormLayout();
 		subContent.setMargin(true);
@@ -54,28 +47,6 @@ public class LoginWindow extends Window {
 		feedback.setVisible(false);
 		subContent.addComponent(feedback);
 		feedback.setStyleName(ValoTheme.LABEL_FAILURE);
-		
-		final NativeSelect languageSelect = new NativeSelect("Language");
-		// Add supported languages TODO: Maybe read it from an interface
-		languageSelect.addItems("English", "Deutsch", "Español");
-		languageSelect.setValue("English");
-		languageSelect.addValueChangeListener(new Property.ValueChangeListener() {
-            private static final long serialVersionUID = 2754712574220857944L;
-            public void valueChange(ValueChangeEvent event) {
-            	switch(languageSelect.getValue().toString()){
-            	case "English":
-            		locale.setLocale("en");
-            		break;
-            	case "Español":
-            		locale.setLocale("es");
-            		break;
-            	case "Deutsch":
-            		locale.setLocale("de");
-            		break;
-            	}
-            }
-        });
-		subContent.addComponent(languageSelect);
 		
 		final Button okButton = new Button(resourceBundle.getString("login"));
 		okButton.setStyleName(ValoTheme.BUTTON_PRIMARY);
