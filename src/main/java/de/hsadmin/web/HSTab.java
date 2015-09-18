@@ -65,6 +65,8 @@ public class HSTab extends CustomComponent {
 		final Iterator<PropertyInfo> properties = moduleInfo.properties();
 		while (properties.hasNext()) {
 			final PropertyInfo propertyInfo = properties.next();
+			if(propertyInfo != null && "password".equalsIgnoreCase(propertyInfo.getName()))
+				continue;
 			if (DisplayPolicy.ALWAYS.equals(propertyInfo.getDisplayVisible())) {
 				String columnHeader;
 				try{
