@@ -1,8 +1,6 @@
 package de.hsadmin.web;
 
 import java.io.Serializable;
-import java.util.MissingResourceException;
-import java.util.ResourceBundle;
 
 import com.vaadin.data.Validator;
 
@@ -13,7 +11,6 @@ import de.hsadmin.rpc.enums.ReadWritePolicy;
 public class GenericEditorFactory extends AbstractEditorFactory implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-	ResourceBundle resourceBundle = ResourceBundle.getBundle("Messages");
 
 	@Override
 	public IHSEditor getEditor(final String action, final PropertyInfo propertyInfo, final String inputName, final HSAdminSession session) {
@@ -23,31 +20,14 @@ public class GenericEditorFactory extends AbstractEditorFactory implements Seria
 	}
 
 	private IHSEditor getPasswordField(String action, PropertyInfo propertyInfo, String inputName) {
-		String text;
-		/*Try to get the translation from the properties file - if it doesn't 
-		  exist, don't throw the error - Just print the normal text*/
-		try{
-			text = resourceBundle.getString(inputName);
-		}catch(MissingResourceException e){
-			text = inputName;
-		}
-		final HSPasswordField field = new HSPasswordField(text);
+		final HSPasswordField field = new HSPasswordField(I18N.getText(inputName));
 		field.setWidth("100%");
 		field.setEnabled("new".equals(action) || "edit".equals(action));
 		return field;
 	}
 
 	private IHSEditor getTextField(final String action, final PropertyInfo propertyInfo, final String inputName) {
-		String text;
-		/*Try to get the translation from the properties file - if it doesn't 
-		  exist, don't throw the error - Just print the normal text*/
-		try{
-			text = resourceBundle.getString(inputName);
-		}catch(MissingResourceException e){
-			text = inputName;
-		}
-		
-		final HSTextField field = new HSTextField(text);
+		final HSTextField field = new HSTextField(I18N.getText(inputName));
 		field.setWidth("100%");
 		if (isWriteAble(propertyInfo, action)) {
 			final String regexp = propertyInfo.getValidationRegexp();

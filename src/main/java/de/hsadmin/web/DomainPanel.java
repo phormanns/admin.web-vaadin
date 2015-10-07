@@ -1,7 +1,5 @@
 package de.hsadmin.web;
 
-import java.util.MissingResourceException;
-
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.Panel;
@@ -31,26 +29,11 @@ public class DomainPanel extends CustomComponent implements IHSPanel, SelectedTa
 	@Override
 	public TabSheet createTabs(Object itemId) throws RpcException 
 	{
-		String caption;
 		final TabSheet tabsheet = new TabSheet();
-		/*Try to get the translation from the properties file - if it doesn't 
-		  exist, don't throw the error - Just print the normal text*/
-		try{
-			caption = resourceBundle.getString("domain");
-		}catch(MissingResourceException e){
-			caption = "domain";
-		}
-		tabsheet.addTab(new GenericForm("domain", session, itemId, "name"), caption);
+		tabsheet.addTab(new GenericForm("domain", session, itemId, "name"), I18N.getText("domain"));
 		HSTab emailTab = new HSTab("emailaddress", session, "domain", itemId, "id");
 		emailTab.fillTable();
-		/*Try to get the translation from the properties file - if it doesn't 
-		  exist, don't throw the error - Just print the normal text*/
-		try{
-			caption = resourceBundle.getString("emailaddress");
-		}catch(MissingResourceException e){
-			caption = "emailaddress";
-		}
-		tabsheet.addTab(emailTab, caption);
+		tabsheet.addTab(emailTab, I18N.getText("emailaddress"));
 		return tabsheet;
 	}
 

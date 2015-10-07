@@ -3,8 +3,6 @@ package de.hsadmin.web;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.MissingResourceException;
-import java.util.ResourceBundle;
 
 import org.apache.xmlrpc.XmlRpcException;
 
@@ -30,7 +28,6 @@ public class PanelToolbar extends HorizontalLayout implements ClickListener {
 	private final String module;
 
 	private Button newBtn, editBtn, deleteBtn, refreshBtn, helpBtn;
-	private ResourceBundle resourceBundle = ResourceBundle.getBundle("Messages");
 
 	public PanelToolbar(String source, HSAdminSession session, HSTab parent) 
 	{
@@ -38,15 +35,15 @@ public class PanelToolbar extends HorizontalLayout implements ClickListener {
 		this.module = source;
 		this.session = session;
 		this.parent = parent;
-		newBtn = createButton("New_" + source, "new", "New");
+		newBtn = createButton("New_" + source, "new", "new.tooltop");
 		addComponent(newBtn);
-		editBtn = createButton("Edit_" + source, "edit", "Edit");
+		editBtn = createButton("Edit_" + source, "edit", "edit.tooltip");
 		addComponent(editBtn);
-		deleteBtn = createButton("Delete_" + source, "trash", "Delete");
+		deleteBtn = createButton("Delete_" + source, "trash", "delete.tooltip");
 		addComponent(deleteBtn);
-		refreshBtn = createButton("Refresh_" + source, "reload", "Refresh");
+		refreshBtn = createButton("Refresh_" + source, "reload", "refresh.tooltip");
 		addComponent(refreshBtn);
-		helpBtn = createButton("Help", "question", "Help");
+		helpBtn = createButton("Help", "question", "help.tooltip");
 		addComponent(helpBtn);
 	}
 
@@ -56,15 +53,7 @@ public class PanelToolbar extends HorizontalLayout implements ClickListener {
 		if (image != null) {
 			btn.setIcon(new ThemeResource("../icons/" + image + "-icon.png"));
 		}
-		String tooltipText;
-		/*Try to get the translation from the properties file - if it doesn't 
-		  exist, don't throw the error - Just print the normal text*/
-		try{
-			tooltipText = resourceBundle.getString(tooltip);
-		}catch(MissingResourceException e){
-			tooltipText = tooltip;
-		}
-		btn.setDescription(tooltipText);
+		btn.setDescription(I18N.getText(tooltip));
 		btn.setStyleName("borderless");
 		btn.addClickListener(this);
 		return btn;
@@ -92,13 +81,7 @@ public class PanelToolbar extends HorizontalLayout implements ClickListener {
 		Object value = parent.getSelection();
 		if (value == null) {
 			if ("edit".equals(action) || "delete".equals(action)) {
-				String errorMessage;
-				try{
-					errorMessage = resourceBundle.getString("emptySelectionMessage");
-				}catch(MissingResourceException e){
-					errorMessage = "please select a record to ";
-				}
-				UI.getCurrent().addWindow(new InfoWindow(errorMessage + action));
+				UI.getCurrent().addWindow(new InfoWindow(I18N.getText("emptySelectionMessage") + " " + action));
 				return;
 			}
 		}

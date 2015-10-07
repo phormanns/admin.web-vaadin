@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
 import org.apache.xmlrpc.XmlRpcException;
 
 import com.vaadin.ui.AbstractSplitPanel;
@@ -22,6 +23,8 @@ import de.hsadmin.rpc.RpcException;
 public class MainWindow extends CustomComponent implements HSAdminSession {
 
 	private static final long serialVersionUID = 1L;
+	
+	private static final Logger LOG = Logger.getLogger(MainWindow.class);
 	
 	public static final String[] SERVICE_URLS = new String[] { 
 		"https://config2.hostsharing.net:443/hsar/xmlrpc/hsadmin", 
@@ -60,8 +63,7 @@ public class MainWindow extends CustomComponent implements HSAdminSession {
 			content.setSecondComponent(new MainPanel());
 			content.setSplitPosition(26.6f);
 		} catch (RpcException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			LOG.fatal(e.getLocalizedMessage(), e);
 		}
 	}
 
@@ -77,8 +79,7 @@ public class MainWindow extends CustomComponent implements HSAdminSession {
 			panel.setSizeFull();
 			content.setSecondComponent(panel);
 		} catch (RpcException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			LOG.fatal(e.getLocalizedMessage(), e);
 		}
 	}
 
@@ -94,8 +95,7 @@ public class MainWindow extends CustomComponent implements HSAdminSession {
 				resultList.add(valueArr);
 			}
 		} catch (XmlRpcException | RpcException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			LOG.fatal(e.getLocalizedMessage(), e);
 		}
 		return resultList;
 	}

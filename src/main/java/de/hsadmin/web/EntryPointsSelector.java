@@ -3,8 +3,6 @@ package de.hsadmin.web;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.MissingResourceException;
-import java.util.ResourceBundle;
 
 import org.apache.xmlrpc.XmlRpcException;
 
@@ -25,9 +23,7 @@ import de.hsadmin.rpc.RpcException;
 public class EntryPointsSelector extends CustomComponent implements ItemClickListener, SelectedTabChangeListener {
 
 	private static final long serialVersionUID = 1L;
-	
 	private final MainWindow mainWindow;
-	ResourceBundle resourceBundle = ResourceBundle.getBundle("Messages");
 	
 	private Accordion accordion;
 
@@ -48,15 +44,7 @@ public class EntryPointsSelector extends CustomComponent implements ItemClickLis
 		final AbstractEntryPointsFactory entryPointsFactory = FactoryProducer.getEntryPointsFactory("default");
 		boolean hasFirstTab = false;
 		for(String tabName : entryPointsFactory.getEntryPointNames(role)) {
-			String caption;
-			/*Try to get the translation from the properties file - if it doesn't 
-			  exist, don't throw the error - Just print the normal text*/
-			try{
-				caption = resourceBundle.getString(tabName);
-			}catch(MissingResourceException e){
-				caption = tabName;
-			}
-			accordion.addTab(new EntryPoint(this, tabName), caption);
+			accordion.addTab(new EntryPoint(this, tabName), I18N.getText(tabName));
 			hasFirstTab = true;
 		}
 		if (hasFirstTab) {

@@ -2,7 +2,6 @@ package de.hsadmin.web;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.ResourceBundle;
 
 import com.vaadin.event.ShortcutAction.KeyCode;
 import com.vaadin.ui.AbstractTextField;
@@ -24,7 +23,6 @@ import de.hsadmin.rpc.RpcException;
 public class LoginWindow extends Window {
 
 	private static final long serialVersionUID = 1L;
-	final ResourceBundle resourceBundle = ResourceBundle.getBundle("Messages");
 
 	public LoginWindow(final HSAdminUI parent, final TicketService ticketService) {
 		super("Login");
@@ -35,11 +33,11 @@ public class LoginWindow extends Window {
 		final FormLayout subContent = new FormLayout();
 		subContent.setMargin(true);
 		
-		final TextField login = new TextField(resourceBundle.getString("user.name"));
+		final TextField login = new TextField(I18N.getText("user.name"));
 		login.setWidth("100%");
 		subContent.addComponent(login);
 		login.focus();
-		final PasswordField password = new PasswordField(resourceBundle.getString("password"));
+		final PasswordField password = new PasswordField(I18N.getText("password"));
 		password.setWidth("100%");
 		subContent.addComponent(password);
 		final Label feedback = new Label("");
@@ -48,7 +46,7 @@ public class LoginWindow extends Window {
 		subContent.addComponent(feedback);
 		feedback.setStyleName(ValoTheme.LABEL_FAILURE);
 		
-		final Button okButton = new Button(resourceBundle.getString("login"));
+		final Button okButton = new Button(I18N.getText("login"));
 		okButton.setStyleName(ValoTheme.BUTTON_PRIMARY);
 		okButton.setClickShortcut(KeyCode.ENTER);
 		okButton.addClickListener(new ClickListener() 
@@ -74,9 +72,9 @@ public class LoginWindow extends Window {
 						}
 					}
 					try {
-						final String user = credentials.get(resourceBundle.getString("user.name"));
+						final String user = credentials.get(I18N.getText("user.name"));
 						final String loginUser = user.length() == 3 ? "hsh00-" + user : user;
-						final String password = credentials.get(resourceBundle.getString("password"));
+						final String password = credentials.get(I18N.getText("password"));
 						final String grantingTicket = ticketService.getGrantingTicket(loginUser, password);
 						if (grantingTicket != null && !grantingTicket.isEmpty()) {
 							feedback.setValue("successful login");
