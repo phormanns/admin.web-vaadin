@@ -21,6 +21,7 @@ import de.hsadmin.rpc.ModulesManager;
 import de.hsadmin.rpc.PropertyInfo;
 import de.hsadmin.rpc.RpcException;
 import de.hsadmin.rpc.enums.DisplayPolicy;
+import de.hsadmin.rpc.enums.ReadWritePolicy;
 
 public class HSTab extends CustomComponent {
 	
@@ -56,24 +57,6 @@ public class HSTab extends CustomComponent {
 		setCompositionRoot(layout);
 	}
 
-	private Table getGrid(ModuleInfo moduleInfo) 
-	{
-		grid = new Table();
-		final Iterator<PropertyInfo> properties = moduleInfo.properties();
-		while (properties.hasNext()) {
-			final PropertyInfo propertyInfo = properties.next();
-			if(propertyInfo != null && "password".equalsIgnoreCase(propertyInfo.getName()))
-				continue;
-			if (DisplayPolicy.ALWAYS.equals(propertyInfo.getDisplayVisible())) {
-				grid.addContainerProperty(I18N.getText(propertyInfo.getModule() + "." + propertyInfo.getName()), String.class, "");
-			}
-		}
-		grid.setSelectable(true);
-		grid.setImmediate(true);
-		grid.setSizeFull();
-		return grid;
-	}
-	
 	public void fillTable() 
 	{
 		grid.removeAllItems();
@@ -95,7 +78,7 @@ public class HSTab extends CustomComponent {
 					final List<String> itemsList = new ArrayList<String>();
 					while (properties.hasNext()) {
 						final PropertyInfo propertyInfo = properties.next();
-						if (DisplayPolicy.ALWAYS.equals(propertyInfo.getDisplayVisible())) {
+						if (showColumnInTable(propertyInfo)) {
 							final Object value = objectHash.get(propertyInfo.getName());
 							if (value == null) {
 								itemsList.add("");
@@ -144,6 +127,30 @@ public class HSTab extends CustomComponent {
 
 	public String getRowIdName() {
 		return rowIdPropertyName;
+	}
+
+	private boolean showColumnInTable(final PropertyInfo propertyInfo) 
+	{
+		final DisplayPolicy displayVisible = propertyInfo.getDisplayVisible();
+		final ReadWritePolicy readwriteable = propertyInfo.getReadwriteable();
+		return DisplayPolicy.ALWAYS.equals(displayVisible) && 
+				( ! ReadWritePolicy.NONE.equals(readwriteable) );
+	}
+
+	private Table getGrid(ModuleInfo moduleInfo) 
+	{
+		grid = new Table();
+		final Iterator<PropertyInfo> properties = moduleInfo.properties();
+		while (properties.hasNext()) {
+			final PropertyInfo propertyInfo = properties.next();
+			if (showColumnInTable(propertyInfo)) {
+				grid.addContainerProperty(I18N.getText(propertyInfo.getModule() + "." + propertyInfo.getName()), String.class, "");
+			}
+		}
+		grid.setSelectable(true);
+		grid.setImmediate(true);
+		grid.setSizeFull();
+		return grid;
 	}
 
 }
