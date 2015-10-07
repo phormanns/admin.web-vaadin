@@ -1,5 +1,7 @@
 package de.hsadmin.web;
 
+import java.util.MissingResourceException;
+
 import com.vaadin.ui.Component;
 import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.Panel;
@@ -29,27 +31,69 @@ public class PackagePanel extends CustomComponent implements IHSPanel, SelectedT
 	@Override
 	public TabSheet createTabs(Object itemId) throws RpcException 
 	{
+		String caption;
 		final TabSheet tabsheet = new TabSheet();
 		tabsheet.addSelectedTabChangeListener(this);
-		tabsheet.addTab(new GenericForm("pac", session, itemId, "name"), "pac");
+		/*Try to get the translation from the properties file - if it doesn't 
+		  exist, don't throw the error - Just print the normal text*/
+		try{
+			caption = resourceBundle.getString("pac");
+		}catch(MissingResourceException e){
+			caption = "pac";
+		}
+		tabsheet.addTab(new GenericForm("pac", session, itemId, "name"), caption);
 		final HSTab usersTab = new HSTab("user", session, "pac", itemId, "name");
 		usersTab.fillTable();
-		tabsheet.addTab(usersTab, "user");
+		try{
+			caption = resourceBundle.getString("user");
+		}catch(MissingResourceException e){
+			caption = "user";
+		}
+		tabsheet.addTab(usersTab, caption);
 		final HSTab aliasTab = new HSTab("emailalias", session, "pac", itemId, "name");
-		tabsheet.addTab(aliasTab, "emailalias");
+		try{
+			caption = resourceBundle.getString("emailalias");
+		}catch(MissingResourceException e){
+			caption = "emailalias";
+		}
+		tabsheet.addTab(aliasTab, caption);
 
 		final HSTab domainTab = new HSTab("domain", session, "pac", itemId, "name");
-		tabsheet.addTab(domainTab, "domain");
+		try{
+			caption = resourceBundle.getString("domain");
+		}catch(MissingResourceException e){
+			caption = "domain";
+		}
+		tabsheet.addTab(domainTab, caption);
 
 		final HSTab mysqluserTab = new HSTab("mysqluser", session, "pac", itemId, "name");
-		tabsheet.addTab(mysqluserTab, "mysqluser");
+		try{
+			caption = resourceBundle.getString("mysqluser");
+		}catch(MissingResourceException e){
+			caption = "mysqluser";
+		}
+		tabsheet.addTab(mysqluserTab, caption);
 		final HSTab mysqldbTab = new HSTab("mysqldb", session, "pac", itemId, "name");
-		tabsheet.addTab(mysqldbTab, "mysqldb");
+		try{
+			caption = resourceBundle.getString("mysqldb");
+		}catch(MissingResourceException e){
+			caption = "mysqldb";
+		}
+		tabsheet.addTab(mysqldbTab, caption);
 		final HSTab postgresqluserTab = new HSTab("postgresqluser", session, "pac", itemId, "name");
-		tabsheet.addTab(postgresqluserTab, "postgresqluser");
+		try{
+			caption = resourceBundle.getString("postgresqluser");
+		}catch(MissingResourceException e){
+			caption = "postgresqluser";
+		}
+		tabsheet.addTab(postgresqluserTab, caption);
 		final HSTab postgresqldbTab = new HSTab("postgresqldb", session, "pac", itemId, "name");
-		tabsheet.addTab(postgresqldbTab, "postgresqldb");
-		
+		try{
+			caption = resourceBundle.getString("postgresqldb");
+		}catch(MissingResourceException e){
+			caption = "postgresqldb";
+		}
+		tabsheet.addTab(postgresqldbTab, caption);
 		return tabsheet;
 	}
 

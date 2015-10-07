@@ -1,5 +1,8 @@
 package de.hsadmin.web;
 
+import java.util.MissingResourceException;
+import java.util.ResourceBundle;
+
 import org.apache.xmlrpc.XmlRpcException;
 
 import com.vaadin.event.ShortcutAction.KeyCode;
@@ -21,6 +24,7 @@ public class HSConfirmBox extends HorizontalLayout {
 	private static final long serialVersionUID = 1L;
 	
 	private Button okButton, cancelButton;
+	private ResourceBundle resourceBundle = ResourceBundle.getBundle("Messages");
 
 	public HSConfirmBox(final GenericFormWindow parent, final String module, final String action, final HSAdminSession session) {
 		okButton = new Button("OK");
@@ -75,7 +79,15 @@ public class HSConfirmBox extends HorizontalLayout {
 				}
 			}
 		});
-		cancelButton = new Button("Cancel");
+		String text;
+		/*Try to get the translation from the properties file - if it doesn't 
+		  exist, don't throw the error - Just print the normal text*/
+		try{
+			text = resourceBundle.getString("cancel");
+		}catch(MissingResourceException e){
+			text = "cancel";
+		}
+		cancelButton = new Button(text);
 		cancelButton.setClickShortcut(KeyCode.ESCAPE);
 		cancelButton.addClickListener(new ClickListener() 
 		{

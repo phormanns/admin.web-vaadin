@@ -3,6 +3,7 @@ package de.hsadmin.web;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.ResourceBundle;
 import java.util.Set;
 
 import com.vaadin.ui.FormLayout;
@@ -21,10 +22,11 @@ public class GenericFormWindow extends Window implements IHSWindow {
 	final private HSTab parent;
 	
 	private Map<String, String> selector;
+	private static ResourceBundle resourceBundle = ResourceBundle.getBundle("Messages");
 	
 	public GenericFormWindow(final HSTab parent, final String module, final String action, final HSAdminSession session) 
 	{
-		super(action + " " + module);
+		super(resourceBundle.getString(action) + " " + resourceBundle.getString(module));
 		this.parent = parent;
 		center();
 		setModal(true);
