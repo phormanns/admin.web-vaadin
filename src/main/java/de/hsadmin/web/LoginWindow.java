@@ -25,7 +25,7 @@ public class LoginWindow extends Window {
 	private static final long serialVersionUID = 1L;
 
 	public LoginWindow(final HSAdminUI parent, final TicketService ticketService) {
-		super("Login");
+		super(I18N.getText("login.title"));
 		center();
 		setModal(true);
 		setWidth("480px");
@@ -46,7 +46,7 @@ public class LoginWindow extends Window {
 		subContent.addComponent(feedback);
 		feedback.setStyleName(ValoTheme.LABEL_FAILURE);
 		
-		final Button okButton = new Button(I18N.getText("login"));
+		final Button okButton = new Button(I18N.getText("login.button"));
 		okButton.setStyleName(ValoTheme.BUTTON_PRIMARY);
 		okButton.setClickShortcut(KeyCode.ENTER);
 		okButton.addClickListener(new ClickListener() 

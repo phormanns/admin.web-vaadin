@@ -35,7 +35,7 @@ public class PanelToolbar extends HorizontalLayout implements ClickListener {
 		this.module = source;
 		this.session = session;
 		this.parent = parent;
-		newBtn = createButton("New_" + source, "new", "new.tooltop");
+		newBtn = createButton("New_" + source, "new", "new.tooltip");
 		addComponent(newBtn);
 		editBtn = createButton("Edit_" + source, "edit", "edit.tooltip");
 		addComponent(editBtn);
