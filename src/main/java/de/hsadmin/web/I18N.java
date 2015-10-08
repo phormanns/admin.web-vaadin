@@ -12,7 +12,7 @@ public class I18N {
 		try{
 			textValue = I18N.TEXTS.getString(textProperty);
 		}catch(MissingResourceException e){
-			textValue = textProperty;
+			textValue = "./. " + textProperty;
 		}
 		return textValue;
 	}

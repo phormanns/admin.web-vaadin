@@ -51,12 +51,15 @@ public class MainWindow extends CustomComponent implements HSAdminSession {
 		mainPanel.setContent(vl);
 		
 		try {
+			final MainToolbar mainToolbar = new MainToolbar();
+			vl.addComponent(mainToolbar);
+			vl.setExpandRatio(mainToolbar, 0.0f);
 			final ModulesManagerFactory modulesManagerFactory = new ModulesManagerFactory(grantingTicket, username);
 			modulesManager = modulesManagerFactory.newModulesManager(SERVICE_URLS);
 			content = new HorizontalSplitPanel();
 			content.setSizeFull();
 			vl.addComponent(content);
-
+			vl.setExpandRatio(content, 1.0f);
 			final EntryPointsSelector entryPoints = new EntryPointsSelector(this);
 			entryPoints.setSizeFull();
 			content.setFirstComponent(entryPoints);
