@@ -32,7 +32,7 @@ public class GenericForm extends CustomComponent {
 		final Iterator<PropertyInfo> iterator = session.getModulesManager().module(module).properties();
 		while (iterator.hasNext()) {
 			final PropertyInfo propertyInfo = iterator.next();
-			final String inputName = propertyInfo.getName();
+			final String inputName = propertyInfo.getName().toLowerCase();
 			final AbstractEditorFactory editorFactory = FactoryProducer.getEditorFactory(module);
 			final IHSEditor field = editorFactory.getEditor("view", propertyInfo, inputName, session);
 			inputFields.put(inputName, field);
