@@ -27,9 +27,9 @@ public class PanelToolbar extends HorizontalLayout implements ClickListener {
 	private final HSTab parent;
 	private final String module;
 
-	private Button newBtn, editBtn, deleteBtn, refreshBtn, helpBtn;
+	private final Button newBtn, editBtn, deleteBtn, refreshBtn, helpBtn;
 
-	public PanelToolbar(String source, HSAdminSession session, HSTab parent) 
+	public PanelToolbar(final String source, final HSAdminSession session, final HSTab parent) 
 	{
 		super();
 		this.module = source;
@@ -78,7 +78,7 @@ public class PanelToolbar extends HorizontalLayout implements ClickListener {
 			parent.fillTable();
 			return;
 		}
-		Object value = parent.getSelection();
+		final Object value = parent.getSelection();
 		if (value == null) {
 			if ("edit".equals(action) || "delete".equals(action)) {
 				UI.getCurrent().addWindow(new InfoWindow(I18N.getText("emptySelectionMessage") + " " + action));
@@ -107,6 +107,12 @@ public class PanelToolbar extends HorizontalLayout implements ClickListener {
 			} catch (XmlRpcException | RpcException e) {
 				e.printStackTrace();
 			}
+		}
+		if ("new".equals(action)) {
+			final Map<String, String> whereParams = new HashMap<String, String>();
+			final Map<String, Object> parentParams = new HashMap<String, Object>();
+			parentParams.put(parent.getSelectPropertyName(), parent.getSelectPropertyValue());
+			((IHSWindow) window).setFormData(parentParams, whereParams);
 		}
 		if (window != null) {
 			UI.getCurrent().addWindow(window);

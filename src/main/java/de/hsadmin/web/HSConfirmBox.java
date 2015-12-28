@@ -44,12 +44,12 @@ public class HSConfirmBox extends HorizontalLayout {
 								success = true;
 						}
 						if ("edit".equals(action)) {
-							iRemote.update(runAsUser, ticket, parent.getFormData(), parent.getSelector());
+							iRemote.update(runAsUser, ticket, parent.getFormData(), parent.getUniqueWhereSelector());
 							parent.reload();
 							success = true;
 						}
 						if ("delete".equals(action)) {
-							iRemote.delete(runAsUser, ticket, parent.getSelector());
+							iRemote.delete(runAsUser, ticket, parent.getUniqueWhereSelector());
 							parent.reload();
 							success = true;
 						}

@@ -6,6 +6,6 @@ import de.hsadmin.rpc.PropertyInfo;
 
 public abstract class AbstractEditorFactory {
 
-	public abstract IHSEditor getEditor(String action, PropertyInfo propertyInfo, String inputName, HSAdminSession session);
+	public abstract IHSEditor getEditor(String action, PropertyInfo propertyInfo, HSAdminSession session);
 	
 }

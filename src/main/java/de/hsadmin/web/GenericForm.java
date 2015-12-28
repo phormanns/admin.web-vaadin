@@ -25,16 +25,16 @@ public class GenericForm extends CustomComponent {
 	final private FormLayout formLayout;
 	final private Map<String, IHSEditor> inputFields;
 
-	public GenericForm(final String module, final HSAdminSession session, final Object itemId, String selectPropertyName) throws RpcException {
+	public GenericForm(final String module, final HSAdminSession session, final Object itemId, final String selectPropertyName) throws RpcException {
 		formLayout = new FormLayout();
 		formLayout.setMargin(true);
 		inputFields = new HashMap<String, IHSEditor>();
 		final Iterator<PropertyInfo> iterator = session.getModulesManager().module(module).properties();
 		while (iterator.hasNext()) {
 			final PropertyInfo propertyInfo = iterator.next();
-			final String inputName = propertyInfo.getName().toLowerCase();
+			final String inputName = propertyInfo.getName();
 			final AbstractEditorFactory editorFactory = FactoryProducer.getEditorFactory(module);
-			final IHSEditor field = editorFactory.getEditor("view", propertyInfo, inputName, session);
+			final IHSEditor field = editorFactory.getEditor("view", propertyInfo, session);
 			inputFields.put(inputName, field);
 			formLayout.addComponent(field);
 		}
@@ -53,8 +53,7 @@ public class GenericForm extends CustomComponent {
 			
 			final Set<String> keySet = inputFields.keySet();
 			for (String key : keySet) {
-				final Object value = list.get(0).get(key);
-				inputFields.get(key).setValue(value == null ? "" : value.toString());
+				inputFields.get(key).setValues(list.get(0));
 			}
 		} catch (XmlRpcException e) {
 			throw new RpcException(e);

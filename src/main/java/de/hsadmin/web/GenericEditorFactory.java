@@ -13,22 +13,55 @@ public class GenericEditorFactory extends AbstractEditorFactory implements Seria
 	private static final long serialVersionUID = 1L;
 
 	@Override
-	public IHSEditor getEditor(final String action, final PropertyInfo propertyInfo, final String inputName, final HSAdminSession session) {
-		
-		final IHSEditor field = "password".equals(inputName) ? getPasswordField(action, propertyInfo, inputName) : getTextField(action, propertyInfo, inputName);
+	public IHSEditor getEditor(final String action, final PropertyInfo propertyInfo, final HSAdminSession session) 
+	{
+		final String inputName = propertyInfo.getName();
+		if ("password".equals(inputName)) {
+			return getPasswordField(action, propertyInfo);
+		}
+		if ("shell".equals(inputName)) {
+			return getShellSelect(action, propertyInfo);
+		}
+		final String module = propertyInfo.getModule();
+		if ("user".equals(module)) {
+			if ("name".equals(inputName)) {
+				return getPacPrefixedField(action, propertyInfo);
+			}
+		}
+		return getTextField(action, propertyInfo);
+	}
+
+	private IHSEditor getPacPrefixedField(final String action, final PropertyInfo propertyInfo) {
+		final HSPacPrefixedField field = new HSPacPrefixedField(propertyInfo.getName());
+		field.setWidth("100%");
+		field.setValue("xyz00-");
+		enableAndValidate(action, propertyInfo, field);
 		return field;
 	}
 
-	private IHSEditor getPasswordField(String action, PropertyInfo propertyInfo, String inputName) {
-		final HSPasswordField field = new HSPasswordField(I18N.getText(inputName));
+	private IHSEditor getShellSelect(final String action, final PropertyInfo propertyInfo) {
+		final HSShellSelect field = new HSShellSelect(propertyInfo.getName());
 		field.setWidth("100%");
 		field.setEnabled("new".equals(action) || "edit".equals(action));
 		return field;
 	}
 
-	private IHSEditor getTextField(final String action, final PropertyInfo propertyInfo, final String inputName) {
-		final HSTextField field = new HSTextField(I18N.getText(inputName));
+	private IHSEditor getPasswordField(final String action, final PropertyInfo propertyInfo) {
+		final HSPasswordField field = new HSPasswordField(propertyInfo.getName());
 		field.setWidth("100%");
+		field.setEnabled("new".equals(action) || "edit".equals(action));
+		return field;
+	}
+
+	private IHSEditor getTextField(final String action, final PropertyInfo propertyInfo) {
+		final HSTextField field = new HSTextField(propertyInfo.getName());
+		field.setWidth("100%");
+		enableAndValidate(action, propertyInfo, field);
+		return field;
+	}
+
+	private void enableAndValidate(final String action,
+			final PropertyInfo propertyInfo, final IHSEditor field) {
 		if (isWriteAble(propertyInfo, action)) {
 			final String regexp = propertyInfo.getValidationRegexp();
 			final int minLength = propertyInfo.getMinLength();
@@ -38,7 +71,7 @@ public class GenericEditorFactory extends AbstractEditorFactory implements Seria
 				@Override
 				public void validate(Object value) throws InvalidValueException {
 					final String inputString = (String) value;
-					if (!inputString.matches(regexp)) {
+					if (inputString == null || !inputString.matches(regexp)) {
 						throw new InvalidValueException("input must match " + regexp);
 					}
 					if (inputString.length() < minLength) {
@@ -52,7 +85,6 @@ public class GenericEditorFactory extends AbstractEditorFactory implements Seria
 		} else {
 			field.setEnabled(false);
 		}
-		return field;
 	}
 
 	private boolean isWriteAble(PropertyInfo propertyInfo, String action) {

@@ -32,12 +32,12 @@ public class HSTab extends CustomComponent {
 	private final Object selectPropertyValue;
 	private final String selectPropertyName;
 	private final String rowIdPropertyName;
-	
-	private HorizontalLayout panelToolbar;
+	private final HorizontalLayout panelToolbar;
+
 	private Table grid;
 
 
-	public HSTab(String source, HSAdminSession session, String selectPropertyName, Object selectPropertyValue, String rowIdPropertyName) {
+	public HSTab(final String source, final HSAdminSession session, final String selectPropertyName, final Object selectPropertyValue, final String rowIdPropertyName) {
 		super();
 		setSizeFull();
 		this.module = source;
@@ -71,9 +71,8 @@ public class HSTab extends CustomComponent {
 			whereParams.put(selectPropertyName, selectPropertyValue.toString());
 			try {
 				final List<Map<String, Object>> objectsList = modulesManager.proxy(module).search(user, serviceTicket, whereParams);
-				
-				for (Map<String, Object> objectHash : objectsList) {
-
+				for (Map<String, Object> objectHash : objectsList) 
+				{
 					final Iterator<PropertyInfo> properties = session.getModulesManager().module(module).properties();
 					final List<String> itemsList = new ArrayList<String>();
 					while (properties.hasNext()) {
@@ -151,6 +150,14 @@ public class HSTab extends CustomComponent {
 		grid.setImmediate(true);
 		grid.setSizeFull();
 		return grid;
+	}
+
+	public Object getSelectPropertyValue() {
+		return selectPropertyValue;
+	}
+
+	public String getSelectPropertyName() {
+		return selectPropertyName;
 	}
 
 }

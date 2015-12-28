@@ -8,7 +8,7 @@ public interface IHSWindow {
 	
 	public Map<String, Object> getFormData();
 	
-	public Map<String, String> getSelector();
+	public Map<String, String> getUniqueWhereSelector();
 
 	public void reload();
 

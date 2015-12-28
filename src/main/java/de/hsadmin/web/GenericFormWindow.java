@@ -20,7 +20,7 @@ public class GenericFormWindow extends Window implements IHSWindow {
 	final private Map<String, IHSEditor> inputFields;
 	final private HSTab parent;
 	
-	private Map<String, String> selector;
+	private Map<String, String> uniqueRecordSelect;
 	
 	public GenericFormWindow(final HSTab parent, final String module, final String action, final HSAdminSession session) 
 	{
@@ -41,7 +41,7 @@ public class GenericFormWindow extends Window implements IHSWindow {
 			}
 			final String inputName = propertyInfo.getName();
 			final AbstractEditorFactory editorFactory = FactoryProducer.getEditorFactory(module);
-			final IHSEditor field = editorFactory.getEditor(action, propertyInfo, inputName, session);
+			final IHSEditor field = editorFactory.getEditor(action, propertyInfo, session);
 			inputFields.put(inputName, field);
 			contentForm.addComponent(field);
 		}
@@ -50,12 +50,11 @@ public class GenericFormWindow extends Window implements IHSWindow {
 	}
 
 	@Override
-	public void setFormData(Map<String, Object> valuesMap, Map<String, String> selector) {
-		this.selector = selector;
+	public void setFormData(final Map<String, Object> valuesMap, final Map<String, String> uniqueWhereSelector) {
+		this.uniqueRecordSelect = uniqueWhereSelector;
 		final Set<String> keySet = inputFields.keySet();
-		for (String key : keySet) {
-			final Object value = valuesMap.get(key);
-			inputFields.get(key).setValue(value == null ? "" : value.toString());
+		for (final String key : keySet) {
+			inputFields.get(key).setValues(valuesMap);
 		}
 	}
 
@@ -70,8 +69,8 @@ public class GenericFormWindow extends Window implements IHSWindow {
 	}
 
 	@Override
-	public Map<String, String> getSelector() {
-		return selector;
+	public Map<String, String> getUniqueWhereSelector() {
+		return uniqueRecordSelect;
 	}
 
 	@Override

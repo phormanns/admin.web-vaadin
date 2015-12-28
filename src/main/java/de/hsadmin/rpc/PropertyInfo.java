@@ -30,7 +30,7 @@ public class PropertyInfo implements Serializable {
 	}
 
 	public String getName() {
-		return name;
+		return name.toLowerCase();
 	}
 
 	void setName(String name) {
@@ -101,4 +101,8 @@ public class PropertyInfo implements Serializable {
 		this.searchable = SearchPolicy.valueOf(searchable.toUpperCase());
 	}
 	
+	@Override
+	public String toString() {
+		return "PropertyInfo " + module + "." + name;
+	}
 }
