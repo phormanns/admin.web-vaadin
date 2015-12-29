@@ -23,7 +23,7 @@ public class GenericEditorFactory extends AbstractEditorFactory implements Seria
 			return getShellSelect(action, propertyInfo);
 		}
 		final String module = propertyInfo.getModule();
-		if ("user".equals(module)) {
+		if ("user".equals(module) || "emailalias".equals(module)) {
 			if ("name".equals(inputName)) {
 				return getPacPrefixedField(action, propertyInfo);
 			}
@@ -47,7 +47,7 @@ public class GenericEditorFactory extends AbstractEditorFactory implements Seria
 	}
 
 	private IHSEditor getPasswordField(final String action, final PropertyInfo propertyInfo) {
-		final HSPasswordField field = new HSPasswordField(propertyInfo.getName());
+		final HSPasswordField field = new HSPasswordField(propertyInfo.getName(), "new".equals(action));
 		field.setWidth("100%");
 		field.setEnabled("new".equals(action) || "edit".equals(action));
 		return field;

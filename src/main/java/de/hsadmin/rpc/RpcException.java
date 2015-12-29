@@ -9,4 +9,7 @@ public class RpcException extends Exception {
 		super(e);
 	}
 
+	public RpcException(final String message) {
+		super(message);
+	}
 }

@@ -30,12 +30,16 @@ public class HSConfirmBox extends HorizontalLayout {
 		{
 			private static final long serialVersionUID = 1L;
 
-			public void buttonClick(ClickEvent event) {
+			public void buttonClick(ClickEvent event) 
+			{
 				final IRemote iRemote = session.getModulesManager().proxy(module);
 				final String runAsUser = session.getUser();
 				final TicketService ticketService = session.getTicketService();
 				boolean success = false;
 				try {
+					if (!parent.isValid()) {
+						throw new RpcException("validation error");
+					}
 					final String ticket = ticketService.getServiceTicket(session.getGrantingTicket());
 					try {
 						if ("new".equals(action)) {
@@ -57,8 +61,7 @@ public class HSConfirmBox extends HorizontalLayout {
 						throw new RpcException(e);
 					}
 				} catch (final RpcException e) {
-					Button btn = event.getButton();
-					btn.setComponentError(new ErrorMessage() {
+					final ErrorMessage componentError = new ErrorMessage() {
 						private static final long serialVersionUID = 1L;
 						@Override
 						public ErrorLevel getErrorLevel() {
@@ -66,9 +69,12 @@ public class HSConfirmBox extends HorizontalLayout {
 						}
 						@Override
 						public String getFormattedHtmlMessage() {
-							return e.getLocalizedMessage();
+							return "<h3>Error</h3><p>" + e.getLocalizedMessage() + "</p>";
 						}
-					});
+					};
+					parent.setComponentError(componentError);
+					final Button btn = event.getButton();
+					btn.setComponentError(componentError);
 				}
 				if (success) {
 					((Window) parent).close();

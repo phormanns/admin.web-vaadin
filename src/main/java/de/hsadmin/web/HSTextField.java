@@ -17,7 +17,17 @@ public class HSTextField extends TextField implements IHSEditor {
 
 	@Override
 	public void setValues(final Map<String, Object> valuesMap) {
-		final String newValue = (String) valuesMap.get(propertyName);
+		String newValue = "";
+		final Object valObject = valuesMap.get(propertyName);
+		if (valObject instanceof String) {
+			newValue = (String) valObject;
+		}
+		if (valObject instanceof Integer) {
+			((Integer) valObject).toString();
+		}
+		if (valObject instanceof Boolean) {
+			((Boolean) valObject).toString();
+		}
 		if (newValue != null) {
 			setValue(newValue);
 		}

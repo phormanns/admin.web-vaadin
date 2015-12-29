@@ -11,5 +11,7 @@ public interface IHSWindow {
 	public Map<String, String> getUniqueWhereSelector();
 
 	public void reload();
+	
+	public boolean isValid();
 
 }

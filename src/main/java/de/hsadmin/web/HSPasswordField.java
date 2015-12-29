@@ -8,8 +8,9 @@ public class HSPasswordField extends PasswordField implements IHSEditor {
 
 	private static final long serialVersionUID = 1L;
 	
-	public HSPasswordField(final String name) {
+	public HSPasswordField(final String name, final boolean passwordRequired) {
 		super(I18N.getText(name));
+		addValidator(new PasswordValidator(passwordRequired));
 	}
 
 	@Override

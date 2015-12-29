@@ -63,7 +63,10 @@ public class GenericFormWindow extends Window implements IHSWindow {
 		Map<String, Object> formData = new HashMap<String, Object>(); 
 		final Set<String> keySet = inputFields.keySet();
 		for (String key : keySet) {
-			formData.put(key, inputFields.get(key).getValue());
+			final IHSEditor ihsEditor = inputFields.get(key);
+			if (ihsEditor.isEnabled()) {
+				formData.put(key, ihsEditor.getValue());
+			}
 		}
 		return formData;
 	}
@@ -76,6 +79,15 @@ public class GenericFormWindow extends Window implements IHSWindow {
 	@Override
 	public void reload() {
 		parent.fillTable();
+	}
+
+	@Override
+	public boolean isValid() {
+		boolean valid = true;
+		for (IHSEditor editor : inputFields.values()) {
+			valid &= editor.isValid();
+		}
+		return valid;
 	}
 
 }
