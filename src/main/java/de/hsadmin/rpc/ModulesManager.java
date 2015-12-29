@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
 import org.apache.xmlrpc.XmlRpcException;
 import org.apache.xmlrpc.client.XmlRpcClient;
 import org.apache.xmlrpc.client.XmlRpcClientConfigImpl;
@@ -17,6 +18,8 @@ import de.hsadmin.model.IRemote;
 public class ModulesManager implements Serializable {
 
 	private static final long serialVersionUID = 1L;
+	
+	private static final Logger LOG = Logger.getLogger(ModulesManager.class);
 	
 	private final Map<String, ModuleInfo> modulesRepository; 
 	private final Map<String, URL> serviceRepository; 
@@ -62,6 +65,7 @@ public class ModulesManager implements Serializable {
 			@Override
 			public List<Map<String, Object>> search(final String runAsUser, final String ticket,
 					final Map<String, String> whereParams) throws XmlRpcException {
+				LOG.info("RPC Call: " + moduleName + ".search");
 				final XmlRpcClient rpcClient = rpcClient(moduleName);
 				final List<Object> xmlRpcParamsList = new ArrayList<Object>();
 				xmlRpcParamsList.add(runAsUser);
@@ -81,6 +85,7 @@ public class ModulesManager implements Serializable {
 			@Override
 			public Map<String, Object> add(String runAsUser, String ticket,
 					Map<String, Object> setParams) throws XmlRpcException {
+				LOG.info("RPC Call: " + moduleName + ".add");
 				final XmlRpcClient rpcClient = rpcClient(moduleName);
 				final List<Object> xmlRpcParamsList = new ArrayList<Object>();
 				xmlRpcParamsList.add(runAsUser);
@@ -94,6 +99,7 @@ public class ModulesManager implements Serializable {
 			public List<Map<String, Object>> update(String runAsUser, String ticket,
 					Map<String, Object> setParams, Map<String, String> whereParams)
 					throws XmlRpcException {
+				LOG.info("RPC Call: " + moduleName + ".update");
 				final XmlRpcClient rpcClient = rpcClient(moduleName);
 				final List<Object> xmlRpcParamsList = new ArrayList<Object>();
 				xmlRpcParamsList.add(runAsUser);
@@ -113,6 +119,7 @@ public class ModulesManager implements Serializable {
 			@Override
 			public void delete(String runAsUser, String ticket,
 					Map<String, String> whereParams) throws XmlRpcException {
+				LOG.info("RPC Call: " + moduleName + ".delete");
 				final XmlRpcClient rpcClient = rpcClient(moduleName);
 				final List<Object> xmlRpcParamsList = new ArrayList<Object>();
 				xmlRpcParamsList.add(runAsUser);

@@ -1,5 +1,6 @@
 package de.hsadmin.web;
 
+import org.apache.log4j.Logger;
 import org.apache.xmlrpc.XmlRpcException;
 
 import com.vaadin.event.ShortcutAction.KeyCode;
@@ -19,6 +20,8 @@ import de.hsadmin.rpc.RpcException;
 public class HSConfirmBox extends HorizontalLayout {
 
 	private static final long serialVersionUID = 1L;
+	
+	private static final Logger LOG = Logger.getLogger(HSConfirmBox.class);
 	
 	private Button okButton, cancelButton;
 
@@ -58,6 +61,7 @@ public class HSConfirmBox extends HorizontalLayout {
 							success = true;
 						}
 					} catch (final XmlRpcException e) {
+						LOG.info("RPC Error", e);
 						throw new RpcException(e);
 					}
 				} catch (final RpcException e) {

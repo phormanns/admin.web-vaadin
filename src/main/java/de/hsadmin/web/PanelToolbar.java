@@ -23,6 +23,13 @@ public class PanelToolbar extends HorizontalLayout implements ClickListener {
 
 	private static final long serialVersionUID = 1L;
 	
+	public static final String ACTION_NEW = "new";
+	public static final String ACTION_EDIT = "edit";
+	public static final String ACTION_DELETE = "delete";
+	public static final String ACTION_VIEW = "view";
+	public static final String ACTION_REFRESH = "refresh";
+	public static final String ACTION_HELP = "help";
+
 	private final HSAdminSession session;
 	private final HSTab parent;
 	private final String module;
@@ -64,23 +71,23 @@ public class PanelToolbar extends HorizontalLayout implements ClickListener {
 	{
 		String action = null;
 		if (event.getButton().equals(newBtn)) {
-			action = "new";
+			action = ACTION_NEW;
 		} else if (event.getButton().equals(editBtn)) {
-			action = "edit";
+			action = ACTION_EDIT;
 		} else if (event.getButton().equals(deleteBtn)) {
-			action = "delete";
+			action = ACTION_DELETE;
 		} else if (event.getButton().equals(refreshBtn)) {
-			action = "refresh";
+			action = ACTION_REFRESH;
 		} else if (event.getButton().equals(helpBtn)) {
-			action = "help";
+			action = ACTION_HELP;
 		}
-		if ("refresh".equals(action)) {
+		if (ACTION_REFRESH.equals(action)) {
 			parent.fillTable();
 			return;
 		}
 		final Object value = parent.getSelection();
 		if (value == null) {
-			if ("edit".equals(action) || "delete".equals(action)) {
+			if (ACTION_EDIT.equals(action) || ACTION_DELETE.equals(action)) {
 				UI.getCurrent().addWindow(new InfoWindow(I18N.getText("emptySelectionMessage") + " " + action));
 				return;
 			}
@@ -93,7 +100,7 @@ public class PanelToolbar extends HorizontalLayout implements ClickListener {
 		}
 		type = buttonId.substring(buttonId.indexOf("_") + 1, buttonId.indexOf("-"));
 		final Window window = windowFactory.getSubWindow(parent, type, action, session);
-		if ("edit".equals(action) || "delete".equals(action)) {
+		if (ACTION_EDIT.equals(action) || ACTION_DELETE.equals(action)) {
 			final IRemote remote = session.getModulesManager().proxy(module);
 			final HashMap<String, String> whereParams = new HashMap<String, String>();
 			whereParams.put(parent.getRowIdName(), value.toString());
@@ -108,7 +115,7 @@ public class PanelToolbar extends HorizontalLayout implements ClickListener {
 				e.printStackTrace();
 			}
 		}
-		if ("new".equals(action)) {
+		if (ACTION_NEW.equals(action)) {
 			final Map<String, String> whereParams = new HashMap<String, String>();
 			final Map<String, Object> parentParams = new HashMap<String, Object>();
 			parentParams.put(parent.getSelectPropertyName(), parent.getSelectPropertyValue());

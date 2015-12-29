@@ -22,7 +22,7 @@ public class GenericFormWindow extends Window implements IHSWindow {
 	
 	private Map<String, String> uniqueRecordSelect;
 	
-	public GenericFormWindow(final HSTab parent, final String module, final String action, final HSAdminSession session) 
+	public GenericFormWindow(final HSTab parent, final String module, final String action, final HSAdminSession session, final Map<String, String> whereContext) 
 	{
 		super(I18N.getText(action) + " " + I18N.getText(module));
 		this.parent = parent;
@@ -40,8 +40,8 @@ public class GenericFormWindow extends Window implements IHSWindow {
 				continue;
 			}
 			final String inputName = propertyInfo.getName();
-			final AbstractEditorFactory editorFactory = FactoryProducer.getEditorFactory(module);
-			final IHSEditor field = editorFactory.getEditor(action, propertyInfo, session);
+			final IEditorFactory editorFactory = FactoryProducer.getEditorFactory(module);
+			final IHSEditor field = editorFactory.getEditor(action, propertyInfo, session, whereContext);
 			inputFields.put(inputName, field);
 			contentForm.addComponent(field);
 		}

@@ -33,8 +33,8 @@ public class GenericForm extends CustomComponent {
 		while (iterator.hasNext()) {
 			final PropertyInfo propertyInfo = iterator.next();
 			final String inputName = propertyInfo.getName();
-			final AbstractEditorFactory editorFactory = FactoryProducer.getEditorFactory(module);
-			final IHSEditor field = editorFactory.getEditor("view", propertyInfo, session);
+			final IEditorFactory editorFactory = FactoryProducer.getEditorFactory(module);
+			final IHSEditor field = editorFactory.getEditor("view", propertyInfo);
 			inputFields.put(inputName, field);
 			formLayout.addComponent(field);
 		}

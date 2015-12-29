@@ -13,7 +13,7 @@ public class FactoryProducer {
 		return new SubWindowFactory();
 	}
 
-	public static AbstractEditorFactory getEditorFactory(String choice) 
+	public static IEditorFactory getEditorFactory(String choice) 
 	{
 		return new GenericEditorFactory();
 	}
