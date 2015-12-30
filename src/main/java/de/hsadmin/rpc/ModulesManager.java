@@ -63,9 +63,9 @@ public class ModulesManager implements Serializable {
 			
 			@SuppressWarnings("unchecked")
 			@Override
-			public List<Map<String, Object>> search(final String runAsUser, final String ticket,
-					final Map<String, String> whereParams) throws XmlRpcException {
-				LOG.info("RPC Call: " + moduleName + ".search");
+			public List<Map<String, Object>> search(final String runAsUser, final String ticket, final Map<String, String> whereParams) throws XmlRpcException 
+			{
+				LOG.info("RPC Call: " + moduleName + ".search - user " + runAsUser);
 				final XmlRpcClient rpcClient = rpcClient(moduleName);
 				final List<Object> xmlRpcParamsList = new ArrayList<Object>();
 				xmlRpcParamsList.add(runAsUser);
@@ -83,9 +83,9 @@ public class ModulesManager implements Serializable {
 
 			@SuppressWarnings("unchecked")
 			@Override
-			public Map<String, Object> add(String runAsUser, String ticket,
-					Map<String, Object> setParams) throws XmlRpcException {
-				LOG.info("RPC Call: " + moduleName + ".add");
+			public Map<String, Object> add(final String runAsUser, final String ticket, final Map<String, Object> setParams) throws XmlRpcException 
+			{
+				LOG.info("RPC Call: " + moduleName + ".add - user " + runAsUser);
 				final XmlRpcClient rpcClient = rpcClient(moduleName);
 				final List<Object> xmlRpcParamsList = new ArrayList<Object>();
 				xmlRpcParamsList.add(runAsUser);
@@ -96,10 +96,10 @@ public class ModulesManager implements Serializable {
 
 			@SuppressWarnings("unchecked")
 			@Override
-			public List<Map<String, Object>> update(String runAsUser, String ticket,
-					Map<String, Object> setParams, Map<String, String> whereParams)
-					throws XmlRpcException {
-				LOG.info("RPC Call: " + moduleName + ".update");
+			public List<Map<String, Object>> update(final String runAsUser, final String ticket, final Map<String, Object> setParams, final Map<String, String> whereParams)
+					throws XmlRpcException 
+			{
+				LOG.info("RPC Call: " + moduleName + ".update - user " + runAsUser);
 				final XmlRpcClient rpcClient = rpcClient(moduleName);
 				final List<Object> xmlRpcParamsList = new ArrayList<Object>();
 				xmlRpcParamsList.add(runAsUser);
@@ -117,9 +117,9 @@ public class ModulesManager implements Serializable {
 			}
 
 			@Override
-			public void delete(String runAsUser, String ticket,
-					Map<String, String> whereParams) throws XmlRpcException {
-				LOG.info("RPC Call: " + moduleName + ".delete");
+			public void delete(final String runAsUser, final String ticket, final Map<String, String> whereParams) throws XmlRpcException 
+			{
+				LOG.info("RPC Call: " + moduleName + ".delete - user " + runAsUser);
 				final XmlRpcClient rpcClient = rpcClient(moduleName);
 				final List<Object> xmlRpcParamsList = new ArrayList<Object>();
 				xmlRpcParamsList.add(runAsUser);
@@ -128,7 +128,8 @@ public class ModulesManager implements Serializable {
 				rpcClient.execute(moduleName + ".delete", xmlRpcParamsList);
 			}
 
-			private XmlRpcClient rpcClient(final String moduleName) {
+			private XmlRpcClient rpcClient(final String moduleName) 
+			{
 				final XmlRpcClient rpcClient = new XmlRpcClient();
 				final XmlRpcClientConfigImpl config = new XmlRpcClientConfigImpl();
 				config.setServerURL(serviceRepository.get(moduleName));
