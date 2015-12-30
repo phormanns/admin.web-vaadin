@@ -19,9 +19,9 @@ public class HSSelect extends NativeSelect implements IHSEditor {
 		super(I18N.getText(label));
 		this.propertyName = label;
 		super.addItems(values);
-		super.setValue(values.get(defaultIndex));
-//		super.addItems("/bin/false", "/bin/bash", "/bin/csh", "/bin/dash", "/bin/ksh", "/bin/tcsh", "/bin/zsh", "/usr/bin/passwd", "/usr/bin/scponly");
-//		super.setValue("/usr/bin/passwd");
+		if (values != null && values.size() > defaultIndex) {
+			super.setValue(values.get(defaultIndex));
+		}
 		super.setMultiSelect(false);
 		super.setNullSelectionAllowed(false);
 	}

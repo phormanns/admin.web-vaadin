@@ -59,17 +59,17 @@ public class GenericEditorFactory implements IEditorFactory, Serializable {
 		final String module = propertyInfo.getModule();
 		if ("user".equals(module) || "emailalias".equals(module)) {
 			if ("name".equals(inputName)) {
-				return getPacPrefixedField(action, propertyInfo);
+				return getPacPrefixedField(action, propertyInfo, '-');
 			}
 		}
 		if ("mysqluser".equals(module) || "postgresqluser".equals(module)) {
 			if ("name".equals(inputName)) {
-				return getPacPrefixedField(action, propertyInfo);
+				return getPacPrefixedField(action, propertyInfo, '_');
 			}
 		}
 		if ("mysqldb".equals(module) || "postgresqldb".equals(module)) {
 			if ("name".equals(inputName)) {
-				return getPacPrefixedField(action, propertyInfo);
+				return getPacPrefixedField(action, propertyInfo, '_');
 			}
 			if ("encoding".equals(inputName)) {
 				return getSelectField(action, propertyInfo, "UTF8", "LATIN1");
@@ -78,7 +78,8 @@ public class GenericEditorFactory implements IEditorFactory, Serializable {
 		return getTextField(action, propertyInfo);
 	}
 
-	private IHSEditor getSelectField(final String action, final PropertyInfo propertyInfo, final String... items) {
+	private IHSEditor getSelectField(final String action, final PropertyInfo propertyInfo, final String... items) 
+	{
 		final HSSelect field = new HSSelect(propertyInfo.getName(), Arrays.asList(items));
 		field.setWidth("100%");
 		field.setEnabled(isWriteAble(propertyInfo, action));
@@ -86,15 +87,17 @@ public class GenericEditorFactory implements IEditorFactory, Serializable {
 	}
 
 
-	private IHSEditor getPacPrefixedField(final String action, final PropertyInfo propertyInfo) {
-		final HSPacPrefixedField field = new HSPacPrefixedField(propertyInfo.getName());
+	private IHSEditor getPacPrefixedField(final String action, final PropertyInfo propertyInfo, final char delimiter) 
+	{
+		final HSPacPrefixedField field = new HSPacPrefixedField(propertyInfo.getName(), delimiter);
 		field.setWidth("100%");
 		field.setValue("xyz00-");
-		field.setEnabled(isWriteAble(propertyInfo, action));
+		enableAndValidate(action, propertyInfo, field);
 		return field;
 	}
 
-	private IHSEditor getShellSelect(final String action, final PropertyInfo propertyInfo) {
+	private IHSEditor getShellSelect(final String action, final PropertyInfo propertyInfo) 
+	{
 		final String[] items = new String[] { "/bin/false", "/bin/bash", "/bin/csh", "/bin/dash", "/bin/ksh", "/bin/tcsh", "/bin/zsh", "/usr/bin/passwd", "/usr/bin/scponly" };
 		final HSSelect field = new HSSelect(propertyInfo.getName(), 7, Arrays.asList(items));
 		field.setWidth("100%");
@@ -102,7 +105,8 @@ public class GenericEditorFactory implements IEditorFactory, Serializable {
 		return field;
 	}
 
-	private IHSEditor getSelectFromRemote(final String action, final PropertyInfo propertyInfo, final HSAdminSession session, final String module, final Map<String, String> whereContext) {
+	private IHSEditor getSelectFromRemote(final String action, final PropertyInfo propertyInfo, final HSAdminSession session, final String module, final Map<String, String> whereContext) 
+	{
 		final List<String> selectList = new ArrayList<>();
 		try {
 			final String grantingTicket = session.getGrantingTicket();
@@ -125,22 +129,24 @@ public class GenericEditorFactory implements IEditorFactory, Serializable {
 		return field;
 	}
 
-	private IHSEditor getPasswordField(final String action, final PropertyInfo propertyInfo) {
+	private IHSEditor getPasswordField(final String action, final PropertyInfo propertyInfo) 
+	{
 		final HSPasswordField field = new HSPasswordField(propertyInfo.getName(), "new".equals(action));
 		field.setWidth("100%");
 		field.setEnabled("new".equals(action) || "edit".equals(action));
 		return field;
 	}
 
-	private IHSEditor getTextField(final String action, final PropertyInfo propertyInfo) {
+	private IHSEditor getTextField(final String action, final PropertyInfo propertyInfo) 
+	{
 		final HSTextField field = new HSTextField(propertyInfo.getName());
 		field.setWidth("100%");
 		enableAndValidate(action, propertyInfo, field);
 		return field;
 	}
 
-	private void enableAndValidate(final String action,
-			final PropertyInfo propertyInfo, final IHSEditor field) {
+	private void enableAndValidate(final String action, final PropertyInfo propertyInfo, final IHSEditor field) 
+	{
 		if (isWriteAble(propertyInfo, action)) {
 			final String regexp = propertyInfo.getValidationRegexp();
 			final int minLength = propertyInfo.getMinLength();
