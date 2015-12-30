@@ -30,7 +30,7 @@ public class PropertyInfo implements Serializable {
 	}
 
 	public String getName() {
-		return name.toLowerCase();
+		return name;
 	}
 
 	void setName(String name) {
