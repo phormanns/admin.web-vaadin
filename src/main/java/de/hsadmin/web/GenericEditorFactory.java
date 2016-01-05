@@ -32,6 +32,11 @@ public class GenericEditorFactory implements IEditorFactory, Serializable {
 				return getSelectFromRemote(action, propertyInfo, session, "user", whereContext);
 			}
 		}
+		if ("emailaddress".equals(module) || "emailalias".equals(module)) {
+			if ("target".equals(inputName)) {
+				return getEMailTargetEditor(action, propertyInfo, session, whereContext);
+			}
+		}
 		if ("mysqldb".equals(module)) {
 			if ("owner".equals(inputName)) {
 				return getSelectFromRemote(action, propertyInfo, session, "mysqluser", whereContext);
@@ -43,6 +48,13 @@ public class GenericEditorFactory implements IEditorFactory, Serializable {
 			}
 		}
 		return getEditor(action, propertyInfo);
+	}
+
+
+	private IHSEditor getEMailTargetEditor(final String action, final PropertyInfo propertyInfo, final HSAdminSession session, final Map<String, String> whereContext) 
+	{
+		final EMailTargetEditor eMailTargetEditor = new EMailTargetEditor(propertyInfo, session, whereContext);
+		return eMailTargetEditor;
 	}
 
 
