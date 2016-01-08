@@ -32,18 +32,22 @@ public class EMailTargetEditor extends CustomComponent implements IHSEditor, Val
 
 	private static final long serialVersionUID = 1L;
 	
+	private final boolean isEditAble;
 	private final PropertyInfo propertyInfo;
 	private final List<Validator> validators;
 	private final AbstractOrderedLayout layout;
 	private final List<String> aliases;
 	private final List<String> postboxes;
 
-	public EMailTargetEditor(final PropertyInfo propertyInfo, final HSAdminSession session, final Map<String, String> whereContext) {
+
+	public EMailTargetEditor(final String action, final PropertyInfo propertyInfo, final HSAdminSession session, final Map<String, String> whereContext) {
+		this.isEditAble = PanelToolbar.ACTION_EDIT.equals(action) || PanelToolbar.ACTION_NEW.equals(action);
 		this.propertyInfo = propertyInfo;
 		this.validators = new ArrayList<>();
 		this.setCaption(I18N.getText(propertyInfo.getName()));
 		this.aliases = targetsSelect("emailalias", session, whereContext);
 		this.postboxes = targetsSelect("user", session, whereContext);
+		postboxes.removeAll(aliases);
 		layout = new VerticalLayout();
 		layout.setCaption(I18N.getText(propertyInfo.getName()));
 		setCompositionRoot(layout);
@@ -65,9 +69,15 @@ public class EMailTargetEditor extends CustomComponent implements IHSEditor, Val
 	
 	public void assertLastTargetRowIsEmpty() {
 		final int rowsCount = layout.getComponentCount();
-		final Component component = layout.getComponent(rowsCount - 1);
-		if (! ((TargetRow) component).valueIsEmpty()) {
-			layout.addComponent(new TargetRow(this));
+		if (isEditAble) {
+			if (rowsCount > 0) {
+				final Component component = layout.getComponent(rowsCount - 1);
+				if (! ((TargetRow) component).valueIsEmpty()) {
+					layout.addComponent(new TargetRow(this));
+				}
+			} else {
+				layout.addComponent(new TargetRow(this));
+			}
 		}
 	}
 
@@ -170,6 +180,7 @@ public class EMailTargetEditor extends CustomComponent implements IHSEditor, Val
 				sel.addItems(aliases);
 				sel.setValue(target);
 				sel.addValueChangeListener(editor);
+				sel.setEnabled(isEditAble);
 				targetField = sel;
 			} else {
 				if (postboxes.contains(target)) {
@@ -178,10 +189,12 @@ public class EMailTargetEditor extends CustomComponent implements IHSEditor, Val
 					sel.addItems(postboxes);
 					sel.setValue(target);
 					sel.addValueChangeListener(editor);
+					sel.setEnabled(isEditAble);
 					targetField = sel;
 				} else {
 					targetTypeSelect.setValue(I18N.getText("emailtarget.email"));
 					targetField = new TextField();
+					targetField.setEnabled(isEditAble);
 					((TextField) targetField).setValue(target);
 					((TextField) targetField).addValueChangeListener(editor);
 				}
@@ -211,6 +224,7 @@ public class EMailTargetEditor extends CustomComponent implements IHSEditor, Val
 								final TextField textField = new TextField();
 								textField.addValueChangeListener(editor);
 								textField.setImmediate(true);
+								textField.setEnabled(isEditAble);
 								comp = textField;
 							} else {
 								if (I18N.getText("emailtarget.alias").equals(newValue) || I18N.getText("emailtarget.postbox").equals(newValue)) {
@@ -222,11 +236,13 @@ public class EMailTargetEditor extends CustomComponent implements IHSEditor, Val
 									}
 									select.addValueChangeListener(editor);
 									select.setImmediate(true);
+									select.setEnabled(isEditAble);
 									comp = select;
 								} else {
 									final TextField textField = new TextField();
 									textField.addValueChangeListener(editor);
 									textField.setImmediate(true);
+									textField.setEnabled(isEditAble);
 									comp = textField;
 								}
 							}
@@ -239,6 +255,7 @@ public class EMailTargetEditor extends CustomComponent implements IHSEditor, Val
 				}
 				
 			});
+			targetTypeSelect.setEnabled(isEditAble);
 			field.setWidth("100%");
 			addComponent(field);
 			setComponentAlignment(field, Alignment.MIDDLE_RIGHT);

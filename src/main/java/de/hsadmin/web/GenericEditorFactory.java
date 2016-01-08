@@ -31,6 +31,9 @@ public class GenericEditorFactory implements IEditorFactory, Serializable {
 			if ("user".equals(inputName)) {
 				return getSelectFromRemote(action, propertyInfo, session, "user", whereContext);
 			}
+			if ("domainoptions".equals(inputName)) {
+				return getDomainOptionsEditor(action, propertyInfo, session, whereContext);
+			}
 		}
 		if ("emailaddress".equals(module) || "emailalias".equals(module)) {
 			if ("target".equals(inputName)) {
@@ -51,10 +54,14 @@ public class GenericEditorFactory implements IEditorFactory, Serializable {
 	}
 
 
+	private IHSEditor getDomainOptionsEditor(final String action, final PropertyInfo propertyInfo, final HSAdminSession session, final Map<String, String> whereContext) {
+		return PanelToolbar.ACTION_EDIT.equals(action) ? new DomainOptionsEditor(propertyInfo, session, whereContext) : new NullEditor();
+	}
+
+
 	private IHSEditor getEMailTargetEditor(final String action, final PropertyInfo propertyInfo, final HSAdminSession session, final Map<String, String> whereContext) 
 	{
-		final EMailTargetEditor eMailTargetEditor = new EMailTargetEditor(propertyInfo, session, whereContext);
-		return eMailTargetEditor;
+		return new EMailTargetEditor(action, propertyInfo, session, whereContext);
 	}
 
 
