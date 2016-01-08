@@ -28,7 +28,7 @@ public class GenericFormWindow extends Window implements IHSWindow {
 		this.parent = parent;
 		center();
 		setModal(true);
-		setWidth("480px");
+		setWidth("640px");
 		inputFields = new HashMap<String, IHSEditor>();
 		contentForm = new FormLayout();
 		contentForm.setMargin(true);
