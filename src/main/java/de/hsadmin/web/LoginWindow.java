@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.vaadin.event.ShortcutAction.KeyCode;
+import com.vaadin.server.ExternalResource;
 import com.vaadin.ui.AbstractTextField;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -12,6 +13,7 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.HasComponents;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Link;
 import com.vaadin.ui.PasswordField;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.Window;
@@ -97,6 +99,8 @@ public class LoginWindow extends Window {
 			}
 		});
 		subContent.addComponent(okButton);
+		final Link linkToOld = new Link(I18N.getText("main.panel.link_to_old"), new ExternalResource("https://admin.hostsharing.net/"));
+		subContent.addComponent(linkToOld);
 
 		setContent(subContent);
 	}
