@@ -13,7 +13,6 @@ import com.vaadin.ui.VerticalLayout;
 import de.hsadmin.model.TicketService;
 
 @Title("HSAdmin Web")
-//@Theme("reindeer")
 @Theme("valo")
 public class HSAdminUI extends UI {
 
