@@ -31,13 +31,14 @@ public class MainWindow extends CustomComponent implements HSAdminSession {
 		"https://config.hostsharing.net:443/hsar/xmlrpc/hsadmin" 
 	};
 
+	final private TicketService ticketService;
+	final private String grantingTicket;
+	final private String username;
+
 	private ModulesManager modulesManager;
-	private TicketService ticketService;
-	private String grantingTicket;
-	private String username;
 	private AbstractSplitPanel content;
 	
-	public MainWindow(TicketService ticketService, String grantingTicket, String username) {
+	public MainWindow(final TicketService ticketService, final String grantingTicket, final String username) {
 		this.ticketService = ticketService;
 		this.grantingTicket = grantingTicket;
 		this.username = username;
@@ -75,7 +76,7 @@ public class MainWindow extends CustomComponent implements HSAdminSession {
 	 * @param source module name
 	 * @param itemId 
 	 */
-	public void setCenterPanel(String source, Object itemId) {
+	public void setCenterPanel(final String source, final Object itemId) {
 		final AbstractPanelFactory panelFactory = FactoryProducer.getPanelFactory("panel");
 		try {
 			IHSPanel panel = panelFactory.getPanel(source, this, itemId);
@@ -86,7 +87,7 @@ public class MainWindow extends CustomComponent implements HSAdminSession {
 		}
 	}
 
-	public List<Object[]> list(final String moduleName, String... columnNames) {
+	public List<Object[]> list(final String moduleName, final String... columnNames) {
 		final List<Object[]> resultList = new ArrayList<Object[]>();
 		try {
 			final List<Map<String, Object>> searchResult = modulesManager.proxy(moduleName).search(username, ticketService.getServiceTicket(grantingTicket), new HashMap<String, String>());
