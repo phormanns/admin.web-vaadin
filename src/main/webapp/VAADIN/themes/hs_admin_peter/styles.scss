@@ -1,0 +1,9 @@
+@import "addons.scss";
+@import "hs_admin_peter.scss";
+
+/* This file prefixes all rules with the theme name to avoid causing conflicts with other themes. */
+/* The actual styles should be defined in hs_admin_peter.scss */
+.hs_admin_peter {
+  @include addons;
+  @include hs_admin_peter;
+}
