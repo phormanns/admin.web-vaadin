@@ -51,7 +51,7 @@ public class MainWindow extends CustomComponent implements HSAdminSession {
 		mainPanel.setContent(vl);
 		
 		try {
-			final MainToolbar mainToolbar = new MainToolbar();
+			final MainToolbar mainToolbar = new MainToolbar(this);
 			vl.addComponent(mainToolbar);
 			vl.setExpandRatio(mainToolbar, 0.0f);
 			final ModulesManagerFactory modulesManagerFactory = new ModulesManagerFactory(grantingTicket, username);

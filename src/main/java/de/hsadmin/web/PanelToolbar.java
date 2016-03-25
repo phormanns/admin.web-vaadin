@@ -67,7 +67,7 @@ public class PanelToolbar extends HorizontalLayout implements ClickListener {
 	}
 
 	@Override
-	public void buttonClick(ClickEvent event) 
+	public void buttonClick(final ClickEvent event) 
 	{
 		String action = null;
 		if (event.getButton().equals(newBtn)) {

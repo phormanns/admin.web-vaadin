@@ -9,11 +9,12 @@ import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinServlet;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.themes.ValoTheme;
 
 import de.hsadmin.model.TicketService;
 
 @Title("HSAdmin Web")
-@Theme("valo")
+@Theme(ValoTheme.THEME_NAME)
 public class HSAdminUI extends UI {
 
 	private static final long serialVersionUID = 1L;

@@ -25,7 +25,7 @@ public class HSConfirmBox extends HorizontalLayout {
 	
 	private Button okButton, cancelButton;
 
-	public HSConfirmBox(final GenericFormWindow parent, final String module, final String action, final HSAdminSession session) {
+	public HSConfirmBox(final IHSWindow parent, final String module, final String action, final HSAdminSession session) {
 		okButton = new Button("OK");
 		okButton.setStyleName(ValoTheme.BUTTON_PRIMARY);
 		okButton.setClickShortcut(KeyCode.ENTER);

@@ -60,7 +60,7 @@ public class GenericFormWindow extends Window implements IHSWindow {
 
 	@Override
 	public Map<String, Object> getFormData() {
-		Map<String, Object> formData = new HashMap<String, Object>(); 
+		final Map<String, Object> formData = new HashMap<String, Object>(); 
 		final Set<String> keySet = inputFields.keySet();
 		for (String key : keySet) {
 			final IHSEditor ihsEditor = inputFields.get(key);

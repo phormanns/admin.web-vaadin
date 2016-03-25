@@ -10,7 +10,7 @@ import de.hsadmin.rpc.HSAdminSession;
 public class SubWindowFactory extends AbstractWindowFactory {
 
 	@Override
-	public Window getSubWindow(HSTab parent, String type, String action, HSAdminSession session) 
+	public Window getSubWindow(final HSTab parent, final String type, final String action, final HSAdminSession session) 
 	{
 		if (type == null) {
 			return null;

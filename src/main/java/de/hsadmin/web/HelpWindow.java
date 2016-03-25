@@ -19,11 +19,11 @@ public class HelpWindow extends Window {
 		// Center it in the browser window
 		center();
 
-		VerticalLayout subContent = new VerticalLayout();
+		final VerticalLayout subContent = new VerticalLayout();
 		subContent.setMargin(true);
 
 		subContent.addComponent(new Label(HELP_HTML_SNIPPET));
-		Button ok = new Button("OK");
+		final Button ok = new Button("OK");
 		ok.addClickListener(new ClickListener() {
 			private static final long serialVersionUID = -6121701552072481416L;
 

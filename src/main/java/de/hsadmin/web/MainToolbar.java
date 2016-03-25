@@ -1,5 +1,7 @@
 package de.hsadmin.web;
 
+import java.util.HashMap;
+
 import com.vaadin.server.ThemeResource;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinService;
@@ -11,12 +13,19 @@ import com.vaadin.ui.CustomComponent;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.UI;
+import com.vaadin.ui.Window;
+import com.vaadin.ui.themes.ValoTheme;
+
+import de.hsadmin.rpc.HSAdminSession;
 
 public class MainToolbar extends CustomComponent implements ClickListener {
 
 	private static final long serialVersionUID = 1L;
 
-	public MainToolbar() {
+	private final HSAdminSession session;
+
+	public MainToolbar(final HSAdminSession session) {
+		this.session = session;
 		final Panel toolbar = new Panel();
 		toolbar.setSizeFull();
 		final HorizontalLayout layout = new HorizontalLayout();
@@ -25,6 +34,13 @@ public class MainToolbar extends CustomComponent implements ClickListener {
 		whitespace.setStyleName("borderless");
 		layout.addComponent(whitespace);
 		layout.setExpandRatio(whitespace, 1.0f);
+		final String login = session.getUser();
+		final Button profileBtn = new Button(login);
+		profileBtn.setStyleName(ValoTheme.BUTTON_LINK);
+		layout.addComponent(profileBtn);
+		layout.setExpandRatio(profileBtn, 0.0f);
+		profileBtn.setId("profile-btn");
+		profileBtn.addClickListener(this);
 		final Button logoutBtn = createButton("logout", "x");
 		layout.addComponent(logoutBtn);
 		layout.setExpandRatio(logoutBtn, 0.0f);
@@ -50,6 +66,14 @@ public class MainToolbar extends CustomComponent implements ClickListener {
 			final UI vaadinUI = getUI();
 			vaadinUI.getSession().close();
 			vaadinUI.getPage().setLocation(currentRequest.getContextPath());
+		}
+		if ("profile-btn".equals(btnId)) {
+			final HashMap<String, String> where = new HashMap<String, String>();
+			where.put("name", session.getUser());
+			final Window window = new UserProfileWindow(session, where);
+			if (window != null) {
+				getUI().addWindow(window);
+			}		
 		}
 	}
 	
