@@ -87,11 +87,7 @@ public class MainWindow extends CustomComponent implements HSAdminSession {
 		}
 	}
 
-<<<<<<< HEAD
-	public List<Object[]> list(final String moduleName, String... columnNames) {
-=======
 	public List<Object[]> list(final String moduleName, final String... columnNames) {
->>>>>>> 6bf9c1b44aaf4ea732109c6262b4dcc0277e1800
 		final List<Object[]> resultList = new ArrayList<Object[]>();
 		try {
 			final List<Map<String, Object>> searchResult = modulesManager.proxy(moduleName).search(username, ticketService.getServiceTicket(grantingTicket), new HashMap<String, String>());
